@@ -21,6 +21,13 @@
     "language": "id"
   },
   {
+    "id": "mahasiswa",
+    "name": "Rani (20, mahasiswa)",
+    "context": "Aktif cari beasiswa & part-time, sering isi form online, tabungan tipis",
+    "tags": ["mahasiswa"],
+    "language": "id"
+  },
+  {
     "id": "worker",
     "name": "Sari (29, karyawan)",
     "context": "Banking app harian, sering dapat WA promosi, cukup skeptis tapi sibuk",

@@ -55,8 +55,16 @@ h2.sect{font-size:.75rem;text-transform:uppercase;letter-spacing:1.5px;color:var
 .stat small{color:var(--dim);font-size:.68rem}
 .hidden{display:none}
 .footnote{color:var(--dim);font-size:.68rem;text-align:center;padding:12px}
-.advhud{display:flex;gap:6px;justify-content:center;padding:6px;font-size:.65rem;color:var(--dim)}
+.advhud{display:flex;gap:6px;justify-content:center;padding:6px;font-size:.65rem;color:var(--dim);flex-wrap:wrap}
 .advhud span{background:var(--panel2);border-radius:8px;padding:3px 8px}
+.chip{border:1px solid var(--acc);background:transparent;color:var(--acc);border-radius:16px;padding:6px 12px;font-size:.72rem;cursor:pointer}
+.chip.warn{border-color:var(--bad);color:var(--bad)}
+.chip:active{background:var(--acc);color:#04121f}
+.indrow{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;padding:9px 0;border-bottom:1px dashed var(--line)}
+.badge{font-size:.66rem;border-radius:8px;padding:3px 8px}
+.badge.ok{background:rgba(52,211,153,.15);color:var(--ok)}
+.badge.no{background:rgba(248,113,113,.15);color:var(--bad)}
+.badge.todo{background:rgba(56,189,248,.12);color:var(--acc)}
 </style>
 </head>
 <body>
@@ -99,6 +107,11 @@ h2.sect{font-size:.75rem;text-transform:uppercase;letter-spacing:1.5px;color:var
       </div>
       <div class="advhud"><span id="hud-press">pressure 0</span><span id="hud-tac">tactic: pressure</span><span id="hud-sus">suspicion 0.0</span></div>
       <div class="wa-body" id="chat"></div>
+      <div style="display:flex;gap:6px;padding:6px 10px;background:var(--wa-in);flex-wrap:wrap">
+        <button class="chip" onclick="doAction('verify_sender')">🔍 Cek Pengirim</button>
+        <button class="chip" onclick="doAction('open_link')">🔗 Buka Link</button>
+        <button class="chip warn" onclick="doAction('report')">🚩 Laporkan</button>
+      </div>
       <div class="wa-foot">
         <input id="msg" placeholder="Ketik pesan…" autocomplete="off">
         <button id="send">➤</button>
@@ -113,6 +126,7 @@ h2.sect{font-size:.75rem;text-transform:uppercase;letter-spacing:1.5px;color:var
       <div class="verdict" id="verdict"></div>
       <div class="coach" id="coach"></div>
       <div class="flags" id="flags"></div>
+      <div id="indicators"></div>
       <div class="stat">
         <div><b id="st-score">0</b><small>SKOR PERILAKU</small></div>
         <div><b id="st-risky">0</b><small>AKSI BERISIKO</small></div>
@@ -186,6 +200,13 @@ function addBubble(txt, dir){
   $("#chat").scrollTop = 1e9;
 }
 
+async function doAction(action){
+  const r = await (await fetch(`${API}/mission/${MISSION.mission_id}/action`, {method:"POST",
+    headers:{"Content-Type":"application/json"}, body: JSON.stringify({action})})).json();
+  if (r.note) addBubble("⚙️ " + r.note, "out");
+  if (r.outcome){ setTimeout(()=>showDebrief(r), 800); }
+}
+
 async function send(){
   const txt = $("#msg").value.trim(); if(!txt) return;
   const delay = Date.now() - lastSent;
@@ -200,6 +221,13 @@ async function send(){
   $("#hud-press").textContent = `pressure ${r.pressure}`;
   $("#hud-tac").textContent = `tactic: ${r.tactic}`;
   $("#hud-sus").textContent = `suspicion ${r.suspicion}`;
+  if (r.tactic_reason) {
+    const tr = document.createElement("div");
+    tr.className = "advhud";
+    tr.innerHTML = `<span>why: ${r.tactic_reason}</span>`;
+    $("#chat").appendChild(tr);
+    $("#chat").scrollTop = 1e9;
+  }
   if (r.finished) setTimeout(()=>showDebrief(r), 1400);
 }
 $("#send").onclick = send;
@@ -216,6 +244,28 @@ async function showDebrief(r){
   $("#st-score").textContent = d.summary.score;
   $("#st-risky").textContent = d.summary.risky_actions;
   $("#st-verify").textContent = d.summary.verifications;
+  const indBox = document.getElementById("indicators");
+  if (indBox && d.summary.indicators){
+    indBox.innerHTML = "<h2 class='sect'>Indikator perilaku (dari aksi teramati)</h2>";
+    const cls = {"Teramati":"ok","Belum teramati":"no","Perlu diuji":"todo"};
+    const labels = {
+      verify_source:"Verifikasi sumber independen",
+      under_pressure:"Tetap kritis saat ditekan waktu",
+      protect_data:"Melindungi data sensitif",
+      report_threat:"Melapor / menghentikan kontak"};
+    for (const [k,v] of Object.entries(d.summary.indicators)){
+      const row = document.createElement("div");
+      row.className = "indrow";
+      row.innerHTML = `${labels[k]||k} <span class="badge ${cls[v]||'todo'}">${v}</span>`;
+      indBox.appendChild(row);
+    }
+    if (d.summary.next_exercise){
+      const nx = document.createElement("div");
+      nx.className = "coach"; nx.style.marginTop = "10px";
+      nx.innerHTML = `<b>Episode berikutnya menguji:</b> ${d.summary.next_exercise.label}`;
+      indBox.appendChild(nx);
+    }
+  }
   const fl = $("#flags"); fl.innerHTML = "<h2 class='sect'>Red flags yang harusnya kamu tangkap</h2>";
   d.flags_hack = null;
   show("sc-debrief");
