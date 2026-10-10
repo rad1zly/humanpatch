@@ -1,0 +1,39 @@
+{
+  "id": "wifi_cafe_evil_twin",
+  "title": "Wi-Fi Kafe Palsu",
+  "domain": "browsing",
+  "channel": "Notifikasi HP",
+  "sender": "Wi-Fi Gratis",
+  "language": "id",
+  "level": 3,
+  "persona_tags": [
+    "mahasiswa",
+    "karyawan",
+    "umkm",
+    "umum"
+  ],
+  "attacker_character": "evil twin hotspot 'Free_Coffee_WiFi' dengan captive portal palsu yang minta login Google",
+  "attacker_goal": "Minta korban login akun Google di captive portal palsu (man-in-the-middle)",
+  "opener": "Terhubung ke Free_Coffee_WiFi. Sambungan memerlukan verifikasi ulang Google: masuk ke akun untuk melanjutkan browsing 1 jam gratis.",
+  "escalation_ladder": [
+    "Verifikasi gagal. Masukkan lagi email dan kata sandi Google Anda — sesi gratis akan hangus dalam 5 menit.",
+    "Sistem kafe mendeteksi perangkat Anda belum terverifikasi. Tanpa login, koneksi diputus otomatis.",
+    "Ini standar keamanan WiFi kafe sekarang, semua pelanggan juga login. Jangan sampai koneksi Anda diblokir seharian."
+  ],
+  "red_flags": [
+    "WiFi gratis yang minta password Google = evil twin / MITM klasik",
+    "Nama hotspot mirip WiFi resmi kafe (tanya staf nama WiFi yang bener!)",
+    "'Sesi hangus 5 menit' = tekanan waktu buatan",
+    "Login page tanpa HTTPS padlock atau sertifikat aneh",
+    "Captive portal resmi tidak pernah minta password akun penuh"
+  ],
+  "safe_response": "Putuskan WiFi, tanya staf nama hotspot resmi, atau pakai kuota data; lapor ke kafe jika ada hotspot janggal",
+  "page": {
+    "title": "Google Sign-in (Wi-Fi)",
+    "hint": "Masukkan email dan kata sandi untuk verifikasi Wi-Fi.",
+    "fields": [
+      "Email",
+      "Kata sandi"
+    ]
+  }
+}

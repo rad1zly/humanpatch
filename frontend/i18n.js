@@ -1,6 +1,10 @@
 /* UI copy per language. Keep keys stable; add languages by appending dicts. */
 const COPY = {
     "id": {
+
+        "level_badge": "Lv",
+        "level_up": "Naik level! Kesulitan:",
+        "level_down": "Level turun — lawan lebih ringan:",
         "steps_profile": "Profil", "steps_sim": "Lawan", "steps_patch": "Patch",
         "kicker": "Adversary adaptif",
         "hero_h1": "Lawan yang berubah mengikuti keputusanmu.",
@@ -54,6 +58,10 @@ const COPY = {
         "free_note": "Free tier: 2 episode.",
     },
     "en": {
+
+        "level_badge": "Lv",
+        "level_up": "Level up! Difficulty:",
+        "level_down": "Level down — lighter opponent:",
         "steps_profile": "Profile", "steps_sim": "Foe", "steps_patch": "Patch",
         "kicker": "Adaptive adversary",
         "hero_h1": "An opponent that changes with your decisions.",
@@ -107,6 +115,10 @@ const COPY = {
         "free_note": "Free tier: 2 episodes.",
     },
     "es": {
+
+        "level_badge": "Nv",
+        "level_up": "¡Subiste! Dificultad:",
+        "level_down": "Bajaste — rival más ligero:",
         "steps_profile": "Perfil", "steps_sim": "Rival", "steps_patch": "Parche",
         "kicker": "Adversario adaptativo",
         "hero_h1": "Un rival que cambia con tus decisiones.",
@@ -160,6 +172,10 @@ const COPY = {
         "free_note": "Nivel gratis: 2 episodios.",
     },
     "hi": {
+
+        "level_badge": "स्तर",
+        "level_up": "स्तर ऊपर! कठिनाई:",
+        "level_down": "स्तर नीचे — हल्का प्रतिद्वंद्वी:",
         "steps_profile": "प्रोफ़ाइल", "steps_sim": "प्रतिद्वंद्वी", "steps_patch": "पैच",
         "kicker": "अनुकूली प्रतिद्वंद्वी",
         "hero_h1": "आपके फ़ैसलों के साथ बदलने वाला प्रतिद्वंद्वी।",
@@ -213,6 +229,10 @@ const COPY = {
         "free_note": "मुफ़्त स्तर: 2 एपिसोड।",
     },
     "pt": {
+
+        "level_badge": "Nv",
+        "level_up": "Subiu! Dificuldade:",
+        "level_down": "Desceu — rival mais leve:",
         "steps_profile": "Perfil", "steps_sim": "Rival", "steps_patch": "Patch",
         "kicker": "Adversário adaptativo",
         "hero_h1": "Um rival que muda com as suas decisões.",

@@ -31,6 +31,11 @@ def scenarios_for_persona(persona: dict) -> list:
     return matched + rest
 
 
+def scenarios_for_level(level: int) -> list:
+    """All scenarios at a given difficulty level (1..5), any domain."""
+    return [s for s in load_scenarios().values() if int(s.get("level", 1)) == level]
+
+
 DOMAINS = {
     "phishing_social": "Phishing & Social Engineering",
     "credentials": "Passwords & Login Hygiene",

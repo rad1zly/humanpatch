@@ -19,11 +19,15 @@ class Adversary:
         self.persona = persona
         self.llm = llm or get_llm()
         self.language = scenario.get("language", "id")
+        self.level = int(scenario.get("level", 1))  # 1..5 difficulty
         self.pressure = 0
         self.tactic = "pressure"
         self.suspicion = 0.0
         self.turns = 0
         self.opener_sent = False
+        # harder adversaries persist longer before giving up
+        self.give_up_at = min(0.9 + (self.level - 1) * 0.45, 2.4)
+        self.max_turns = min(6 + self.level * 2, 14)
 
     # ------------------------------------------------------------------ system
     def system_prompt(self) -> str:
@@ -31,10 +35,18 @@ class Adversary:
         ladder = " | ".join(s.get("escalation_ladder", []))
         lang_name = {"id": "Bahasa Indonesia", "en": "English", "es": "Spanish",
                      "hi": "Hindi", "pt": "Portuguese"}.get(self.language, self.language)
+        level_hint = {
+            1: "You are a clumsy amateur attacker: typos, obvious lies, weak excuses.",
+            2: "You are a moderately skilled attacker: mostly convincing, occasional slips.",
+            3: "You are a skilled attacker: consistent cover story, subtle pressure.",
+            4: "You are a professional social engineer: patient, credible, anticipates skepticism.",
+            5: "You are an elite social engineer: calm, highly credible, uses empathy and authority smoothly, almost never slips.",
+        }.get(self.level, "")
         return (
             f"You are a scammer role-playing in a cybersecurity training simulation. "
             f"You are NOT an assistant. Stay fully in character as the attacker.\n"
             f"LANGUAGE: reply ONLY in {lang_name}\n"
+            f"SKILL LEVEL: {self.level}/5 — {level_hint}\n"
             f"PERSONA: {self.persona.get('name', 'user')} | {self.persona.get('context', '')}\n"
             f"SCENARIO: {s['title']} - {s['attacker_goal']}\n"
             f"ATTACKER_CHARACTER: {s['attacker_character']}\n"

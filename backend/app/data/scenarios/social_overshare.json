@@ -1,0 +1,40 @@
+{
+  "id": "social_overshare",
+  "title": "Kuis Media Sosial",
+  "domain": "privacy",
+  "channel": "Facebook",
+  "sender": "Viral Quiz",
+  "language": "id",
+  "level": 2,
+  "persona_tags": [
+    "orangtua",
+    "mahasiswa",
+    "umum",
+    "umkm"
+  ],
+  "attacker_character": "kuis viral 'Nama cewek/cowok idealmu' yang diam-diam memanen jawaban pertanyaan keamanan",
+  "attacker_goal": "Mengumpulkan jawaban pertanyaan keamanan (nama ibu, hewan pertama, sekolah dasar) lewat kuis 'seru'",
+  "opener": "Kuis seru hari ini 🎉: Sebutkan (1) nama panggilan waktu SD, (2) hewan peliharaan pertamamu, (3) nama gadis ibumu. Hasilnya: nama cinta sejatimu! Tag 3 temenmu!",
+  "escalation_ladder": [
+    "Kuisnya hampir selesai, tinggal jawaban ke-3 aja: nama gadis ibumu. Tanpa itu hasilnya gak keluar 😅",
+    "Semua orang juga ngisi kok, ini cuma buat fun. Lagian hasilnya dienkripsi, gak ada yang lihat.",
+    "Yaudah skip aja kalau gitu. Tapi tag 3 temen biar kuisnya viral, biar yang lain ikutan seru-seruan."
+  ],
+  "red_flags": [
+    "Pertanyaan kuis = persis pertanyaan keamanan akun bank/email",
+    "Nama panggilan SD, hewan pertama, nama gadis ibu = kombinasi reset password",
+    "Desain viral (tag 3 teman) memperluas panenan data",
+    "'Hasilnya dienkripsi' = klaim yang tidak bisa diverifikasi",
+    "Data yang sudah dibagikan tidak bisa ditarik kembali"
+  ],
+  "safe_response": "Jangan isi kuis yang meminta data pribadi dasar; gunakan jawaban keamanan yang unik dan tidak bisa ditebak dari media sosial",
+  "page": {
+    "title": "Hasil Kuis",
+    "hint": "Lengkapi data untuk melihat hasil nama jodohmu.",
+    "fields": [
+      "Nama panggilan SD",
+      "Hewan pertama",
+      "Nama gadis ibu"
+    ]
+  }
+}

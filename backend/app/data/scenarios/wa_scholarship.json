@@ -4,12 +4,17 @@
   "domain": "phishing_social",
   "channel": "whatsapp",
   "language": "id",
-  "persona_tags": ["mahasiswa"],
+  "persona_tags": [
+    "mahasiswa"
+  ],
   "sender": "Panitia Beasiswa",
   "page": {
     "title": "Portal konfirmasi beasiswa",
     "hint": "Masukkan NIM dan nama ibu kandung untuk mengunci kuota.",
-    "fields": ["NIM", "Nama ibu kandung"]
+    "fields": [
+      "NIM",
+      "Nama ibu kandung"
+    ]
   },
   "attacker_character": "ramah 'petugas yayasan beasiswa', gaya semi-formal, penuh emoji selamat",
   "attacker_goal": "Minta target mengisi 'formulir verifikasi' berisi data pribadi (NIK, no rekening, password email) lewat link",
@@ -26,5 +31,6 @@
     "Urgency buatan: kuota 50, tutup jam 9 malam",
     "Cek: yayasan tidak punya situs resmi / tidak terdaftar"
   ],
-  "safe_response": "Cek daftar beasiswa resmi via kampus/kemenkeu (beasiswa.kemenkeu.go.id), jangan isi data di link dari chat"
+  "safe_response": "Cek daftar beasiswa resmi via kampus/kemenkeu (beasiswa.kemenkeu.go.id), jangan isi data di link dari chat",
+  "level": 2
 }
