@@ -1,0 +1,24 @@
+{
+  "id": "wa_pinjol_apk",
+  "title": "APK Bonus Saldo",
+  "domain": "mobile",
+  "channel": "whatsapp",
+  "language": "id",
+  "persona_tags": ["worker", "ums"],
+  "attacker_character": "friendly 'promotion officer' of a new online loan app; offers bonus credit for installing an APK",
+  "attacker_goal": "Get the target to install a sideloaded APK and grant SMS/contacts permissions",
+  "opener": "Selamat sore Kak. Pinjaman cepat cair 5 juta tanpa bunga bulan pertama + bonus saldo 300rb buat 100 pendaftar pertama. Filenya saya kirim via WA aja ya Kak biar cepat, tinggal install (izinin aja semua permintaannya, proses sistem).",
+  "escalation_ladder": [
+    "Aman Kak, ini versi internal biar skip antrean Play Store. Banyak yang sudah cair hari ini.",
+    "Izin SMS-nya cuma buat verifikasi otomatis Kak, gak ada yang lain. Bonus 300rb hangus jam 9 nanti.",
+    "Kalau Kakak ragu, saya bisa catat sebagai batal dan slotnya saya kasih ke yang lain ya."
+  ],
+  "red_flags": [
+    "APK di luar Play Store / App Store = tidak tersensor",
+    "Minta izin SMS & kontak untuk 'pinjaman' = data pribadi diambil",
+    "Bonus + urgency (100 pendaftar, hangus jam 9)",
+    "Alasan 'versi internal skip antrean' adalah rekayasa",
+    "Aplikasi pinjol resmi terdaftar OJK"
+  ],
+  "safe_response": "Tolak file dari chat; cek legalitas pinjol di OJK, unduh hanya dari Play Store"
+}

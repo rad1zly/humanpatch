@@ -1,0 +1,30 @@
+[
+  {
+    "id": "senior",
+    "name": "Ibu Ratna (58, pensiunan)",
+    "context": "Pengguna WhatsApp aktif, rekening bank dipakai rutin, mudah percaya pada nada formal 'pihak bank', tidak mengerti istilah teknis",
+    "tags": ["senior"],
+    "language": "id"
+  },
+  {
+    "id": "student",
+    "name": "Dika (16, pelajar)",
+    "context": "Mobile Legends, aktif grup WA kelas, sering ikut giveaway, gampang FOMO",
+    "tags": ["student"],
+    "language": "id"
+  },
+  {
+    "id": "ums",
+    "name": "Pak Yusuf (41, pemilik warung)",
+    "context": "Pakai e-wallet & aplikasi pinjaman, sibuk, sering terburu-buru, nominal kecil menarik perhatiannya",
+    "tags": ["ums"],
+    "language": "id"
+  },
+  {
+    "id": "worker",
+    "name": "Sari (29, karyawan)",
+    "context": "Banking app harian, sering dapat WA promosi, cukup skeptis tapi sibuk",
+    "tags": ["worker"],
+    "language": "id"
+  }
+]

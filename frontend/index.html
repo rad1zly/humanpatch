@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>HumanPatch — security teams patch software. we patch the human.</title>
+<style>
+:root{
+  --bg:#0b1220;--panel:#111a2e;--panel2:#16213a;--line:#233250;
+  --txt:#e8eefc;--dim:#8fa3c8;--acc:#38bdf8;--ok:#34d399;--bad:#f87171;
+  --wa-out:#075e54;--wa-in:#1f2c34;--wa-bg:#0b141a;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{background:var(--bg);color:var(--txt);min-height:100vh}
+.wrap{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+header{padding:20px 20px 14px;border-bottom:1px solid var(--line)}
+header h1{font-size:1.3rem;letter-spacing:.5px}
+header h1 b{color:var(--acc)}
+header p{color:var(--dim);font-size:.8rem;margin-top:4px}
+main{flex:1;padding:18px 20px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px;cursor:pointer;transition:border-color .15s}
+.card:hover{border-color:var(--acc)}
+.card.sel{border-color:var(--acc);background:var(--panel2)}
+.card h3{font-size:.95rem}
+.card small{color:var(--dim);display:block;margin-top:4px;font-size:.78rem;line-height:1.45}
+.btn{display:block;width:100%;padding:14px;border:0;border-radius:12px;background:var(--acc);color:#04121f;font-weight:700;font-size:.95rem;cursor:pointer;margin-top:14px}
+.btn:disabled{opacity:.4}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--dim)}
+h2.sect{font-size:.75rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);margin:18px 0 10px}
+/* phone frame */
+.phone{flex:1;display:flex;flex-direction:column;background:var(--wa-bg);max-width:480px;margin:0 auto;width:100%}
+.wa-head{background:var(--wa-out);padding:10px 14px;display:flex;align-items:center;gap:10px}
+.wa-head .av{width:38px;height:38px;border-radius:50%;background:#22333f;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+.wa-head .nm{font-weight:600;font-size:.92rem}
+.wa-head .st{font-size:.7rem;color:#cfe9e4}
+.wa-body{flex:1;overflow-y:auto;padding:14px 12px;display:flex;flex-direction:column;gap:8px}
+.bubble{max-width:82%;padding:8px 12px;border-radius:12px;font-size:.88rem;line-height:1.45;white-space:pre-wrap;word-wrap:break-word}
+.bubble.in{background:var(--wa-in);align-self:flex-start;border-top-left-radius:2px}
+.bubble.out{background:#145e4d;align-self:flex-end;border-top-right-radius:2px}
+.bubble .t{display:block;font-size:.62rem;color:#9fb8b0;text-align:right;margin-top:3px}
+.wa-foot{display:flex;gap:8px;padding:10px;background:var(--wa-in)}
+.wa-foot input{flex:1;background:#2a3942;border:0;border-radius:20px;padding:10px 16px;color:var(--txt);font-size:.88rem;outline:none}
+.wa-foot button{width:42px;height:42px;border-radius:50%;border:0;background:var(--wa-out);color:#fff;font-size:1.1rem;cursor:pointer}
+.typing{align-self:flex-start;color:var(--dim);font-size:.75rem;padding:4px 8px}
+/* debrief */
+.verdict{font-size:1.05rem;font-weight:700;margin-bottom:10px}
+.verdict.ok{color:var(--ok)} .verdict.bad{color:var(--bad)}
+.coach{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:10px;padding:14px;font-size:.88rem;line-height:1.6}
+.flags{margin-top:12px}
+.flag{display:flex;gap:8px;font-size:.8rem;color:var(--dim);padding:6px 0;border-bottom:1px dashed var(--line)}
+.flag:before{content:"🚩"}
+.stat{display:flex;gap:10px;margin-top:14px}
+.stat div{flex:1;background:var(--panel2);border-radius:10px;padding:10px;text-align:center}
+.stat b{display:block;font-size:1.15rem}
+.stat small{color:var(--dim);font-size:.68rem}
+.hidden{display:none}
+.footnote{color:var(--dim);font-size:.68rem;text-align:center;padding:12px}
+.advhud{display:flex;gap:6px;justify-content:center;padding:6px;font-size:.65rem;color:var(--dim)}
+.advhud span{background:var(--panel2);border-radius:8px;padding:3px 8px}
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+  <!-- ============ SCREEN 1: PERSONA ============ -->
+  <section id="sc-persona">
+    <header>
+      <h1>Human<b>Patch</b> 🛡️</h1>
+      <p>Security teams patch software. Nobody patches the human. <b>Until now.</b></p>
+    </header>
+    <main>
+      <h2 class="sect">Siapa kamu?</h2>
+      <div id="personas"></div>
+      <button class="btn" id="btn-start" disabled>Mulai Misi Pertama ▸</button>
+      <p class="footnote">AI adversary akan menyerang sesuai duniamu. Semua tindakanmu direkam sebagai data perilaku. Ini simulasi — nggak ada yang bahaya.</p>
+    </main>
+  </section>
+
+  <!-- ============ SCREEN 2: WHATSAPP MISSION ============ -->
+  <section id="sc-mission" class="hidden">
+    <div class="phone">
+      <div class="wa-head">
+        <div class="av">👤</div>
+        <div><div class="nm" id="wa-name">+62 812-3456-7890</div><div class="st">online</div></div>
+      </div>
+      <div class="advhud"><span id="hud-press">pressure 0</span><span id="hud-tac">tactic: pressure</span><span id="hud-sus">suspicion 0.0</span></div>
+      <div class="wa-body" id="chat"></div>
+      <div class="wa-foot">
+        <input id="msg" placeholder="Ketik pesan…" autocomplete="off">
+        <button id="send">➤</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 3: DEBRIEF ============ -->
+  <section id="sc-debrief" class="hidden">
+    <header><h1 id="db-title">Debrief</h1><p id="db-sub"></p></header>
+    <main>
+      <div class="verdict" id="verdict"></div>
+      <div class="coach" id="coach"></div>
+      <div class="flags" id="flags"></div>
+      <div class="stat">
+        <div><b id="st-score">0</b><small>SKOR PERILAKU</small></div>
+        <div><b id="st-risky">0</b><small>AKSI BERISIKO</small></div>
+        <div><b id="st-verify">0</b><small>VERIFIKASI</small></div>
+      </div>
+      <button class="btn" id="btn-next">Misi Berikutnya ▸</button>
+      <button class="btn ghost" id="btn-profile">Lihat Patch Level-ku</button>
+    </main>
+  </section>
+
+  <!-- ============ SCREEN 4: PROFILE ============ -->
+  <section id="sc-profile" class="hidden">
+    <header><h1>Patch Level-mu</h1><p id="pr-sub"></p></header>
+    <main>
+      <div class="verdict ok" id="pr-level" style="text-align:center;font-size:1.6rem;padding:20px 0"></div>
+      <div id="pr-rows"></div>
+      <button class="btn" id="btn-again">Main Lagi 🔁</button>
+    </main>
+  </section>
+</div>
+
+<script>
+const API = location.port === "8080" ? "http://localhost:8000/api" : "/api";
+const $ = s => document.querySelector(s);
+let SESSION = null, MISSION = null, lastSent = Date.now();
+
+// ---------- personas ----------
+async function loadPersonas(){
+  const ps = await (await fetch(`${API}/personas`)).json();
+  const box = $("#personas"); box.innerHTML = "";
+  ps.forEach(p => {
+    const c = document.createElement("div");
+    c.className = "card";
+    c.innerHTML = `<h3>${p.name}</h3><small>${p.context}</small>`;
+    c.onclick = () => {
+      document.querySelectorAll(".card").forEach(x=>x.classList.remove("sel"));
+      c.classList.add("sel"); SESSION = {...SESSION, persona_pick: p.id};
+      $("#btn-start").disabled = false;
+    };
+    box.appendChild(c);
+  });
+}
+
+// ---------- flow ----------
+$("#btn-start").onclick = async () => {
+  const r = await (await fetch(`${API}/session`, {method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({persona_id: SESSION.persona_pick})})).json();
+  SESSION = {...SESSION, ...r};
+  await startMission();
+};
+
+async function startMission(){
+  const r = await (await fetch(`${API}/session/${SESSION.session_id}/mission/start`, {method:"POST"})).json();
+  if (r.finished_all){ showProfile(); return; }
+  MISSION = r;
+  $("#wa-name").textContent = r.scenario.channel === "whatsapp" ? "+62 812-3456-7890" : "Unknown";
+  $("#chat").innerHTML = "";
+  addBubble(r.message, "in");
+  show("sc-mission");
+  $("#msg").focus();
+}
+
+function addBubble(txt, dir){
+  const b = document.createElement("div");
+  b.className = `bubble ${dir}`;
+  b.innerHTML = `${txt.replace(/</g,"&lt;")}<span class="t">${new Date().toLocaleTimeString("id",{hour:"2-digit",minute:"2-digit"})}</span>`;
+  $("#chat").appendChild(b);
+  $("#chat").scrollTop = 1e9;
+}
+
+async function send(){
+  const txt = $("#msg").value.trim(); if(!txt) return;
+  const delay = Date.now() - lastSent;
+  addBubble(txt, "out"); $("#msg").value = ""; lastSent = Date.now();
+  const t = document.createElement("div"); t.className="typing"; t.textContent="• • •";
+  $("#chat").appendChild(t); $("#chat").scrollTop = 1e9;
+  const r = await (await fetch(`${API}/mission/${MISSION.mission_id}/reply`, {method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({text: txt, delay_ms: delay})})).json();
+  t.remove();
+  addBubble(r.message, "in");
+  $("#hud-press").textContent = `pressure ${r.pressure}`;
+  $("#hud-tac").textContent = `tactic: ${r.tactic}`;
+  $("#hud-sus").textContent = `suspicion ${r.suspicion}`;
+  if (r.finished) setTimeout(()=>showDebrief(r), 1400);
+}
+$("#send").onclick = send;
+$("#msg").addEventListener("keydown", e => { if(e.key==="Enter") send(); });
+
+async function showDebrief(r){
+  const d = await (await fetch(`${API}/mission/${MISSION.mission_id}/debrief`)).json();
+  const ok = d.summary.outcome !== "compromised";
+  $("#db-title").textContent = MISSION.scenario.title;
+  $("#db-sub").textContent = `Domain: ${MISSION.scenario.domain}`;
+  $("#verdict").textContent = ok ? "✅ KAMU SELAMAT" : "❌ KAMU KENA — dan itu normal. Ini latihan.";
+  $("#verdict").className = `verdict ${ok?"ok":"bad"}`;
+  $("#coach").textContent = d.coach;
+  $("#st-score").textContent = d.summary.score;
+  $("#st-risky").textContent = d.summary.risky_actions;
+  $("#st-verify").textContent = d.summary.verifications;
+  const fl = $("#flags"); fl.innerHTML = "<h2 class='sect'>Red flags yang harusnya kamu tangkap</h2>";
+  d.flags_hack = null;
+  show("sc-debrief");
+  // fetch red flags from scenario via queue info is not exposed; show generic from coach text only
+}
+
+$("#btn-next").onclick = () => startMission();
+$("#btn-profile").onclick = () => showProfile();
+
+async function showProfile(){
+  const p = await (await fetch(`${API}/session/${SESSION.session_id}/profile`)).json();
+  $("#pr-level").textContent = p.patch_level;
+  const rows = $("#rows") || $("#pr-rows"); rows.innerHTML = "";
+  p.results.forEach(r => {
+    const c = document.createElement("div");
+    c.className = "card";
+    c.innerHTML = `<h3>${r.domain}</h3><small>skor ${r.score}/100 • ${r.outcome} • ${r.risky_actions} aksi berisiko</small>`;
+    rows.appendChild(c);
+  });
+  $("#pr-sub").textContent = `${p.results.length} misi selesai`;
+  show("sc-profile");
+}
+$("#btn-again").onclick = () => location.reload();
+
+function show(id){
+  ["sc-persona","sc-mission","sc-debrief","sc-profile"].forEach(s => $("#"+s).classList.add("hidden"));
+  $("#"+id).classList.remove("hidden");
+}
+
+loadPersonas();
+</script>
+</body>
+</html>

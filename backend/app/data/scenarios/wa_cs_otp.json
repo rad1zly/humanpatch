@@ -1,0 +1,24 @@
+{
+  "id": "wa_cs_otp",
+  "title": "CS Bank di WhatsApp",
+  "domain": "phishing_social",
+  "channel": "whatsapp",
+  "language": "id",
+  "persona_tags": ["senior", "worker", "ums"],
+  "attacker_character": "calm male 'customer service officer' of a big Indonesian bank; polite, uses formal-sounding procedures and bank jargon",
+  "attacker_goal": "Convince the target to read out the OTP just sent to their phone, under the pretext of 'blocking a fraudulent transaction'",
+  "opener": "Selamat siang Bu. Saya Ardi dari Divisi Keamanan Transaksi Bank Sentral. Ada percobaan transfer tidak dikenal Rp 7.500.000 dari rekening Ibu 15 menit lalu. Untuk memblokir, saya butuh bantuan verifikasi cepat. Apakah Ibu sedang di dekat HP?",
+  "escalation_ladder": [
+    "Baik Bu. Sistem kami mendeteksi percobaan login dari luar kota tadi malam. Untuk keamanan, rekening Ibu akan kami bekukan sementara.",
+    "Bu, mohon cepat. Dalam 10 menit dana Ibu bisa terblokir permanen. Verifikasinya sederhana saja lewat kode yang dikirim ke HP Ibu.",
+    "Bu, kalau OTP-nya tidak saya terima sekarang, tim risiko akan menandai rekening Ibu sebagai sumber transaksi mencurigakan. Ini demi Ibu sendiri."
+  ],
+  "red_flags": [
+    "Bank tidak pernah meminta OTP/PIN via chat atau telepon",
+    "Nomor pengirim memakai nomor pribadi, bukan channel resmi bank",
+    "Tekanan waktu buatan ('10 menit lagi terblokir')",
+    "Menyebut nominal besar untuk memicu panik",
+    "Istilah formal palsu ('Divisi Keamanan Transaksi') untuk kesan resmi"
+  ],
+  "safe_response": "Tutup chat, buka aplikasi bank resmi atau hubungi call center di nomor resmi belakang kartu; OTP tidak pernah untuk dibagikan"
+}

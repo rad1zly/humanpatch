@@ -1,0 +1,24 @@
+{
+  "id": "wa_prize_link",
+  "title": "Giveaway Skin ML",
+  "domain": "phishing_social",
+  "channel": "whatsapp",
+  "language": "id",
+  "persona_tags": ["student"],
+  "attacker_character": "excited teenage 'event moderator' running a Mobile Legends giveaway; casual slang, lots of emojis energy",
+  "attacker_goal": "Get the target to click a phishing link and 'log in with their Moonton account' to claim a prize",
+  "opener": "BROO kamu terpilih di giveaway skin epic week ini \ud83d\ude0d cuma tinggal klaim di link ini sebelum kuota habis: bit.ly/klaim-skin-ML",
+  "escalation_ladder": [
+    "Gak percaya? Cek kan admin giveaway-nya banyak yang menang kok, kuota tinggal 3 lagi",
+    "Yaudah slow aja, nyesel ya klaimnya tinggal 2 menit, login Moonton doang kok",
+    "Link-nya bakal expired malem ini. Yang laen udah pada dapat, tinggal kamu"
+  ],
+  "red_flags": [
+    "Link pemendek (bit.ly) menyembunyikan tujuan asli",
+    "Hadiah untuk hal yang tidak perlu diikuti / too good to be true",
+    "Login 'klaim hadiah' = credential phishing berkedok giveaway",
+    "Urgency buatan: kuota tinggal 3, expired malem ini",
+    "Cek profil admin: akun baru, bukan akun resmi komunitas"
+  ],
+  "safe_response": "Jangan klik link dari orang asing; hadiah resmi selalu lewat in-app event, bukan login lewat link luar"
+}
