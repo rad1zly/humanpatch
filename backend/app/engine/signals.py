@@ -13,7 +13,13 @@ REFUSAL = re.compile(
     r"\b(tidak|jangan|gak|ga|nggak|enggak|stop|curiga|penipu|penipuan|"
     r"menolak|no|nakal|bodong|palsu|"
     # EN
-    r"nope|never|refuse|scam|fraud|fake|phishing|suspicious|won'?t|will not)\b",
+    r"nope|never|refuse|scam|fraud|fake|phishing|suspicious|won'?t|will not|"
+    # ES
+    r"no\s+way|estafa|fraudulento|falso|enga\u00f1o|no pienso|no voy a|desconf\u00edo|"
+    # PT
+    r"golpe|fraudulento|mentira|n\u00e3o vou|n\u00e3o penso|desconfio|cuidado|"
+    # HI (romanized + common)
+    r"dhokha|fraud hai|nahi doonga|nahi dunga|bharosa nahi|shak)\b",
     re.I,
 )
 SKEPTICISM = re.compile(
@@ -21,7 +27,13 @@ SKEPTICISM = re.compile(
     r"divisi|nomor|cekin?|cek dulu|hubungi|"
     # EN
     r"really|who is|are you|legit|official|verify|why|how come|what is this|"
-    r"doubt|strange|weird)",
+    r"doubt|strange|weird|"
+    # ES
+    r"de verdad|qui\u00e9n eres|eres del|leg\u00edtimo|oficial|por qu\u00e9|verific|"
+    # PT
+    r"verdade|quem \u00e9|voc\u00ea \u00e9|leg\u00edtimo|oficial|por que|verific|"
+    # HI
+    r"sach mein|kaun ho|asli hai|officiel|kyun|jaanch)",
     re.I,
 )
 HESITATION_MS = 15_000  # >15s before acting = hesitation signal

@@ -78,7 +78,7 @@ class MockLLM:
 
     def chat(self, system, messages, temperature=0.8, max_tokens=320):
         # coach mode: debrief prompts get a canned coach reply
-        en = "reply ONLY in English" in system or "In English" in system
+        en = any(m in system for m in ("reply ONLY in English", "In English", "In Spanish", "In Hindi", "In Portuguese"))
         if "cybersecurity coach" in system:
             return self.COACH_EN if en else (
                 "Baik, santai — ini latihan, dan hasilnya bisa dibenerin. "
@@ -96,17 +96,27 @@ class MockLLM:
         ladder = [s.strip() for s in marker("LADDER").split("|") if s.strip()]
         pressure = int(marker("PRESSURE") or 0)
         tactic = marker("TACTIC") or "pressure"
+        # non-ID languages: prefer scenario ladder lines (already in-scenario
+        # language) over canned ID lines; EN canned as last resort
+        non_id = any(m in system for m in (
+            "reply ONLY in English", "reply ONLY in Spanish",
+            "reply ONLY in Hindi", "reply ONLY in Portuguese"))
 
-        if tactic == "good_cop":
+        if tactic == "give_up":
+            if ladder:
+                msg = ladder[-1]
+            else:
+                msg = self.GAVE_UP_EN[0] if (en or non_id) else self.GAVE_UP[0]
+        elif non_id and ladder:
+            msg = ladder[min(pressure, len(ladder) - 1)]
+        elif tactic == "good_cop":
             msg = random.choice(self.GOOD_COP_EN if en else self.GOOD_COP)
         elif tactic == "last_ditch":
             msg = random.choice(self.LAST_DITCH_EN if en else self.LAST_DITCH)
-        elif tactic == "give_up":
-            msg = self.GAVE_UP_EN[0] if en else self.GAVE_UP[0]
         elif ladder:
             msg = ladder[min(pressure, len(ladder) - 1)]
         else:
-            msg = random.choice(self.GENERIC_EN if en else self.GENERIC)
+            msg = random.choice(self.GENERIC_EN if (en or non_id) else self.GENERIC)
 
         return json.dumps({"message": msg, "tactic_switch": tactic})
 
