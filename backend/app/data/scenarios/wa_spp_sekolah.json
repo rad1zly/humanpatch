@@ -1,0 +1,35 @@
+{
+  "id": "wa_spp_sekolah",
+  "title": "SPP Sekolah Palsu",
+  "domain": "phishing_social",
+  "channel": "WhatsApp",
+  "sender": "Admin Sekolah",
+  "language": "id",
+  "persona_tags": [
+    "orangtua"
+  ],
+  "attacker_character": "mengaku admin sekolah, memanfaatkan rasa takut orang tua soal anak",
+  "attacker_goal": "Minta orang tua bayar SPP lewat link e-wallet palsu (mencuri PIN e-wallet)",
+  "opener": "Bu, SPP anak tertunggak dan akses rapor dikunci. Bayar lewat tautan ini dalam 1 jam supaya tidak masuk daftar tunggakan.",
+  "escalation_ladder": [
+    "Bendahara sudah tutup loket. Tanpa pembayaran sekarang, anak tidak bisa ikut ujian besok pagi.",
+    "Jangan telepon sekolah, saluran sedang gangguan. Saya admin piket. Kirim bukti transfer ke chat ini saja.",
+    "Ibu, daftar tunggakan sudah mau dikirim ke wali kelas. Sekali bayar lewat tautan ini, langsung beres."
+  ],
+  "red_flags": [
+    "Sekolah resmi tidak minta pembayaran via WA pribadi admin",
+    "Ancaman 'tidak bisa ujian' = tekanan emosional ke orang tua",
+    "'Jangan telepon sekolah' = mencegah verifikasi",
+    "Link pembayaran di luar sistem sekolah/e-wallet resmi",
+    "Nomor pengirim bukan nomor resmi sekolah"
+  ],
+  "safe_response": "Hubungi wali kelas/sekolah lewat nomor resmi yang sudah dikenal; bayar SPP lewat kanal resmi sekolah",
+  "page": {
+    "title": "Pembayaran SPP simulasi",
+    "hint": "Isi nama anak dan PIN e-wallet untuk menuntaskan tagihan.",
+    "fields": [
+      "Nama anak",
+      "PIN e-wallet"
+    ]
+  }
+}

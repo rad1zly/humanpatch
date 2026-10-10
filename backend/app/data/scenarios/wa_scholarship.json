@@ -4,7 +4,13 @@
   "domain": "phishing_social",
   "channel": "whatsapp",
   "language": "id",
-  "persona_tags": ["mahasiswa", "student"],
+  "persona_tags": ["mahasiswa"],
+  "sender": "Panitia Beasiswa",
+  "page": {
+    "title": "Portal konfirmasi beasiswa",
+    "hint": "Masukkan NIM dan nama ibu kandung untuk mengunci kuota.",
+    "fields": ["NIM", "Nama ibu kandung"]
+  },
   "attacker_character": "ramah 'petugas yayasan beasiswa', gaya semi-formal, penuh emoji selamat",
   "attacker_goal": "Minta target mengisi 'formulir verifikasi' berisi data pribadi (NIK, no rekening, password email) lewat link",
   "opener": "Selamat Kak! 🎉 Kakak terpilih penerima Beasiswa Cendekia 2026 Rp 12 juta/semester. Data Kakak kami dapat dari kampus. Tinggal verifikasi di: bit.ly/beasiswa-cendekia-2026 (hari ini terakhir, kuota 50 orang).",

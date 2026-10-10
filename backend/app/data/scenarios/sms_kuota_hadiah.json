@@ -1,0 +1,35 @@
+{
+  "id": "sms_kuota_hadiah",
+  "title": "Hadiah Kuota Palsu",
+  "domain": "phishing_social",
+  "channel": "SMS",
+  "sender": "Promo Operator",
+  "language": "id",
+  "persona_tags": [
+    "umum"
+  ],
+  "attacker_character": "SMS singkat gaya operator seluler, klaim hadiah kuota + saldo",
+  "attacker_goal": "Minta korban buka link dan masukkan nomor HP + OTP (smishing pencurian akun)",
+  "opener": "Anda menang kuota 50GB + saldo. Klaim dalam 10 menit lewat tautan, atau hadiah dialihkan ke nomor lain.",
+  "escalation_ladder": [
+    "Kuota hampir habis. Jangan hubungi call center, antreannya panjang. Balas YA sekarang supaya tidak hangus.",
+    "Saya petugas klaim. Tidak perlu cek aplikasi resmi. Sebutkan kode OTP yang baru masuk.",
+    "Terakhir: 2 menit lagi hadiah pindah ke nomor penerima cadangan. OTP-nya yang 6 digit itu ya."
+  ],
+  "red_flags": [
+    "Lomba/undian yang tidak perlu kamu ikuti = tidak ada hadiahnya",
+    "Operator tidak pernah minta OTP lewat SMS/chat",
+    "'Jangan hubungi call center' = mencegah verifikasi",
+    "Link pemendek menyembunyikan domain asli",
+    "Tenggat 10 menit = tekanan klasik smishing"
+  ],
+  "safe_response": "Hapus SMS; cek promo asli lewat aplikasi operator resmi; OTP tidak pernah untuk dibagikan",
+  "page": {
+    "title": "Klaim hadiah simulasi",
+    "hint": "Masukkan nomor HP dan OTP untuk mengambil hadiah.",
+    "fields": [
+      "Nomor HP",
+      "OTP"
+    ]
+  }
+}
