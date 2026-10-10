@@ -52,20 +52,38 @@ class Adversary:
         signals = detect_signals(user_text, delay_ms)
 
         # --- engine decides the tactic (LLM never grades the user) ---
+        reason = ""
         if "shared_credentials" in signals:
             self.tactic = "success"  # attacker got what they wanted
+            reason = "user shared credentials — attacker ends with a win"
         elif "refusal" in signals:
             self.suspicion += 0.45
-            self.tactic = "good_cop" if self.suspicion >= 0.9 else "last_ditch" if self.pressure >= 2 else "pressure"
+            if self.suspicion >= 0.9:
+                self.tactic = "give_up"
+                reason = f"cumulative suspicion {self.suspicion:.2f} >= 0.9 — attacker gives up"
+            elif self.pressure >= 2:
+                self.tactic = "last_ditch"
+                reason = "user refused under high pressure — one final push before quitting"
+            else:
+                self.tactic = "good_cop"
+                reason = "user refused — attacker switches to reassure tactic"
         elif "skepticism" in signals:
             self.suspicion += 0.25
             self.tactic = "good_cop"
+            reason = "user is skeptical — attacker de-escalates to build trust"
         elif "hesitation" in signals:
             self.pressure += 1
             self.tactic = "pressure"
-
-        if self.suspicion >= 0.9:
+            reason = f"user hesitated >15s — pressure raised to {self.pressure}"
+        elif "reported" in signals:
             self.tactic = "give_up"
+            reason = "user reported the message — attacker aborts"
+        else:
+            reason = "no strong signal — attacker keeps pressing"
+
+        if self.suspicion >= 0.9 and self.tactic != "give_up":
+            self.tactic = "give_up"
+            reason = f"suspicion {self.suspicion:.2f} crossed threshold — attacker gives up"
 
         raw = self.llm.chat(
             system=self.system_prompt(),
@@ -89,6 +107,7 @@ class Adversary:
             "message": message,
             "pressure": self.pressure,
             "tactic": self.tactic,
+            "tactic_reason": reason,
             "suspicion": round(self.suspicion, 2),
             "signals": signals,
             "turns": self.turns,

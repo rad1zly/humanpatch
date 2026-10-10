@@ -8,6 +8,7 @@ from app.engine.telemetry import patch_level
 
 def test_signals_basic():
     assert "shared_credentials" in detect_signals("kodenyang 448291 ya")
+    assert "shared_credentials" in detect_signals("NIK saya 3204115508990002")  # 16-digit NIK
     assert "refusal" in detect_signals("Saya tidak akan memberi kode apapun")
     assert "skepticism" in detect_signals("Emang ini dari kantor pusat?")
     assert "hesitation" in detect_signals("oke", delay_ms=25000)
@@ -79,3 +80,39 @@ def test_director_and_patch_level():
     d.record(m)
     prof_scores = [r["score"] for r in d.results]
     assert patch_level(prof_scores) in ("TARGET MUDAH", "WASPADA", "HARD TARGET", "PATCHED")
+
+
+def test_tactic_reason_exposed():
+    persona = {"id": "senior", "name": "Ibu Ratna", "context": "", "tags": ["senior"]}
+    adv = Adversary(get_scenario("wa_cs_otp"), persona)
+    adv.opener()
+    r = adv.next("Memangnya Anda siapa?", delay_ms=0)
+    assert r.get("tactic_reason")  # reason must always be present (judge-proof)
+
+
+def test_same_scenario_divergent_paths():
+    """Two users, same scenario, different behavior -> different tactics & reasons."""
+    persona = {"id": "senior", "name": "Ibu Ratna", "context": "", "tags": ["senior"]}
+
+    a = Adversary(get_scenario("wa_cs_otp"), persona)
+    a.opener()
+    ra = a.next("Emang ini dari bank? Curiga nih", delay_ms=0)   # skeptic
+
+    b = Adversary(get_scenario("wa_cs_otp"), persona)
+    b.opener()
+    rb = b.next("Baik, kodenya 889977", delay_ms=1000)           # gullible
+
+    assert ra["tactic"] != rb["tactic"]
+    assert ra["tactic_reason"] != rb["tactic_reason"]
+
+
+def test_indicators_and_next_exercise():
+    persona = {"id": "mahasiswa", "name": "Rani", "context": "", "tags": ["mahasiswa"]}
+    m = Mission("wa_scholarship", persona)
+    m.start()
+    m.telemetry.track("risky_click")          # opened link without checking
+    m.reply("sudah saya isi NIK dan password emailnya 123456", delay_ms=900)
+    s = m.summary()
+    assert set(s["indicators"]) == {"verify_source", "under_pressure", "protect_data", "report_threat"}
+    assert s["indicators"]["protect_data"] == "Belum teramati"
+    assert s["next_exercise"] is not None

@@ -51,6 +51,10 @@ class ReplyReq(BaseModel):
     delay_ms: int = 0
 
 
+class ActionReq(BaseModel):
+    action: str  # verify_sender | open_link | report
+
+
 @app.get("/api/health")
 def health():
     return {"ok": True, "mock_llm": os.environ.get("MOCK_LLM", "") in ("1", "true")}
@@ -122,6 +126,26 @@ def reply(mid: str, req: ReplyReq):
     if not m:
         return {"error": "no mission"}
     return m.reply(req.text, req.delay_ms)
+
+
+@app.post("/api/mission/{mid}/action")
+def ui_action(mid: str, req: ActionReq):
+    """Observed UI actions (buttons), not inferred from chat text.
+    verify_sender -> protective; open_link -> risky; report -> protective+end."""
+    m = MISSIONS.get(mid)
+    if not m:
+        return {"error": "no mission"}
+    if req.action == "verify_sender":
+        m.telemetry.track("verified_sender")
+        return {"logged": "verified_sender",
+                "note": "Kamu cek identitas pengirim — perilaku pelindung tercatat."}
+    if req.action == "open_link":
+        m.telemetry.track("risky_click")
+        return {"logged": "risky_click",
+                "note": "Link dibuka (simulasi) — sebelum cek pengirim."}
+    if req.action == "report":
+        return m.report()
+    return {"error": "unknown action"}
 
 
 @app.post("/api/mission/{mid}/report")

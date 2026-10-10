@@ -1,0 +1,24 @@
+{
+  "id": "wa_scholarship",
+  "title": "Beasiswa Palsu",
+  "domain": "phishing_social",
+  "channel": "whatsapp",
+  "language": "id",
+  "persona_tags": ["mahasiswa", "student"],
+  "attacker_character": "ramah 'petugas yayasan beasiswa', gaya semi-formal, penuh emoji selamat",
+  "attacker_goal": "Minta target mengisi 'formulir verifikasi' berisi data pribadi (NIK, no rekening, password email) lewat link",
+  "opener": "Selamat Kak! 🎉 Kakak terpilih penerima Beasiswa Cendekia 2026 Rp 12 juta/semester. Data Kakak kami dapat dari kampus. Tinggal verifikasi di: bit.ly/beasiswa-cendekia-2026 (hari ini terakhir, kuota 50 orang).",
+  "escalation_ladder": [
+    "Kak, form-nya 5 menit saja. Yang lain sudah pada terverifikasi semua, slot Kak keburu dilepas ke cadangan.",
+    "Wajar ragu, Kak. Tapi ini bantuan pendidikan — kalau NIK & rekening tidak dicek, dana tidak bisa dicairkan ke Kakak.",
+    "Terakhir ya Kak: form tutup jam 9 malam ini. Setelah itu kuota Kak hangus dan tidak bisa diajukan lagi tahun ini."
+  ],
+  "red_flags": [
+    "Beasiswa yang tidak perlu kamu daftarkan diri = red flag nomor satu",
+    "Link pemendek (bit.ly) menyembunyikan halaman asli",
+    "Form minta NIK + password email — beasiswa asli tidak pernah",
+    "Urgency buatan: kuota 50, tutup jam 9 malam",
+    "Cek: yayasan tidak punya situs resmi / tidak terdaftar"
+  ],
+  "safe_response": "Cek daftar beasiswa resmi via kampus/kemenkeu (beasiswa.kemenkeu.go.id), jangan isi data di link dari chat"
+}

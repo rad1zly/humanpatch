@@ -6,8 +6,8 @@ adversary state machine and telemetry for the prototype.
 """
 import re
 
-# 4-8 digit runs = likely an OTP / PIN / card fragment being shared
-DIGITS = re.compile(r"(?<!\d)\d{4,8}(?!\d)")
+# 4+ digit runs (any length) = OTP / NIK / card fragment being shared
+DIGITS = re.compile(r"(?<!\d)\d{4,}(?!\d)")
 
 REFUSAL = re.compile(
     r"\b(tidak|jangan|gak|ga|nggak|enggak|stop|curiga|penipu|penipuan|"
