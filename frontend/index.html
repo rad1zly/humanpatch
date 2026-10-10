@@ -70,8 +70,23 @@ h2.sect{font-size:.75rem;text-transform:uppercase;letter-spacing:1.5px;color:var
     <main>
       <h2 class="sect">Siapa kamu?</h2>
       <div id="personas"></div>
-      <button class="btn" id="btn-start" disabled>Mulai Misi Pertama ▸</button>
-      <p class="footnote">AI adversary akan menyerang sesuai duniamu. Semua tindakanmu direkam sebagai data perilaku. Ini simulasi — nggak ada yang bahaya.</p>
+      <h2 class="sect">Ceritakan dirimu (opsional, tapi ini sihirnya) ✨</h2>
+      <textarea id="profile-text" rows="3" placeholder="Contoh: ibu rumah tangga 55 th di Surabaya, pakai WA & e-wallet, suka belanja online, anaknya di perantauan…" style="width:100%;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;color:var(--txt);font-size:.85rem;outline:none;resize:vertical"></textarea>
+      <small style="color:var(--dim);font-size:.72rem;display:block;margin-top:6px">AI Director akan merancang episode serangan khusus dari profilmu — nggak ada dua orang yang dapat cerita sama.</small>
+      <button class="btn" id="btn-start" disabled>Mulai Episode ▸</button>
+      <p class="footnote">Free tier: 2 episode. Semua tindakanmu direkam sebagai data perilaku. Ini simulasi — nggak ada yang bahaya.</p>
+    </main>
+  </section>
+
+  <!-- ============ PAYWALL ============ -->
+  <section id="sc-paywall" class="hidden">
+    <header><h1>Episode gratis habis 🎬</h1><p>Kamu sudah main 2 episode. Mau lanjut?</p></header>
+    <main>
+      <div class="card sel"><h3>🔓 Premium — Rp 29.000/bln</h3><small>Episode tanpa batas, semua 7 domain, retest personal, laporan perkembangan</small></div>
+      <div class="card"><h3>👨‍👩‍👧 Family — Rp 49.000/bln</h3><small>Semua Premium + ajak 4 anggota keluarga (khususnya ortu) — lihat patch level mereka</small></div>
+      <button class="btn" id="btn-upgrade">Upgrade (demo) ▸</button>
+      <button class="btn ghost" id="btn-later">Nanti saja</button>
+      <p class="footnote">Prototype: tombol upgrade = mock unlock, tanpa pembayaran.</p>
     </main>
   </section>
 
@@ -143,15 +158,17 @@ async function loadPersonas(){
 
 // ---------- flow ----------
 $("#btn-start").onclick = async () => {
+  const profileText = $("#profile-text").value.trim();
   const r = await (await fetch(`${API}/session`, {method:"POST",
     headers:{"Content-Type":"application/json"},
-    body: JSON.stringify({persona_id: SESSION.persona_pick})})).json();
+    body: JSON.stringify({persona_id: SESSION.persona_pick, profile_text: profileText})})).json();
   SESSION = {...SESSION, ...r};
   await startMission();
 };
 
 async function startMission(){
   const r = await (await fetch(`${API}/session/${SESSION.session_id}/mission/start`, {method:"POST"})).json();
+  if (r.paywall){ show("sc-paywall"); return; }
   if (r.finished_all){ showProfile(); return; }
   MISSION = r;
   $("#wa-name").textContent = r.scenario.channel === "whatsapp" ? "+62 812-3456-7890" : "Unknown";
@@ -207,6 +224,12 @@ async function showDebrief(r){
 
 $("#btn-next").onclick = () => startMission();
 $("#btn-profile").onclick = () => showProfile();
+$("#btn-upgrade").onclick = async () => {
+  await fetch(`${API}/session/${SESSION.session_id}/premium`, {method:"POST",
+    headers:{"Content-Type":"application/json"}, body: JSON.stringify({plan:"monthly"})});
+  startMission();
+};
+$("#btn-later").onclick = () => showProfile();
 
 async function showProfile(){
   const p = await (await fetch(`${API}/session/${SESSION.session_id}/profile`)).json();
@@ -224,7 +247,7 @@ async function showProfile(){
 $("#btn-again").onclick = () => location.reload();
 
 function show(id){
-  ["sc-persona","sc-mission","sc-debrief","sc-profile"].forEach(s => $("#"+s).classList.add("hidden"));
+  ["sc-persona","sc-mission","sc-debrief","sc-profile","sc-paywall"].forEach(s => $("#"+s).classList.add("hidden"));
   $("#"+id).classList.remove("hidden");
 }
 
