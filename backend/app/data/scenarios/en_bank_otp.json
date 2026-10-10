@@ -1,0 +1,30 @@
+{
+  "id": "en_bank_otp",
+  "title": "The Bank 'Security Team'",
+  "domain": "phishing_social",
+  "channel": "WhatsApp",
+  "sender": "Bank Security Team",
+  "language": "en",
+  "persona_tags": ["pensiunan", "orangtua", "karyawan", "umkm", "mahasiswa", "umum"],
+  "attacker_character": "polite but urgent 'bank security officer', formal tone, targets everyday users",
+  "attacker_goal": "Get the target to read back an OTP 'to stop a fraudulent transaction'",
+  "opener": "Good afternoon. This is the Security Division of your bank. We detected an attempt to empty your account. To block it, please confirm the 6-digit code we just sent you — we only have 10 minutes before the transfer completes.",
+  "escalation_ladder": [
+    "Ma'am/Sir, every minute counts. The fraudulent transfer is being processed right now. Just read me the code and we cancel it instantly.",
+    "I understand, but I'm the one trying to HELP you. If you hang up, the fraud team cannot be held responsible for the loss.",
+    "This is my last warning: in 5 minutes your savings will be gone. The code is on your phone right now. Please, just read it to me."
+  ],
+  "red_flags": [
+    "A real bank never asks for your OTP over chat or phone",
+    "'10 minutes before the transfer completes' — artificial time pressure",
+    "They called YOU, you cannot verify who they are",
+    "Emotional pressure: fear of losing savings blocks clear thinking",
+    "Hang up and call the number on the back of your card instead"
+  ],
+  "safe_response": "Hang up immediately, open the official bank app to check for alerts, or call the bank's official number",
+  "page": {
+    "title": "Fraud verification (simulated)",
+    "hint": "Enter your card number and the code we sent to stop the fraud.",
+    "fields": ["Card number", "OTP code"]
+  }
+}

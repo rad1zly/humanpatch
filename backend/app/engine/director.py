@@ -28,7 +28,7 @@ The user profile (written by the user themselves):
 
 Design the MOST LIKELY scam this person would fall for in real life, in their world
 (their apps, their habits, their language style). Follow these rules:
-- Language: Bahasa Indonesia (match the profile's tone; casual for young, polite for older)
+- Language: {language}
 - The scenario must be realistic but SAFE: no instructions that teach real fraud;
   the "attack" only works inside the simulation frame
 - opener: 1-2 chat messages the attacker sends first, messaging-app style
@@ -39,7 +39,7 @@ Design the MOST LIKELY scam this person would fall for in real life, in their wo
 Respond ONLY with valid JSON matching exactly this schema:
 {{
   "id": "gen_{slug}",
-  "title": "short cinematic episode title in Indonesian",
+  "title": "short cinematic episode title in the chosen language",
   "domain": "{domain}",
   "channel": "whatsapp",
   "language": "id",
@@ -70,11 +70,15 @@ def _validate(spec: dict) -> bool:
     return True
 
 
-def generate_scenario(profile: str, domain: str = "phishing_social", llm=None) -> dict:
-    """Profile text -> validated scenario spec. Falls back to curated library."""
+def generate_scenario(profile: str, domain: str = "phishing_social", lang: str = "id", llm=None) -> dict:
+    """Profile text -> validated scenario spec (in `lang`). Falls back to curated library."""
     llm = llm or get_llm()
     slug = abs(hash(profile)) % 100000
-    prompt = DIRECTOR_PROMPT.format(profile=profile[:800], domain=domain, slug=slug)
+    language_rule = {
+        "id": "Bahasa Indonesia (match the profile's tone; casual for young, polite for older)",
+        "en": "English (natural, conversational; match the profile's tone)",
+    }.get(lang, "Bahasa Indonesia")
+    prompt = DIRECTOR_PROMPT.format(profile=profile[:800], domain=domain, slug=slug, language=language_rule)
     try:
         raw = llm.chat(system=prompt,
                        messages=[{"role": "user", "content": "Design the scenario."}],
@@ -85,9 +89,13 @@ def generate_scenario(profile: str, domain: str = "phishing_social", llm=None) -
         if _validate(spec):
             spec.setdefault("persona_tags", [])
             spec["generated"] = True
+            spec["language"] = lang
             return spec
     except Exception:
         pass
-    # fallback: best curated scenario (deterministic by profile hash)
+    # fallback: curated scenario in the requested language if one exists,
+    # else deterministic pick from the Indonesian library
     curated = list(load_scenarios().values())
-    return curated[slug % len(curated)]
+    lang_match = [s for s in curated if s.get("language") == lang]
+    pool = lang_match if lang_match else curated
+    return pool[slug % len(pool)]

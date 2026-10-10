@@ -1,44 +1,44 @@
 [
   {
     "id": "mahasiswa",
-    "name": "Mahasiswa",
-    "context": "Tawaran beasiswa fiktif",
     "tags": ["mahasiswa"],
-    "language": "id"
+    "language": "id",
+    "name": {"id": "Mahasiswa", "en": "University student"},
+    "context": {"id": "Tawaran beasiswa fiktif", "en": "Fake scholarship offer"}
   },
   {
     "id": "umkm",
-    "name": "Pedagang online",
-    "context": "Pembeli palsu & QRIS",
     "tags": ["umkm"],
-    "language": "id"
+    "language": "id",
+    "name": {"id": "Pedagang online", "en": "Online seller"},
+    "context": {"id": "Pembeli palsu & QRIS", "en": "Fake buyer & QRIS refund"}
   },
   {
     "id": "karyawan",
-    "name": "Karyawan swasta",
-    "context": "Slip gaji & HR palsu",
     "tags": ["karyawan"],
-    "language": "id"
+    "language": "id",
+    "name": {"id": "Karyawan swasta", "en": "Office employee"},
+    "context": {"id": "Slip gaji & HR palsu", "en": "Fake payroll & HR"}
   },
   {
     "id": "orangtua",
-    "name": "Orang tua",
-    "context": "E-wallet & sekolah",
     "tags": ["orangtua"],
-    "language": "id"
+    "language": "id",
+    "name": {"id": "Orang tua", "en": "Parent"},
+    "context": {"id": "E-wallet & sekolah", "en": "E-wallet & school fees"}
   },
   {
     "id": "pensiunan",
-    "name": "Pensiunan",
-    "context": "Bantuan & transfer",
     "tags": ["pensiunan"],
-    "language": "id"
+    "language": "id",
+    "name": {"id": "Pensiunan", "en": "Retiree"},
+    "context": {"id": "Bantuan & transfer", "en": "Benefit & transfer scam"}
   },
   {
     "id": "umum",
-    "name": "Langsung mulai",
-    "context": "Hadiah kuota umum",
     "tags": ["umum"],
-    "language": "id"
+    "language": "id",
+    "name": {"id": "Langsung mulai", "en": "Just start"},
+    "context": {"id": "Hadiah kuota umum", "en": "Generic prize scam"}
   }
 ]

@@ -47,8 +47,8 @@ class Mission:
             self.director.record(self)
         return {"finished": True, "outcome": self.outcome}
 
-    def summary(self) -> dict:
-        s = self.telemetry.behavior_score()
+    def summary(self, lang: str = "id") -> dict:
+        s = self.telemetry.behavior_score(lang)
         return {**s, "scenario": self.scenario["id"], "outcome": self.outcome}
 
 
@@ -57,19 +57,23 @@ class MissionDirector:
     keeps history for cross-mission retest (same weakness, different skin).
 
     custom_profile: free-form self-description -> Director generates bespoke
-    scenarios on the fly (one per next_mission call)."""
+    scenarios on the fly (one per next_mission call).
+    lang: output language. Curated scenarios are Indonesian; for any other
+    language the Director generates the scenario in that language."""
 
-    def __init__(self, persona: dict, custom_profile: str | None = None):
+    def __init__(self, persona: dict, custom_profile: str | None = None, lang: str = "id"):
         self.persona = persona
         self.custom_profile = custom_profile
-        self.queue = [] if custom_profile else scenarios_for_persona(persona)
+        self.lang = lang
+        self.queue = [] if (custom_profile or lang != "id") else scenarios_for_persona(persona)
         self.results = []
 
     def next_mission(self) -> Mission | None:
-        if self.custom_profile:
+        if self.custom_profile or self.lang != "id":
             # a fresh generated scenario each call — different skin, same person
             from .director import generate_scenario as _gen
-            spec = _gen(self.custom_profile)
+            ctx = self.custom_profile or f"{self.persona.get('name', {})} — {self.persona.get('context', '')}"
+            spec = _gen(ctx, lang=self.lang)
             return Mission(spec["id"], self.persona, scenario=spec)
         while self.queue:
             scenario = self.queue.pop(0)
@@ -77,4 +81,4 @@ class MissionDirector:
         return None
 
     def record(self, mission: Mission):
-        self.results.append(mission.summary())
+        self.results.append(mission.summary(lang=getattr(self, "lang", "id")))

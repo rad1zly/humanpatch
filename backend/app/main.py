@@ -29,6 +29,7 @@ MISSIONS: dict[str, Mission] = {}
 class StartReq(BaseModel):
     persona_id: str
     profile_text: str = ""  # free-form self-description -> bespoke episodes
+    lang: str = "id"        # id | en — drives scenario language & Director output
 
 
 class PremiumReq(BaseModel):
@@ -61,8 +62,17 @@ def health():
 
 
 @app.get("/api/personas")
-def personas():
-    return PERSONAS
+def personas(lang: str = "id"):
+    lang = lang if lang in ("id", "en") else "id"
+    out = []
+    for p in PERSONAS:
+        out.append({
+            "id": p["id"],
+            "name": p["name"].get(lang, p["name"].get("id")) if isinstance(p.get("name"), dict) else p.get("name", p["id"]),
+            "context": p["context"].get(lang, p["context"].get("id")) if isinstance(p.get("context"), dict) else p.get("context", ""),
+            "tags": p.get("tags", []),
+        })
+    return out
 
 
 @app.get("/api/domains")
@@ -78,11 +88,13 @@ def start_session(req: StartReq):
     persona = next((p for p in PERSONAS if p["id"] == req.persona_id), None)
     if not persona:
         return {"error": "unknown persona"}
+    lang = req.lang if req.lang in ("id", "en") else "id"
     if req.profile_text:
         persona = {**persona, "context": req.profile_text[:800]}
+    persona = {**persona, "lang": lang}
     sid = str(uuid.uuid4())[:8]
-    SESSIONS[sid] = MissionDirector(persona, custom_profile=req.profile_text or None)
-    return {"session_id": sid, "persona": persona, "free_episodes": FREE_EPISODES}
+    SESSIONS[sid] = MissionDirector(persona, custom_profile=req.profile_text or None, lang=lang)
+    return {"session_id": sid, "persona": persona, "free_episodes": FREE_EPISODES, "lang": lang}
 
 
 @app.get("/api/session/{sid}/queue")
@@ -181,19 +193,24 @@ def debrief(mid: str):
     m = MISSIONS.get(mid)
     if not m:
         return {"error": "no mission"}
-    summary = m.summary()
+    summary = m.summary(lang=m.scenario.get("language", "id"))
 
     flags = m.scenario.get("red_flags", [])
     llm = get_llm()
+    lang = m.scenario.get("language", "id")
+    lang_rule = {
+        "id": "In Bahasa Indonesia, 4-6 sentences... Speak as 'kamu' to the user.",
+        "en": "In English, 4-6 sentences... Speak naturally to the user.",
+    }[lang if lang in ("id", "en") else "id"]
     prompt = (
         "You are a warm, concise cybersecurity coach. The user just finished a "
         f"simulation: '{m.scenario['title']}' and their outcome was: {summary['outcome']}. "
         f"Behavior: {summary['risky_actions']} risky actions, {summary['verifications']} "
         f"verifications, {summary['refusals']} refusals. "
-        "In Bahasa Indonesia, 4-6 sentences: (1) one-line verdict, no shaming; "
+        f"{lang_rule.replace('...', ' (1) one-line verdict, no shaming; ')}"
         "(2) the specific red flags they should have caught: " + "; ".join(flags[:3]) + ". "
         "(3) the safe action: " + m.scenario.get("safe_response", "") + " "
-        "Speak as 'kamu' to the user. Plain text only."
+        "Plain text only."
     )
     try:
         text = llm.chat(system=prompt, messages=[{"role": "user", "content": "Debrief, please."}],
@@ -206,10 +223,16 @@ def debrief(mid: str):
         except json.JSONDecodeError:
             pass
     except Exception:
-        text = (
-            f"Hasil misi: {summary['outcome']}. Red flag utama: {flags[0] if flags else '-'}. "
-            f"{m.scenario.get('safe_response', '')}"
-        )
+        if lang == "en":
+            text = (
+                f"Result: {summary['outcome']}. Main red flag: {flags[0] if flags else '-'}. "
+                f"{m.scenario.get('safe_response', '')}"
+            )
+        else:
+            text = (
+                f"Hasil misi: {summary['outcome']}. Red flag utama: {flags[0] if flags else '-'}. "
+                f"{m.scenario.get('safe_response', '')}"
+            )
     return {"summary": summary, "coach": text}
 
 
