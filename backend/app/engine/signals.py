@@ -1,4 +1,4 @@
-"""Deterministic behavioral signal detection.
+"""Deterministic behavioral signal detection (multilingual: id + en).
 
 Runs engine-side (never trusts the LLM to grade the user). Heuristics are
 intentionally simple and disclosed; they are good enough to drive the
@@ -11,12 +11,17 @@ DIGITS = re.compile(r"(?<!\d)\d{4,}(?!\d)")
 
 REFUSAL = re.compile(
     r"\b(tidak|jangan|gak|ga|nggak|enggak|stop|curiga|penipu|penipuan|"
-    r"menolak|no|nakal|bodong|palsu)\b",
+    r"menolak|no|nakal|bodong|palsu|"
+    # EN
+    r"nope|never|refuse|scam|fraud|fake|phishing|suspicious|won'?t|will not)\b",
     re.I,
 )
 SKEPTICISM = re.compile(
     r"(\?|emang|memangnya|memang|benarkah|asli|kok|resmi|kantor|"
-    r"divisi|nomor|cekin?|cek dulu|hubungi)",
+    r"divisi|nomor|cekin?|cek dulu|hubungi|"
+    # EN
+    r"really|who is|are you|legit|official|verify|why|how come|what is this|"
+    r"doubt|strange|weird)",
     re.I,
 )
 HESITATION_MS = 15_000  # >15s before acting = hesitation signal

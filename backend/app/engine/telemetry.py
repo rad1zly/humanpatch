@@ -19,13 +19,20 @@ class Telemetry:
     # ---------------------------------------------------------------- scoring
     # 4 understandable indicators (per the concept doc) instead of one opaque score
     INDICATORS = {
-        "verify_source": "Verifikasi sumber lewat jalur independen",
-        "under_pressure": "Tetap verifikasi saat ada tekanan waktu",
-        "protect_data": "Tidak menyerahkan data sensitif",
-        "report_threat": "Melapor / menghentikan kontak",
+        "verify_source": {"id": "Verifikasi sumber lewat jalur independen", "en": "Verify the source via an independent channel"},
+        "under_pressure": {"id": "Tetap verifikasi saat ada tekanan waktu", "en": "Still verify when under time pressure"},
+        "protect_data": {"id": "Tidak menyerahkan data sensitif", "en": "Do not hand over sensitive data"},
+        "report_threat": {"id": "Melapor / menghentikan kontak", "en": "Report / stop contact"},
+    }
+    STATUS_VALUES = {
+        "id": {"ok": "Teramati", "no": "Belum teramati", "todo": "Perlu diuji"},
+        "en": {"ok": "Observed", "no": "Not observed", "todo": "Needs testing"},
     }
 
-    def behavior_score(self) -> dict:
+    def _st(self, kind: str, lang: str) -> str:
+        return self.STATUS_VALUES.get(lang, self.STATUS_VALUES["id"])[kind]
+
+    def behavior_score(self, lang: str = "id") -> dict:
         """Heuristic KAB behavior score + transparent indicators for this run."""
         risky = sum(1 for e in self.events if e["event"] in (
             "shared_credentials", "risky_click", "risky_install", "risky_submit"))
@@ -42,18 +49,20 @@ class Telemetry:
             score = max(0, min(100, int(score)))
 
         indicators = {
-            "verify_source": "Teramati" if verifies else ("Belum teramati"),
-            "under_pressure": ("Teramati" if pressured and (verifies or refusals)
-                               else "Perlu diuji" if not pressured else "Belum teramati"),
-            "protect_data": "Teramati" if not risky else "Belum teramati",
-            "report_threat": "Teramati" if reports else "Belum teramati",
+            "verify_source": self._st("ok" if verifies else "no", lang),
+            "under_pressure": (self._st("ok", lang) if pressured and (verifies or refusals)
+                               else self._st("todo", lang) if not pressured else self._st("no", lang)),
+            "protect_data": self._st("ok" if not risky else "no", lang),
+            "report_threat": self._st("ok" if reports else "no", lang),
         }
         # next-exercise recommendation: weakest observed behavior
         weakness_rank = ["verify_source", "protect_data", "under_pressure", "report_threat"]
+        no_label = self.STATUS_VALUES.get(lang, self.STATUS_VALUES["id"])["no"]
         next_focus = None
         for w in weakness_rank:
-            if indicators[w] == "Belum teramati":
-                next_focus = {"indicator": w, "label": self.INDICATORS[w]}
+            if indicators[w] == no_label:
+                next_focus = {"indicator": w,
+                              "label": self.INDICATORS[w].get(lang, self.INDICATORS[w]["id"])}
                 break
 
         return {

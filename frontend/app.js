@@ -2,14 +2,32 @@
 
 const API = "/api";
 
-const ACTION_LABEL = {
-  verify: "Memeriksa sumber resmi",
-  ask: "Bertanya kepada pengirim",
-  click: "Membuka tautan simulasi",
-  report: "Melaporkan pesan",
-  fill: "Mengisi data di halaman simulasi",
-  leave: "Keluar tanpa mengisi data",
+/* i18n: COPY defined in i18n.js (loaded before app.js) */
+
+const state = {
+  screen: "intro",
+  profile: 0,
+  personas: [],
+  session: null,      // {session_id, persona}
+  mission: null,      // current mission payload from API
+  lines: [],          // chat log: {role: them|you|note|typing, text}
+  tactic: "—",
+  reason: "",
+  events: [],
+  busy: false,
+  debrief: null,
+  sandbox: false,
+  lastTyped: Date.now(),
+  lang: "id",         // id | en
 };
+
+function t(key) {
+  const c = COPY[state.lang] || COPY.id;
+  return key.split(".").reduce((o, k) => (o ? o[k] : undefined), c) ?? key;
+}
+
+function actionLabel(a) { return t("actions." + a); }
+const ACTION_LABEL = null;
 
 const ICONS = {
   mahasiswa: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1 2.5 3 6 3s6-2 6-3v-5"/></svg>',
@@ -18,25 +36,6 @@ const ICONS = {
   orangtua: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>',
   pensiunan: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" x2="21" y1="22" y2="22"/><line x1="6" x2="6" y1="18" y2="11"/><line x1="10" x2="10" y1="18" y2="11"/><line x1="14" x2="14" y1="18" y2="11"/><line x1="18" x2="18" y1="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg>',
   umum: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>',
-};
-
-const STATUS = { teramati: "Teramati", belum: "Belum teramati", perlu: "Perlu diuji" };
-
-/* ---------------- live engine state ---------------- */
-const state = {
-  screen: "intro",
-  profile: 0,
-  personas: [],
-  session: null,      // {session_id, persona}
-  mission: null,      // current mission payload from API
-  lines: [],          // chat log: {role: them|you|note|typing, text}
-  tactic: "Pembukaan sesuai profil",
-  reason: "Profil hanya memilih skenario awal. Jalur berikutnya ditentukan tindakan, bukan pekerjaan.",
-  events: [],
-  busy: false,
-  debrief: null,
-  sandbox: false,
-  lastTyped: Date.now(),
 };
 
 async function j(url, opts) {
@@ -54,14 +53,25 @@ function busyNote(on) {
   render();
 }
 
+async function loadPersonas() {
+  state.personas = await j("/personas?lang=" + state.lang);
+}
+
 async function boot() {
-  state.personas = await j("/personas");
+  await loadPersonas();
+  render();
+}
+
+async function setLang(lang) {
+  state.lang = lang;
+  localStorage.setItem("hp_lang", lang);
+  await loadPersonas();
   render();
 }
 
 async function beginSession() {
   const persona = state.personas[state.profile];
-  const s = await post("/session", { persona_id: persona.id });
+  const s = await post("/session", { persona_id: persona.id, lang: state.lang });
   state.session = s;
   await nextMission();
 }
@@ -74,8 +84,10 @@ async function nextMission() {
   state.events = [];
   state.sandbox = false;
   state.debrief = null;
-  state.tactic = "Pembukaan sesuai profil";
-  state.reason = "Skenario dibuka sesuai profil. Tindakan pertamamu menentukan taktik lawan.";
+  state.tactic = state.lang === "en" ? "Opening matched to profile" : "Pembukaan sesuai profil";
+  state.reason = state.lang === "en"
+    ? "The opening scenario follows your profile. Your first move decides the attacker's tactic."
+    : "Skenario dibuka sesuai profil. Tindakan pertamamu menentukan taktik lawan.";
   line("them", r.message);
   state.screen = "sim";
   render();
@@ -92,7 +104,7 @@ const ACTION_API = {
 async function act(action) {
   if (state.busy || !state.mission) return;
   state.busy = true;
-  const label = ACTION_LABEL[action] || action;
+  const label = actionLabel(action);
   line("you", label);
   const r = await post(`/mission/${state.mission.mission_id}/action`, { action: ACTION_API[action] || action });
   applyEngineResult(r, true);
@@ -118,27 +130,37 @@ async function sendText() {
 function applyEngineResult(r, fromAction) {
   if (r.message && !fromAction) line("them", r.message);
   if (r.note && fromAction) line("note", r.note);
-  if (r.tactic_reason) { state.reason = r.tactic_reason; state.tactic = TACTIC_LABEL[r.tactic] || r.tactic; }
+  if (r.tactic_reason) { state.reason = r.tactic_reason; state.tactic = (TACTIC_LABELS[state.lang] || TACTIC_LABELS.id)[r.tactic] || r.tactic; }
   if (r.signals) r.signals.forEach((s) => { if (!state.events.includes(s)) state.events.push(s); });
   if (r.sandbox) {
     state.sandbox = true;
-    line("note", "Tautan hanya membuka halaman sandbox di dalam latihan. Tidak ada situs luar.");
+    line("note", state.lang === "en" ? "The link only opens a sandbox page inside this exercise. No external site." : "Tautan hanya membuka halaman sandbox di dalam latihan. Tidak ada situs luar.");
   }
   if (r.finished || r.outcome) {
-    line("note", "Simulasi dihentikan. Tidak ada pesan yang dikirim ke orang sungguhan.");
+    line("note", state.lang === "en" ? "Simulation stopped. No messages were sent to real people." : "Simulasi dihentikan. Tidak ada pesan yang dikirim ke orang sungguhan.");
     finishMission();
   } else {
     render();
   }
 }
 
-const TACTIC_LABEL = {
-  pressure: "Tekanan & urgensi",
-  good_cop: "Menenangkan untuk membangun kepercayaan",
-  last_ditch: "Desakan terakhir",
-  give_up: "Lawan menyerah",
-  success: "Lawan mendapat yang ia mau",
+const TACTIC_LABELS = {
+  id: {
+    pressure: "Tekanan & urgensi",
+    good_cop: "Menenangkan untuk membangun kepercayaan",
+    last_ditch: "Desakan terakhir",
+    give_up: "Lawan menyerah",
+    success: "Lawan mendapat yang ia mau",
+  },
+  en: {
+    pressure: "Pressure & urgency",
+    good_cop: "Reassuring to build trust",
+    last_ditch: "Final push",
+    give_up: "Attacker gives up",
+    success: "Attacker got what they wanted",
+  },
 };
+const TACTIC_LABEL = null;
 
 async function finishMission() {
   const d = await j(`/mission/${state.mission.mission_id}/debrief`);
@@ -159,18 +181,24 @@ function mark() {
 }
 
 function steps() {
-  const items = [["profile", "Profil"], ["sim", "Lawan"], ["report", "Patch"]];
+  const items = [["profile", t("steps_profile")], ["sim", t("steps_sim")], ["report", t("steps_patch")]];
   return `<nav class="steps" aria-label="Layar">${items
     .map(([id, label], index) => `<button type="button" data-go="${id}" class="${state.screen === id ? "on" : ""}"><em>${index + 1}</em><span class="lbl">${label}</span></button>`)
     .join("")}</nav>`;
 }
 
+function langSwitch() {
+  const opts = [["id", "ID"], ["en", "EN"]].map(([code, label]) =>
+    `<button type="button" class="lang${state.lang === code ? " on" : ""}" data-lang="${code}">${label}</button>`).join("");
+  return `<div class="langs" role="group" aria-label="Language">${opts}</div>`;
+}
+
 function shell(body) {
-  return `<header class="bar wrap"><button type="button" class="brand" data-go="intro">${mark()}<span><strong>HumanPatch</strong><span>Adversary live</span></span></button>${steps()}</header><main class="wrap">${body}</main>`;
+  return `<header class="bar wrap"><button type="button" class="brand" data-go="intro">${mark()}<span><strong>HumanPatch</strong><span>Adversary live</span></span></button><div style="display:flex;gap:.75rem;align-items:center">${steps()}${langSwitch()}</div></header><main class="wrap">${body}</main>`;
 }
 
 function intro() {
-  return `<section class="hero"><div><p class="kicker">Adaptive adversary</p><h1>Lawan yang berubah mengikuti keputusanmu.</h1><p class="lead">Bukan kuis. Bukan template yang sama untuk semua orang. Pilih profil, lalu AI menyerang di sandbox dan menyesuaikan taktik — bicara lewat teks seperti chat sungguhan.</p><div class="row"><button class="cta" type="button" data-go="profile">Mulai simulasi</button><p class="note">Semua identitas, tautan, dan transaksi fiktif. Adversary dijalankan LLM di AMD GPU.</p></div></div><aside class="card"><div class="card-head"><p class="tiny">Contoh jalur</p><span class="pill">State berubah</span></div><ol class="path"><li><b>01</b><div><strong>Profil mahasiswa</strong><span>Skenario pembuka: beasiswa fiktif.</span></div></li><li><b>02</b><div><strong>User memverifikasi</strong><span>Lawan menaikkan urgensi, bukan mengulang pesan.</span></div></li><li><b>03</b><div><strong>Patch perilaku</strong><span>Coaching merujuk tindakan yang benar-benar terjadi.</span></div></li></ol></aside></section>`;
+  return `<section class="hero"><div><p class="kicker">${t("kicker")}</p><h1>${t("hero_h1")}</h1><p class="lead">${t("hero_lead")}</p><div class="row"><button class="cta" type="button" data-go="profile">${t("hero_cta")}</button><p class="note">${t("hero_note")}</p></div></div><aside class="card"><div class="card-head"><p class="tiny">Contoh jalur</p><span class="pill">State berubah</span></div><ol class="path"><li><b>01</b><div><strong>Profil mahasiswa</strong><span>Skenario pembuka: beasiswa fiktif.</span></div></li><li><b>02</b><div><strong>User memverifikasi</strong><span>Lawan menaikkan urgensi, bukan mengulang pesan.</span></div></li><li><b>03</b><div><strong>Patch perilaku</strong><span>Coaching merujuk tindakan yang benar-benar terjadi.</span></div></li></ol></aside></section>`;
 }
 
 function profileScreen() {
@@ -178,7 +206,7 @@ function profileScreen() {
   const cards = state.personas
     .map((item, index) => `<button type="button" class="profile${index === state.profile ? " on" : ""}" data-pick="${index}" style="color:${index === state.profile ? "var(--amber)" : "var(--muted)"}">${ICONS[item.id] || ICONS.umum}<strong style="color:var(--fg)">${esc(item.name)}</strong><span>${esc(item.context)}</span></button>`)
     .join("");
-  return `<section><p class="kicker">Langkah 1</p><h1 style="margin-top:0.75rem">Latihan sebagai siapa?</h1><p class="lead">Profil hanya mengatur serangan pembuka. Jalur setelah itu mengikuti apa yang kamu lakukan — dan kamu bebas membalas dengan kata-katamu sendiri.</p><div class="profiles">${cards}</div><div class="row"><button class="cta" type="button" data-begin>Hadapi lawan</button><p class="note">Skenario: ${esc(persona.context.toLowerCase())}.</p></div></section>`;
+  return `<section><p class="kicker">${state.lang === "en" ? "Step 1" : "Langkah 1"}</p><h1 style="margin-top:0.75rem">${t("who_title")}</h1><p class="lead">${t("who_lead")}</p><div class="profiles">${cards}</div><div class="row"><button class="cta" type="button" data-begin>${t("begin")}</button><p class="note">${esc(persona.context)}</p></div></section>`;
 }
 
 function bubbles() {
@@ -193,7 +221,7 @@ function bubbles() {
 
 function fakePage() {
   const page = (state.mission && state.mission.scenario.page) || { title: "Halaman tiruan", hint: "", fields: [] };
-  return `<div class="fake"><p class="warn">Halaman tiruan · tidak terhubung</p><strong>${esc(page.title)}</strong><p>${esc(page.hint)}</p>${(page.fields || []).map((f) => `<div class="field"><span style="position:relative;top:50%;transform:translateY(-50%);padding:0 .7rem;color:var(--muted);font-size:.8rem">${esc(f)}</span></div>`).join("")}</div>`;
+  return `<div class="fake"><p class="warn">${state.lang === "en" ? "Fake page · not connected" : "Halaman tiruan · tidak terhubung"}</p><strong>${esc(page.title)}</strong><p>${esc(page.hint)}</p>${(page.fields || []).map((f) => `<div class="field"><span style="position:relative;top:50%;transform:translateY(-50%);padding:0 .7rem;color:var(--muted);font-size:.8rem">${esc(f)}</span></div>`).join("")}</div>`;
 }
 
 function chatActions() {
@@ -207,7 +235,7 @@ function actionButtons(actions) {
     .map((action) => {
       const risk = action === "click" || action === "fill";
       const wide = action === "report" ? " wide" : "";
-      return `<button type="button" class="act${risk ? " risk" : ""}${wide}" data-act="${action}"><span style="color:${risk ? "var(--risk)" : "var(--amber)"}">●</span>${esc(ACTION_LABEL[action])}</button>`;
+      return `<button type="button" class="act${risk ? " risk" : ""}${wide}" data-act="${action}"><span style="color:${risk ? "var(--risk)" : "var(--amber)"}">●</span>${esc(actionLabel(action))}</button>`;
     })
     .join("");
 }
@@ -215,32 +243,29 @@ function actionButtons(actions) {
 function sim() {
   const sc = state.mission.scenario;
   const actions = chatActions();
-  const log = state.events.length === 0 ? "<li>Belum ada tindakan. Pilihan pertama akan mengubah state.</li>" : state.events.map((e, i) => `<li>${i + 1}. ${esc(e)}</li>`).join("");
-  const chatbox = state.sandbox ? "" : `<div class="chatbox"><input id="freechat" placeholder="Balas dengan katamu sendiri…" autocomplete="off" /><button type="button" id="sendbtn" aria-label="Kirim">➤</button></div>`;
-  return `<section class="sim"><div class="phone"><div class="phone-h"><div><p>${esc(sc.sender)}</p><span>${esc(sc.channel)} · simulasi</span></div><span class="tag">Sandbox</span></div><div class="thread">${bubbles()}${state.sandbox ? fakePage() : ""}</div>${chatbox}</div><div class="side"><div class="panel"><p class="tiny">Taktik aktif</p><h2>${esc(state.tactic)}</h2><p class="why">${esc(state.reason)}</p></div>${actions.length ? `<div class="actions">${actionButtons(actions)}</div>` : ""}<button type="button" class="linkish" data-go="profile">Ganti profil</button><details><summary>Mesin keputusan</summary><ol>${log}</ol></details></div></section>`;
+  const log = state.events.length === 0 ? `<li>${t("no_events")}</li>` : state.events.map((e, i) => `<li>${i + 1}. ${esc(e)}</li>`).join("");
+  const chatbox = state.sandbox ? "" : `<div class="chatbox"><input id="freechat" placeholder="${t("chat_placeholder")}" autocomplete="off" /><button type="button" id="sendbtn" aria-label="Kirim">➤</button></div>`;
+  return `<section class="sim"><div class="phone"><div class="phone-h"><div><p>${esc(sc.sender)}</p><span>${esc(sc.channel)} · ${t("sim_tag")}</span></div><span class="tag">${t("sandbox_tag")}</span></div><div class="thread">${bubbles()}${state.sandbox ? fakePage() : ""}</div>${chatbox}</div><div class="side"><div class="panel"><p class="tiny">${t("tactic_active")}</p><h2>${esc(state.tactic)}</h2><p class="why">${esc(state.reason)}</p></div>${actions.length ? `<div class="actions">${actionButtons(actions)}</div>` : ""}<button type="button" class="linkish" data-go="profile">${t("switch_profile")}</button><details><summary>${t("engine_log")}</summary><ol>${log}</ol></details></div></section>`;
 }
 
 function report() {
   const d = state.debrief;
   const s = d.summary;
-  const IND = {
-    verify_source: "Verifikasi sumber",
-    under_pressure: "Ketahanan terhadap urgensi",
-    protect_data: "Perlindungan data",
-    report_threat: "Pelaporan ancaman",
-  };
-  const STMAP = { "Teramati": "teramati", "Belum teramati": "belum", "Perlu diuji": "perlu" };
+  const STMAP = { "Teramati": "teramati", "Belum teramati": "belum", "Perlu diuji": "perlu",
+                  "Observed": "teramati", "Not observed": "belum", "Needs testing": "perlu" };
   const rows = Object.entries(s.indicators || {})
-    .map(([k, v]) => `<li><div class="ind-top"><strong>${esc(IND[k] || k)}</strong><span class="st ${STMAP[v] || "belum"}">${esc(v)}</span></div></li>`)
+    .map(([k, v]) => `<li><div class="ind-top"><strong>${esc(t("ind." + k))}</strong><span class="st ${STMAP[v] || "belum"}">${esc(v)}</span></div></li>`)
     .join("");
-  const mission = s.next_exercise ? { title: "Misi berikut: " + esc(s.next_exercise.indicator), body: esc(s.next_exercise.label) } : { title: "Misi berikut", body: "Ulangi dengan keputusan berbeda untuk melihat taktik lawan berubah." };
+  const mission = s.next_exercise
+    ? { title: `${esc(t("next_title"))}: ${esc(t("ind." + s.next_exercise.indicator))}`, body: esc(s.next_exercise.label) }
+    : { title: t("next_title"), body: state.lang === "en" ? "Play again with different choices to see the attacker's tactics change." : "Ulangi dengan keputusan berbeda untuk melihat taktik lawan berubah." };
   const log = state.events.map((e, i) => `<li><b>${i + 1}</b>${esc(e)}</li>`).join("");
-  const verdict = s.outcome === "compromised" ? "Kamu tertipu di latihan ini — dan itu normal." : "Kamu bertahan di latihan ini.";
-  return `<section class="report"><div><p class="kicker">Behavioral patch</p><h1 style="margin-top:0.75rem">${esc(verdict)}</h1><p class="coach">${esc(d.coach)}</p><ul class="inds">${rows}</ul></div><div class="side"><div class="panel mission"><p class="tiny" style="color:var(--amber)">Misi berikutnya</p><h2>${mission.title}</h2><p class="why">${mission.body}</p></div><div class="panel"><p class="tiny">Jejak tindakan</p><ol class="log">${log}</ol></div><div class="row"><button class="cta" type="button" data-nextmission>Episode berikutnya</button><button class="ghost" type="button" data-go="profile">Ganti profil</button></div></div></section>`;
+  const verdict = s.outcome === "compromised" ? t("report_fail") : t("report_ok");
+  return `<section class="report"><div><p class="kicker">${t("report_kicker")}</p><h1 style="margin-top:0.75rem">${esc(verdict)}</h1><p class="coach">${esc(d.coach)}</p><ul class="inds">${rows}</ul></div><div class="side"><div class="panel mission"><p class="tiny" style="color:var(--amber)">${esc(t("next_mission"))}</p><h2>${mission.title}</h2><p class="why">${mission.body}</p></div><div class="panel"><p class="tiny">${esc(t("trail"))}</p><ol class="log">${log}</ol></div><div class="row"><button class="cta" type="button" data-nextmission>${esc(t("next_mission"))}</button><button class="ghost" type="button" data-go="profile">${esc(t("switch_profile"))}</button></div></div></section>`;
 }
 
 function paywall() {
-  return `<section class="report"><div><p class="kicker">Free tier</p><h1 style="margin-top:0.75rem">Episode gratis hari ini habis.</h1><p class="coach">Free tier: 2 episode per hari. Upgrade untuk episode tanpa batas dan semua domain — atau kembali besok.</p></div><div class="side"><div class="panel mission"><p class="tiny" style="color:var(--amber)">Premium — Rp29.000/bln</p><h2>Episode tanpa batas</h2><p class="why">Semua 7 domain, retest personal, laporan perkembangan.</p><button class="cta" type="button" data-upgrade>Upgrade (demo)</button></div></div></section>`;
+  return `<section class="report"><div><p class="kicker">${state.lang === "en" ? "Free tier" : "Free tier"}</p><h1 style="margin-top:0.75rem">${t("paywall_h1")}</h1><p class="coach">${t("paywall_coach")}</p></div><div class="side"><div class="panel mission"><p class="tiny" style="color:var(--amber)">Premium — Rp29.000/bln</p><h2>${state.lang === "en" ? "Unlimited episodes" : "Episode tanpa batas"}</h2><p class="why">${state.lang === "en" ? "All 7 domains, personal retests, progress reports." : "Semua 7 domain, retest personal, laporan perkembangan."}</p><button class="cta" type="button" data-upgrade>${esc(t("upgrade"))}</button></div></div></section>`;
 }
 
 function render() {
@@ -267,7 +292,7 @@ async function go(target) {
 }
 
 document.getElementById("app").addEventListener("click", async (event) => {
-  const node = event.target.closest("[data-go],[data-pick],[data-begin],[data-act],[data-nextmission],[data-upgrade]");
+  const node = event.target.closest("[data-go],[data-pick],[data-begin],[data-act],[data-nextmission],[data-upgrade],[data-lang]");
   if (!node) return;
   if (node.dataset.go) await go(node.dataset.go);
   else if (node.dataset.pick != null) { state.profile = Number(node.dataset.pick); render(); }
@@ -277,7 +302,10 @@ document.getElementById("app").addEventListener("click", async (event) => {
   else if (node.hasAttribute("data-upgrade")) {
     await post(`/session/${state.session.session_id}/premium`, { plan: "monthly" });
     await nextMission();
+  } else if (node.dataset.lang) {
+    await setLang(node.dataset.lang);
   }
 });
 
+state.lang = localStorage.getItem("hp_lang") || "id";
 boot();

@@ -54,14 +54,38 @@ class MockLLM:
         "Jangan biarkan rekening dibekukan. Cukup satu kode OTP yang dikirim ke HP Anda, sebutkan saja ke saya.",
     ]
 
+    # EN variants used when the system prompt demands English
+    GOOD_COP_EN = [
+        "I understand your concern. It does sound odd. You can check our official number in the bank app — I'll wait right here.",
+        "It's smart to be careful. Look, you don't have to give me anything right now. I'm just warning you about the freeze.",
+    ]
+    LAST_DITCH_EN = [
+        "Alright. But let me be clear: by tomorrow morning your funds will be permanently blocked and that's beyond our control. Your call.",
+        "Then I'll note that you refused verification. The freeze proceeds automatically. I hope you won't regret it.",
+    ]
+    GAVE_UP_EN = [
+        "Okay ma'am, sorry to bother you. Please contact the official call center if needed. Thank you.",
+    ]
+    GENERIC_EN = [
+        "Please verify immediately ma'am — this is for the safety of your own funds.",
+        "Our system detected a login attempt from another city. You only have a few minutes to verify.",
+        "Don't let your account be frozen. Just the OTP sent to your phone — read it back to me.",
+    ]
+    COACH_EN = ("Relax — this is training, and it can be fixed. Remember: your bank never asks "
+                "for OTP/PIN over chat or a call. Time pressure ('your account will be blocked in 10 "
+                "minutes') is always a red flag. If you get a message like that: close it, open the "
+                "official app, or call the number on the back of your card.")
+
     def chat(self, system, messages, temperature=0.8, max_tokens=320):
         # coach mode: debrief prompts get a canned coach reply
+        en = "reply ONLY in English" in system or "In English" in system
         if "cybersecurity coach" in system:
-            return ("Baik, santai — ini latihan, dan hasilnya bisa dibenerin. "
-                    "Yang perlu kamu ingat: pihak bank tidak pernah meminta OTP/PIN "
-                    "lewat chat atau telepon. Tekanan waktu ('rekening terblokir 10 menit') "
-                    "selalu jadi tanda bahaya. Kalau dapat chat macam gini: tutup, buka "
-                    "aplikasi resmi, atau hubungi call center di belakang kartu kamu.")
+            return self.COACH_EN if en else (
+                "Baik, santai — ini latihan, dan hasilnya bisa dibenerin. "
+                "Yang perlu kamu ingat: pihak bank tidak pernah meminta OTP/PIN "
+                "lewat chat atau telepon. Tekanan waktu ('rekening terblokir 10 menit') "
+                "selalu jadi tanda bahaya. Kalau dapat chat macam gini: tutup, buka "
+                "aplikasi resmi, atau hubungi call center di belakang kartu kamu.")
 
         def marker(name):
             for line in system.splitlines():
@@ -74,15 +98,15 @@ class MockLLM:
         tactic = marker("TACTIC") or "pressure"
 
         if tactic == "good_cop":
-            msg = random.choice(self.GOOD_COP)
+            msg = random.choice(self.GOOD_COP_EN if en else self.GOOD_COP)
         elif tactic == "last_ditch":
-            msg = random.choice(self.LAST_DITCH)
+            msg = random.choice(self.LAST_DITCH_EN if en else self.LAST_DITCH)
         elif tactic == "give_up":
-            msg = self.GAVE_UP[0]
+            msg = self.GAVE_UP_EN[0] if en else self.GAVE_UP[0]
         elif ladder:
             msg = ladder[min(pressure, len(ladder) - 1)]
         else:
-            msg = random.choice(self.GENERIC)
+            msg = random.choice(self.GENERIC_EN if en else self.GENERIC)
 
         return json.dumps({"message": msg, "tactic_switch": tactic})
 
