@@ -2,14 +2,16 @@
 import uuid
 
 from .adversary import Adversary
+from .director import generate_scenario
 from .scenarios import get_scenario, scenarios_for_persona
 from .telemetry import Telemetry
 
 
 class Mission:
-    def __init__(self, scenario_id: str, persona: dict, llm=None):
+    def __init__(self, scenario_id: str, persona: dict, llm=None, scenario: dict | None = None):
         self.id = str(uuid.uuid4())[:8]
-        self.scenario = get_scenario(scenario_id)
+        # generated scenarios arrive as full specs; curated ones by id
+        self.scenario = scenario if scenario else get_scenario(scenario_id)
         self.persona = persona
         self.adversary = Adversary(self.scenario, persona, llm=llm)
         self.telemetry = Telemetry(self.scenario["domain"])
@@ -52,14 +54,23 @@ class Mission:
 
 class MissionDirector:
     """Session-level orchestrator: persona -> ordered scenario queue,
-    keeps history for cross-mission retest (same weakness, different skin)."""
+    keeps history for cross-mission retest (same weakness, different skin).
 
-    def __init__(self, persona: dict):
+    custom_profile: free-form self-description -> Director generates bespoke
+    scenarios on the fly (one per next_mission call)."""
+
+    def __init__(self, persona: dict, custom_profile: str | None = None):
         self.persona = persona
-        self.queue = scenarios_for_persona(persona)
+        self.custom_profile = custom_profile
+        self.queue = [] if custom_profile else scenarios_for_persona(persona)
         self.results = []
 
     def next_mission(self) -> Mission | None:
+        if self.custom_profile:
+            # a fresh generated scenario each call — different skin, same person
+            from .director import generate_scenario as _gen
+            spec = _gen(self.custom_profile)
+            return Mission(spec["id"], self.persona, scenario=spec)
         while self.queue:
             scenario = self.queue.pop(0)
             return Mission(scenario["id"], self.persona)

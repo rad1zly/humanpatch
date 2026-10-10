@@ -28,6 +28,22 @@ MISSIONS: dict[str, Mission] = {}
 
 class StartReq(BaseModel):
     persona_id: str
+    profile_text: str = ""  # free-form self-description -> bespoke episodes
+
+
+class PremiumReq(BaseModel):
+    plan: str = "monthly"  # monthly | family
+
+
+@app.post("/api/session/{sid}/premium")
+def go_premium(sid: str, req: PremiumReq):
+    """Mock paywall unlock for the demo (no real billing in the prototype)."""
+    d = SESSIONS.get(sid)
+    if not d:
+        return {"error": "no session"}
+    d.premium = True
+    return {"premium": True, "plan": req.plan,
+            "note": "mock unlock — real billing is post-hackathon"}
 
 
 class ReplyReq(BaseModel):
@@ -50,14 +66,19 @@ def domains():
     return DOMAINS
 
 
+FREE_EPISODES = 2  # freemium: free tier cap (mock paywall for the demo)
+
+
 @app.post("/api/session")
 def start_session(req: StartReq):
     persona = next((p for p in PERSONAS if p["id"] == req.persona_id), None)
     if not persona:
         return {"error": "unknown persona"}
+    if req.profile_text:
+        persona = {**persona, "context": req.profile_text[:800]}
     sid = str(uuid.uuid4())[:8]
-    SESSIONS[sid] = MissionDirector(persona)
-    return {"session_id": sid, "persona": persona}
+    SESSIONS[sid] = MissionDirector(persona, custom_profile=req.profile_text or None)
+    return {"session_id": sid, "persona": persona, "free_episodes": FREE_EPISODES}
 
 
 @app.get("/api/session/{sid}/queue")
@@ -73,6 +94,10 @@ def start_mission(sid: str):
     d = SESSIONS.get(sid)
     if not d:
         return {"error": "no session"}
+    # freemium gate: free tier caps at FREE_EPISODES missions
+    if len(d.results) >= FREE_EPISODES and not getattr(d, "premium", False):
+        return {"paywall": True, "played": len(d.results),
+                "msg": "Free tier: 2 episode per hari. Upgrade untuk episode tanpa batas."}
     m = d.next_mission()
     if not m:
         return {"finished_all": True}
