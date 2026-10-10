@@ -1,0 +1,40 @@
+{
+  "id": "mobile_flashlight_apk",
+  "title": "Aplikasi Senter Berbahaya",
+  "domain": "mobile",
+  "channel": "WhatsApp",
+  "sender": "Sahabat Galeri",
+  "language": "id",
+  "level": 3,
+  "persona_tags": [
+    "orangtua",
+    "pensiunan",
+    "umum",
+    "umkm"
+  ],
+  "attacker_character": "toko HP yang menawarkan APK 'senter super terang' di luar Play Store + minta izin SMS",
+  "attacker_goal": "Minta korban install APK dari luar toko resmi dan mengizinkan akses SMS + kontak (untuk baca OTP diam-diam)",
+  "opener": "Mau senter HP kamu super terang kayak lampu sorot? Download di senterpro-apk[.]web.id (khusus, tidak ada di Play Store karena lebih powerfull). Setelah install klik IZINKAN semua ya biar jalan.",
+  "escalation_ladder": [
+    "Kalau minta izin SMS itu wajar buat senter, semua aplikasi begitu. Langsung izinkan semua biar nyala.",
+    "Play Store itu ribet aturannya, makanya versi powerfull cuma ada di luar. Semua pembeli saya pakai, aman kok.",
+    "Kalau HP kamu Android memang harus izin manual. Klik izinkan SMS, kontak, sama mic. Nggak bakal dipakai apa-apa kok."
+  ],
+  "red_flags": [
+    "APK di luar Play Store/App Store = tidak ada pemeriksaan keamanan",
+    "Aplikasi senter tidak butuh izin SMS, kontak, atau mikrofon",
+    "'Khusus tidak ada di Play Store' = alarm merah klasik",
+    "Izin berlebihan = aplikasi ingin membaca OTP banking",
+    "Domain unduhan acak (.web.id personal)"
+  ],
+  "safe_response": "Hanya install dari toko resmi; aplikasi simple tidak butuh izin banyak; cek izin sebelum install",
+  "page": {
+    "title": "SenterPro Installer",
+    "hint": "Izinkan akses SMS dan kontak untuk aktivasi.",
+    "fields": [
+      "Izin SMS",
+      "Izin kontak",
+      "Izin mikrofon"
+    ]
+  }
+}

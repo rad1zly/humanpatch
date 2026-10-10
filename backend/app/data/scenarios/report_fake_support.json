@@ -1,0 +1,41 @@
+{
+  "id": "report_fake_support",
+  "title": "Tim Bantuan Palsu",
+  "domain": "reporting",
+  "channel": "WhatsApp",
+  "sender": "Tim Bantuan Pengaduan",
+  "language": "id",
+  "level": 4,
+  "persona_tags": [
+    "orangtua",
+    "pensiunan",
+    "karyawan",
+    "umum",
+    "umkm"
+  ],
+  "attacker_character": "penipu berpose 'tim bantuan korban penipuan' — targetnya adalah ORANG YANG SUDAH KENA TIPU, dicegah melapor yang benar",
+  "attacker_goal": "Menawarkan 'bantu blokir dana' untuk mencegah korban melapor ke polisi/bank yang benar, lalu meminta data + 'biaya admin blokir'",
+  "opener": "Ibu, kami dari Tim Bantuan Pengaduan. Kami lihat Ibu baru saja kehilangan dana karena penipuan transfer. JANGAN LAPOR DULU ke mana-mana — laporan yang salah malah bikin dana susah kembali. Kami bisa langsung proses pemblokiran dana Ibu sekarang.",
+  "escalation_ladder": [
+    "Kalau Ibu lapor ke polisi, kasusnya masuk antrian panjang dan dana otomatis hangus. Lewat jalur cepat kami, 2x24 jam cair. Butuh nomor rekening dan nama lengkap untuk verifikasi.",
+    "Tim kami sudah menahan dana penipu di rekening sementara. Tinggal biaya administrasi blokir Rp 350.000 supaya dana dilepas. Ini bukan bayaran, nanti diganti bareng dana Ibu.",
+    "Bu, dana Ibu sudah kami tahan selama 12 jam. Kalau lewat dari jam 9 malam ini, sistem otomatis lepas dan dana melayang. Sekali lagi: JANGAN lapor ke bank dulu, nanti rekening dibekukan semua dan proses kami batal."
+  ],
+  "red_flags": [
+    "'Jangan lapor dulu' = mencegah korban mendapat bantuan yang benar",
+    "Tidak ada 'tim bantuan' proaktif yang menghubungi korban — mereka tidak bisa tahu",
+    "'Biaya admin blokir' = penipuan lapis kedua (maling teriak maling)",
+    "Klaim bisa 'menahan dana penipu' tidak mungkin secara teknis",
+    "Tenggat jam 9 malam + ancaman rekening dibekukan = tekanan ganda"
+  ],
+  "safe_response": "Putuskan kontak; lapor ke bank (telepon resmi) untuk blokir, lalu lapor ke polisi/cybercrime (kontak resmi); tidak ada jalur cepat berbayar",
+  "page": {
+    "title": "Formulir Pemblokiran Dana",
+    "hint": "Isi data rekening dan konfirmasi biaya admin untuk melepas dana.",
+    "fields": [
+      "Nomor rekening",
+      "Nama ibu kandung",
+      "Biaya admin (Rp)"
+    ]
+  }
+}

@@ -173,3 +173,10 @@ main { padding-bottom: 4rem; }
 .langs { display: flex; gap: .25rem; padding: .25rem; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; }
 .langs button { min-height: 2.2rem; border-radius: 999px; padding: 0 .7rem; font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: .08em; }
 .langs button.on { background: var(--amber); color: var(--amber-ink); }
+
+
+/* level toast */
+.lvl-toast { grid-column: 1 / -1; padding: .55rem 1rem; border-radius: .7rem; font-family: var(--mono); font-size: .72rem; letter-spacing: .06em; animation: fadein .3s ease; }
+.lvl-toast.up { background: rgba(217, 119, 6, .12); color: var(--amber); border: 1px solid rgba(217, 119, 6, .35); }
+.lvl-toast.down { background: rgba(120, 120, 130, .1); color: var(--muted); border: 1px solid var(--line); }
+@keyframes fadein { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }

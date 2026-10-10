@@ -129,7 +129,9 @@ def start_mission(sid: str):
             "channel": m.scenario["channel"],
             "sender": m.scenario.get("sender", "Unknown"),
             "page": m.scenario.get("page"),
+            "level": int(m.scenario.get("level", 1)),
         },
+        "level": d.level,
         **res,
     }
 
@@ -249,6 +251,8 @@ def profile(sid: str):
         "results": d.results,
         "patch_level": patch_level(scores),
         "domains": DOMAINS,
+        "difficulty_level": d.level,
+        "level_history": d.level_history,
     }
 
 

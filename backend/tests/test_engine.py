@@ -70,6 +70,26 @@ def test_adversary_adapts_tactic():
     assert r2["suspicion"] > r["suspicion"]
 
 
+def test_level_progression_and_domain_spread():
+    """Adaptive difficulty + multi-domain coverage: surviving well raises the
+    level; scenario pool spans at least 5 distinct domains."""
+    from app.engine.scenarios import load_scenarios
+    persona = {"id": "umum", "name": "U", "context": "", "tags": ["umum"]}
+    d = MissionDirector(persona, level=1)
+    assert d.level == 1
+    # simulate a strong result -> level up
+    d.level = d._level_from_result(90)
+    assert d.level == 2
+    # simulate a weak result -> level down
+    d.level = d._level_from_result(20)
+    assert d.level == 1
+    # level stays when mid-score
+    assert d._level_from_result(55) == 1
+    # domains: at least 5 distinct across the library
+    domains = {s["domain"] for s in load_scenarios().values()}
+    assert len(domains) >= 5, f"expected >=5 domains, got {domains}"
+
+
 def test_director_and_patch_level():
     persona = {"id": "worker", "name": "Sari", "context": "", "tags": ["worker"]}
     d = MissionDirector(persona)

@@ -79,7 +79,13 @@ async function beginSession() {
 async function nextMission() {
   const r = await post(`/session/${state.session.session_id}/mission/start`);
   if (r.paywall) { state.screen = "paywall"; render(); return; }
+  const prevLevel = state.mission ? state.mission.level : null;
   state.mission = r;
+  if (prevLevel != null && r.level && r.level !== prevLevel) {
+    state.levelToast = r.level > prevLevel ? "up" : "down";
+  } else {
+    state.levelToast = null;
+  }
   state.lines = [];
   state.events = [];
   state.sandbox = false;
@@ -242,10 +248,16 @@ function actionButtons(actions) {
 
 function sim() {
   const sc = state.mission.scenario;
+  const r_level = state.mission.level || sc.level || 1;
   const actions = chatActions();
   const log = state.events.length === 0 ? `<li>${t("no_events")}</li>` : state.events.map((e, i) => `<li>${i + 1}. ${esc(e)}</li>`).join("");
   const chatbox = state.sandbox ? "" : `<div class="chatbox"><input id="freechat" placeholder="${t("chat_placeholder")}" autocomplete="off" /><button type="button" id="sendbtn" aria-label="Kirim">➤</button></div>`;
-  return `<section class="sim"><div class="phone"><div class="phone-h"><div><p>${esc(sc.sender)}</p><span>${esc(sc.channel)} · ${t("sim_tag")}</span></div><span class="tag">${t("sandbox_tag")}</span></div><div class="thread">${bubbles()}${state.sandbox ? fakePage() : ""}</div>${chatbox}</div><div class="side"><div class="panel"><p class="tiny">${t("tactic_active")}</p><h2>${esc(state.tactic)}</h2><p class="why">${esc(state.reason)}</p></div>${actions.length ? `<div class="actions">${actionButtons(actions)}</div>` : ""}<button type="button" class="linkish" data-go="profile">${t("switch_profile")}</button><details><summary>${t("engine_log")}</summary><ol>${log}</ol></details></div></section>`;
+  const toast = state.levelToast === "up"
+    ? `<div class="lvl-toast up">▲ ${esc(t("level_up"))} ${r_level}</div>`
+    : state.levelToast === "down"
+      ? `<div class="lvl-toast down">▼ ${esc(t("level_down"))} ${r_level}</div>`
+      : "";
+  return `<section class="sim">${toast}<div class="phone"><div class="phone-h"><div><p>${esc(sc.sender)}</p><span>${esc(sc.channel)} · ${t("sim_tag")} · ${esc(t("level_badge"))} ${r_level}</span></div><span class="tag">${t("sandbox_tag")}</span></div><div class="thread">${bubbles()}${state.sandbox ? fakePage() : ""}</div>${chatbox}</div><div class="side"><div class="panel"><p class="tiny">${t("tactic_active")}</p><h2>${esc(state.tactic)}</h2><p class="why">${esc(state.reason)}</p></div>${actions.length ? `<div class="actions">${actionButtons(actions)}</div>` : ""}<button type="button" class="linkish" data-go="profile">${t("switch_profile")}</button><details><summary>${t("engine_log")}</summary><ol>${log}</ol></details></div></section>`;
 }
 
 function report() {

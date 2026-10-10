@@ -5,7 +5,14 @@
   "channel": "WhatsApp",
   "sender": "Bank Security Team",
   "language": "en",
-  "persona_tags": ["pensiunan", "orangtua", "karyawan", "umkm", "mahasiswa", "umum"],
+  "persona_tags": [
+    "pensiunan",
+    "orangtua",
+    "karyawan",
+    "umkm",
+    "mahasiswa",
+    "umum"
+  ],
   "attacker_character": "polite but urgent 'bank security officer', formal tone, targets everyday users",
   "attacker_goal": "Get the target to read back an OTP 'to stop a fraudulent transaction'",
   "opener": "Good afternoon. This is the Security Division of your bank. We detected an attempt to empty your account. To block it, please confirm the 6-digit code we just sent you — we only have 10 minutes before the transfer completes.",
@@ -25,6 +32,10 @@
   "page": {
     "title": "Fraud verification (simulated)",
     "hint": "Enter your card number and the code we sent to stop the fraud.",
-    "fields": ["Card number", "OTP code"]
-  }
+    "fields": [
+      "Card number",
+      "OTP code"
+    ]
+  },
+  "level": 2
 }
