@@ -1,0 +1,35 @@
+{
+  "id": "wa_qris_refund",
+  "title": "Refund QRIS Palsu",
+  "domain": "phishing_social",
+  "channel": "WhatsApp",
+  "sender": "Pembeli Shopee",
+  "language": "id",
+  "persona_tags": [
+    "umkm"
+  ],
+  "attacker_character": "pembeli online yang mengaku sudah transfer lebih, mendesak minta refund via QRIS",
+  "attacker_goal": "Minta korban men-scan/mengirim dana ke QRIS penyerang dengan alasan 'pengembalian kelebihan bayar'",
+  "opener": "Kak, saya sudah transfer lebih. Tolong refund ke QRIS ini ya, bukti saya kirim. Kalau tidak 10 menit, saya ajukan komplain.",
+  "escalation_ladder": [
+    "Admin marketplace sudah saya hubungi. Kalau refund tidak masuk sekarang, toko kakak saya kunci hari ini.",
+    "Jangan cek aplikasi toko. Transfernya di luar sistem biar cepat. Saya kirim QR-nya lagi.",
+    "Ini komplain resmi kak. Satu jam lagi toko kakak masuk daftar blacklist penjual bermasalah."
+  ],
+  "red_flags": [
+    "Refund tidak pernah lewat QRIS — refund resmi masuk lewat aplikasi marketplace",
+    "Bukti transfer bisa diedit — selalu cek mutasi rekening sendiri",
+    "Ancaman 'toko dikunci' dan 'komplain' = tekanan buatan",
+    "Meminta transaksi DI LUAR sistem = ciri klasik penipuan penjual",
+    "Batas waktu 10 menit mencegah korban berpikir"
+  ],
+  "safe_response": "Cek saldo/mutasi di aplikasi marketplace resmi; refund selalu lewat dalam sistem, tidak pernah via QRIS ke nomor pembeli",
+  "page": {
+    "title": "Refund QRIS simulasi",
+    "hint": "Pindai atau tempel nomor tujuan untuk mengembalikan dana.",
+    "fields": [
+      "Nomor tujuan",
+      "Nominal"
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "wa_bantuan_pensiun",
+  "title": "Pencairan Bantuan Palsu",
+  "domain": "phishing_social",
+  "channel": "WhatsApp",
+  "sender": "Layanan Nasabah",
+  "language": "id",
+  "persona_tags": [
+    "pensiunan"
+  ],
+  "attacker_character": "sopan dan sabar, gaya 'petugas layanan resmi', sasaran lansia",
+  "attacker_goal": "Minta data rekening + tanggal lahir + nama ibu kandung ('verifikasi pencairan bantuan')",
+  "opener": "Bapak/Ibu, ada pencairan bantuan yang tertahan. Konfirmasi nomor rekening lewat tautan ini sebelum pukul 20.00 atau dana kembali.",
+  "escalation_ladder": [
+    "Petugas kami sudah di jalan. Kalau data tidak cocok malam ini, bantuan hangus dan harus antre ulang 3 bulan.",
+    "Jangan ke kantor cabang. Ini kanal khusus nasabah prioritas. Sebutkan nama ibu kandung untuk saya cocokkan.",
+    "Baik Pak/Bu, saya tahan dulu tiketnya 15 menit terakhir. Setelah itu sistem menutup pencairan hari ini."
+  ],
+  "red_flags": [
+    "Bantuan resmi tidak diklaim lewat WA dengan tenggat jam",
+    "Nama ibu kandung + tanggal lahir = data untuk reset password banking",
+    "'Jangan ke kantor cabang' = mencegah verifikasi langsung",
+    "'Kanal khusus prioritas' tidak ada di prosedur bank resmi",
+    "Tekanan waktu 'sebelum pukul 20.00'"
+  ],
+  "safe_response": "Datang/l Hubungi kantor cabang resmi atau call center bank; jangan pernah beri data pribadi lewat chat",
+  "page": {
+    "title": "Konfirmasi bantuan simulasi",
+    "hint": "Masukkan nomor rekening dan tanggal lahir untuk pencairan.",
+    "fields": [
+      "Nomor rekening",
+      "Tanggal lahir"
+    ]
+  }
+}

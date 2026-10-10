@@ -4,7 +4,10 @@
   "domain": "mobile",
   "channel": "whatsapp",
   "language": "id",
-  "persona_tags": ["worker", "ums"],
+  "persona_tags": [
+    "worker",
+    "ums"
+  ],
   "attacker_character": "friendly 'promotion officer' of a new online loan app; offers bonus credit for installing an APK",
   "attacker_goal": "Get the target to install a sideloaded APK and grant SMS/contacts permissions",
   "opener": "Selamat sore Kak. Pinjaman cepat cair 5 juta tanpa bunga bulan pertama + bonus saldo 300rb buat 100 pendaftar pertama. Filenya saya kirim via WA aja ya Kak biar cepat, tinggal install (izinin aja semua permintaannya, proses sistem).",
@@ -20,5 +23,14 @@
     "Alasan 'versi internal skip antrean' adalah rekayasa",
     "Aplikasi pinjol resmi terdaftar OJK"
   ],
-  "safe_response": "Tolak file dari chat; cek legalitas pinjol di OJK, unduh hanya dari Play Store"
+  "safe_response": "Tolak file dari chat; cek legalitas pinjol di OJK, unduh hanya dari Play Store",
+  "sender": "Promo Pinjol",
+  "page": {
+    "title": "Pendaftaran pinjaman simulasi",
+    "hint": "Izinkan akses SMS dan kontak untuk verifikasi otomatis.",
+    "fields": [
+      "Izin SMS",
+      "Izin kontak"
+    ]
+  }
 }

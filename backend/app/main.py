@@ -115,6 +115,8 @@ def start_mission(sid: str):
             "title": m.scenario["title"],
             "domain": m.scenario["domain"],
             "channel": m.scenario["channel"],
+            "sender": m.scenario.get("sender", "Unknown"),
+            "page": m.scenario.get("page"),
         },
         **res,
     }
@@ -131,7 +133,8 @@ def reply(mid: str, req: ReplyReq):
 @app.post("/api/mission/{mid}/action")
 def ui_action(mid: str, req: ActionReq):
     """Observed UI actions (buttons), not inferred from chat text.
-    verify_sender -> protective; open_link -> risky; report -> protective+end."""
+    verify_sender -> protective; open_link -> risky (enters sandbox);
+    fill -> risky data submission; leave -> protective exit; report -> protective+end."""
     m = MISSIONS.get(mid)
     if not m:
         return {"error": "no mission"}
@@ -141,8 +144,24 @@ def ui_action(mid: str, req: ActionReq):
                 "note": "Kamu cek identitas pengirim — perilaku pelindung tercatat."}
     if req.action == "open_link":
         m.telemetry.track("risky_click")
-        return {"logged": "risky_click",
-                "note": "Link dibuka (simulasi) — sebelum cek pengirim."}
+        return {"logged": "risky_click", "sandbox": True,
+                "note": "Link dibuka — kamu masuk halaman sandbox tiruan."}
+    if req.action == "fill":
+        m.telemetry.track("risky_submit")
+        m.finished = True
+        m.outcome = "compromised"
+        if getattr(m, "director", None):
+            m.director.record(m)
+        return {"logged": "risky_submit", "finished": True, "outcome": "compromised",
+                "note": "Data diisi di halaman tiruan. Kredensial tidak keluar dari sandbox."}
+    if req.action == "leave":
+        m.telemetry.track("protective_exit")
+        m.finished = True
+        m.outcome = "survived"
+        if getattr(m, "director", None):
+            m.director.record(m)
+        return {"logged": "protective_exit", "finished": True, "outcome": "survived",
+                "note": "Halaman ditutup tanpa mengisi apa pun."}
     if req.action == "report":
         return m.report()
     return {"error": "unknown action"}

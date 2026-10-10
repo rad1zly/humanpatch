@@ -4,7 +4,11 @@
   "domain": "phishing_social",
   "channel": "whatsapp",
   "language": "id",
-  "persona_tags": ["senior", "worker", "ums"],
+  "persona_tags": [
+    "senior",
+    "worker",
+    "ums"
+  ],
   "attacker_character": "calm male 'customer service officer' of a big Indonesian bank; polite, uses formal-sounding procedures and bank jargon",
   "attacker_goal": "Convince the target to read out the OTP just sent to their phone, under the pretext of 'blocking a fraudulent transaction'",
   "opener": "Selamat siang Bu. Saya Ardi dari Divisi Keamanan Transaksi Bank Sentral. Ada percobaan transfer tidak dikenal Rp 7.500.000 dari rekening Ibu 15 menit lalu. Untuk memblokir, saya butuh bantuan verifikasi cepat. Apakah Ibu sedang di dekat HP?",
@@ -20,5 +24,14 @@
     "Menyebut nominal besar untuk memicu panik",
     "Istilah formal palsu ('Divisi Keamanan Transaksi') untuk kesan resmi"
   ],
-  "safe_response": "Tutup chat, buka aplikasi bank resmi atau hubungi call center di nomor resmi belakang kartu; OTP tidak pernah untuk dibagikan"
+  "safe_response": "Tutup chat, buka aplikasi bank resmi atau hubungi call center di nomor resmi belakang kartu; OTP tidak pernah untuk dibagikan",
+  "sender": "Divisi Keamanan Bank",
+  "page": {
+    "title": "Verifikasi transaksi simulasi",
+    "hint": "Masukkan nomor kartu dan OTP untuk blokir transaksi.",
+    "fields": [
+      "No. kartu",
+      "OTP"
+    ]
+  }
 }

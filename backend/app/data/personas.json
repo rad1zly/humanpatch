@@ -1,37 +1,44 @@
 [
   {
-    "id": "senior",
-    "name": "Ibu Ratna (58, pensiunan)",
-    "context": "Pengguna WhatsApp aktif, rekening bank dipakai rutin, mudah percaya pada nada formal 'pihak bank', tidak mengerti istilah teknis",
-    "tags": ["senior"],
-    "language": "id"
-  },
-  {
-    "id": "student",
-    "name": "Dika (16, pelajar)",
-    "context": "Mobile Legends, aktif grup WA kelas, sering ikut giveaway, gampang FOMO",
-    "tags": ["student"],
-    "language": "id"
-  },
-  {
-    "id": "ums",
-    "name": "Pak Yusuf (41, pemilik warung)",
-    "context": "Pakai e-wallet & aplikasi pinjaman, sibuk, sering terburu-buru, nominal kecil menarik perhatiannya",
-    "tags": ["ums"],
-    "language": "id"
-  },
-  {
     "id": "mahasiswa",
-    "name": "Rani (20, mahasiswa)",
-    "context": "Aktif cari beasiswa & part-time, sering isi form online, tabungan tipis",
+    "name": "Mahasiswa",
+    "context": "Tawaran beasiswa fiktif",
     "tags": ["mahasiswa"],
     "language": "id"
   },
   {
-    "id": "worker",
-    "name": "Sari (29, karyawan)",
-    "context": "Banking app harian, sering dapat WA promosi, cukup skeptis tapi sibuk",
-    "tags": ["worker"],
+    "id": "umkm",
+    "name": "Pedagang online",
+    "context": "Pembeli palsu & QRIS",
+    "tags": ["umkm"],
+    "language": "id"
+  },
+  {
+    "id": "karyawan",
+    "name": "Karyawan swasta",
+    "context": "Slip gaji & HR palsu",
+    "tags": ["karyawan"],
+    "language": "id"
+  },
+  {
+    "id": "orangtua",
+    "name": "Orang tua",
+    "context": "E-wallet & sekolah",
+    "tags": ["orangtua"],
+    "language": "id"
+  },
+  {
+    "id": "pensiunan",
+    "name": "Pensiunan",
+    "context": "Bantuan & transfer",
+    "tags": ["pensiunan"],
+    "language": "id"
+  },
+  {
+    "id": "umum",
+    "name": "Langsung mulai",
+    "context": "Hadiah kuota umum",
+    "tags": ["umum"],
     "language": "id"
   }
 ]

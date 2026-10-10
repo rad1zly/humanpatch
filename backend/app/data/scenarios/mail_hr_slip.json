@@ -1,0 +1,35 @@
+{
+  "id": "mail_hr_slip",
+  "title": "Slip Gaji & HR Palsu",
+  "domain": "credentials",
+  "channel": "Email",
+  "sender": "HRD Perusahaan",
+  "language": "id",
+  "persona_tags": [
+    "karyawan"
+  ],
+  "attacker_character": "orang yang mengaku staf HRD, email resmi-looking, mendesak soal payroll",
+  "attacker_goal": "Minta korban login di portal palsu (mencuri email kantor + password) dengan alasan 'update rekening gaji'",
+  "opener": "Slip gaji bulan ini gagal terbit. Buka tautan HR dan perbarui rekening sebelum pukul 16.00, atau pencairan ditunda.",
+  "escalation_ladder": [
+    "Finance sudah closing. Tanpa konfirmasi rekening hari ini, gaji masuk bulan depan. Ini instruksi langsung atasan.",
+    "Jangan tanya grup kantor. Ini saluran pribadi HRD karena data gaji rahasia. Balas saja nomor rekening.",
+    "Portalnya tutup jam 16.00. Setelah itu tiket payroll kakak otomatis dibatalkan sampai siklus berikutnya."
+  ],
+  "red_flags": [
+    "HR asli tidak pernah minta password via email/link",
+    "Domain pengirim mirip tapi tidak sama dengan domain kantor",
+    "Urgensi 'sebelum 16.00' + 'instruksi atasan' = authority pressure",
+    "'Jangan tanya grup kantor' = isolasi korban dari verifikasi",
+    "Portal login di luar SSO resmi perusahaan"
+  ],
+  "safe_response": "Cek ke HR/kantor lewat kanal internal resmi (bukan reply email itu); login payroll hanya lewat portal/SSO resmi",
+  "page": {
+    "title": "Portal HRD simulasi",
+    "hint": "Masukkan email kantor dan kata sandi untuk membuka slip.",
+    "fields": [
+      "Email kantor",
+      "Kata sandi"
+    ]
+  }
+}
