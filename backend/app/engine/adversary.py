@@ -29,7 +29,8 @@ class Adversary:
     def system_prompt(self) -> str:
         s = self.scenario
         ladder = " | ".join(s.get("escalation_ladder", []))
-        lang_name = {"id": "Bahasa Indonesia", "en": "English"}.get(self.language, self.language)
+        lang_name = {"id": "Bahasa Indonesia", "en": "English", "es": "Spanish",
+                     "hi": "Hindi", "pt": "Portuguese"}.get(self.language, self.language)
         return (
             f"You are a scammer role-playing in a cybersecurity training simulation. "
             f"You are NOT an assistant. Stay fully in character as the attacker.\n"

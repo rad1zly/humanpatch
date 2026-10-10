@@ -19,14 +19,21 @@ class Telemetry:
     # ---------------------------------------------------------------- scoring
     # 4 understandable indicators (per the concept doc) instead of one opaque score
     INDICATORS = {
-        "verify_source": {"id": "Verifikasi sumber lewat jalur independen", "en": "Verify the source via an independent channel"},
-        "under_pressure": {"id": "Tetap verifikasi saat ada tekanan waktu", "en": "Still verify when under time pressure"},
-        "protect_data": {"id": "Tidak menyerahkan data sensitif", "en": "Do not hand over sensitive data"},
-        "report_threat": {"id": "Melapor / menghentikan kontak", "en": "Report / stop contact"},
+        "verify_source": {"id": "Verifikasi sumber lewat jalur independen", "en": "Verify the source via an independent channel",
+                          "es": "Verificar la fuente por un canal independiente", "hi": "स्वतंत्र चैनल से स्रोत सत्यापित करें", "pt": "Verificar a fonte por um canal independente"},
+        "under_pressure": {"id": "Tetap verifikasi saat ada tekanan waktu", "en": "Still verify when under time pressure",
+                           "es": "Seguir verificando bajo presión de tiempo", "hi": "समय-दबाव में भी सत्यापन करें", "pt": "Continuar verificando sob pressão de tempo"},
+        "protect_data": {"id": "Tidak menyerahkan data sensitif", "en": "Do not hand over sensitive data",
+                         "es": "No entregar datos sensibles", "hi": "संवेदनशील डेटा न दें", "pt": "Não entregar dados sensíveis"},
+        "report_threat": {"id": "Melapor / menghentikan kontak", "en": "Report / stop contact",
+                          "es": "Denunciar / detener el contacto", "hi": "रिपोर्ट करें / संपर्क रोकें", "pt": "Denunciar / interromper o contato"},
     }
     STATUS_VALUES = {
         "id": {"ok": "Teramati", "no": "Belum teramati", "todo": "Perlu diuji"},
         "en": {"ok": "Observed", "no": "Not observed", "todo": "Needs testing"},
+        "es": {"ok": "Observado", "no": "No observado", "todo": "Por probar"},
+        "hi": {"ok": "देखा गया", "no": "नहीं देखा गया", "todo": "परखना है"},
+        "pt": {"ok": "Observado", "no": "Não observado", "todo": "A testar"},
     }
 
     def _st(self, kind: str, lang: str) -> str:

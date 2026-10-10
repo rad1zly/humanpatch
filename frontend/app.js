@@ -130,7 +130,7 @@ async function sendText() {
 function applyEngineResult(r, fromAction) {
   if (r.message && !fromAction) line("them", r.message);
   if (r.note && fromAction) line("note", r.note);
-  if (r.tactic_reason) { state.reason = r.tactic_reason; state.tactic = (TACTIC_LABELS[state.lang] || TACTIC_LABELS.id)[r.tactic] || r.tactic; }
+  if (r.tactic_reason) { state.reason = r.tactic_reason; state.tactic = (TACTIC_LABELS[state.lang] || TACTIC_LABELS.en)[r.tactic] || r.tactic; }
   if (r.signals) r.signals.forEach((s) => { if (!state.events.includes(s)) state.events.push(s); });
   if (r.sandbox) {
     state.sandbox = true;
@@ -188,7 +188,7 @@ function steps() {
 }
 
 function langSwitch() {
-  const opts = [["id", "ID"], ["en", "EN"]].map(([code, label]) =>
+  const opts = [["id", "ID"], ["en", "EN"], ["es", "ES"], ["hi", "हिं"], ["pt", "PT"]].map(([code, label]) =>
     `<button type="button" class="lang${state.lang === code ? " on" : ""}" data-lang="${code}">${label}</button>`).join("");
   return `<div class="langs" role="group" aria-label="Language">${opts}</div>`;
 }
@@ -252,7 +252,10 @@ function report() {
   const d = state.debrief;
   const s = d.summary;
   const STMAP = { "Teramati": "teramati", "Belum teramati": "belum", "Perlu diuji": "perlu",
-                  "Observed": "teramati", "Not observed": "belum", "Needs testing": "perlu" };
+                  "Observed": "teramati", "Not observed": "belum", "Needs testing": "perlu",
+                  "Observado": "teramati", "No observado": "belum", "Por probar": "perlu",
+                  "देखा गया": "teramati", "नहीं देखा गया": "belum", "परखना है": "perlu",
+                  "Não observado": "belum", "A testar": "perlu" };
   const rows = Object.entries(s.indicators || {})
     .map(([k, v]) => `<li><div class="ind-top"><strong>${esc(t("ind." + k))}</strong><span class="st ${STMAP[v] || "belum"}">${esc(v)}</span></div></li>`)
     .join("");

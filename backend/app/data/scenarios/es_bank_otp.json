@@ -1,0 +1,40 @@
+{
+  "domain": "phishing_social",
+  "channel": "WhatsApp",
+  "persona_tags": [
+    "pensiunan",
+    "orangtua",
+    "karyawan",
+    "umkm",
+    "mahasiswa",
+    "umum"
+  ],
+  "id": "es_bank_otp",
+  "title": "El 'Equipo de Seguridad' del banco",
+  "language": "es",
+  "attacker_character": "agente de 'seguridad del banco' educado pero urgente, tono formal",
+  "attacker_goal": "Que la víctima lea el OTP 'para bloquear una transacción fraudulenta'",
+  "opener": "Buenas tardes. Le hablamos de la División de Seguridad de su banco. Detectamos un intento de vaciar su cuenta. Para bloquearlo, confirme el código de 6 dígitos que acabamos de enviarle — tenemos solo 10 minutos antes de que la transferencia se complete.",
+  "escalation_ladder": [
+    "Cada minuto cuenta. La transferencia fraudulenta se está procesando ahora mismo. Solo dígame el código y la cancelamos al instante.",
+    "Lo entiendo, pero yo soy quien intenta AYUDARLE. Si cuelga, el equipo antifraude no se hace responsable de la pérdida.",
+    "Última advertencia: en 5 minutos sus ahorros habrán desaparecido. El código está en su teléfono ahora mismo. Por favor, léamelo."
+  ],
+  "red_flags": [
+    "Un banco real nunca pide tu OTP por chat o llamada",
+    "'10 minutos antes de que se complete' — presión de tiempo artificial",
+    "Ellos te llamaron: no puedes verificar quién son",
+    "El miedo a perder los ahorros bloquea el pensamiento claro",
+    "Cuelga y llama al número oficial al reverso de tu tarjeta"
+  ],
+  "safe_response": "Cuelga de inmediato, revisa la app oficial del banco o llama al número oficial",
+  "sender": "Equipo de Seguridad del Banco",
+  "page": {
+    "title": "Verificación de fraude (simulada)",
+    "hint": "Ingresa tu número de tarjeta y el código que enviamos para frenar el fraude.",
+    "fields": [
+      "Número de tarjeta",
+      "Código"
+    ]
+  }
+}

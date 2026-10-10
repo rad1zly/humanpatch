@@ -1,44 +1,128 @@
 [
   {
     "id": "mahasiswa",
-    "tags": ["mahasiswa"],
+    "tags": [
+      "mahasiswa"
+    ],
     "language": "id",
-    "name": {"id": "Mahasiswa", "en": "University student"},
-    "context": {"id": "Tawaran beasiswa fiktif", "en": "Fake scholarship offer"}
+    "name": {
+      "id": "Mahasiswa",
+      "en": "University student",
+      "es": "Estudiante universitario",
+      "hi": "कॉलेज छात्र",
+      "pt": "Estudante universitário"
+    },
+    "context": {
+      "id": "Tawaran beasiswa fiktif",
+      "en": "Fake scholarship offer",
+      "es": "Beca falsa",
+      "hi": "नकली छात्रवृत्ति",
+      "pt": "Bolsa falsa"
+    }
   },
   {
     "id": "umkm",
-    "tags": ["umkm"],
+    "tags": [
+      "umkm"
+    ],
     "language": "id",
-    "name": {"id": "Pedagang online", "en": "Online seller"},
-    "context": {"id": "Pembeli palsu & QRIS", "en": "Fake buyer & QRIS refund"}
+    "name": {
+      "id": "Pedagang online",
+      "en": "Online seller",
+      "es": "Vendedor online",
+      "hi": "ऑनलाइन विक्रेता",
+      "pt": "Vendedor online"
+    },
+    "context": {
+      "id": "Pembeli palsu & QRIS",
+      "en": "Fake buyer & QRIS refund",
+      "es": "Comprador falso y reembolso QR",
+      "hi": "नकली खरीदार और रिफंड",
+      "pt": "Comprador falso e reembolso PIX"
+    }
   },
   {
     "id": "karyawan",
-    "tags": ["karyawan"],
+    "tags": [
+      "karyawan"
+    ],
     "language": "id",
-    "name": {"id": "Karyawan swasta", "en": "Office employee"},
-    "context": {"id": "Slip gaji & HR palsu", "en": "Fake payroll & HR"}
+    "name": {
+      "id": "Karyawan swasta",
+      "en": "Office employee",
+      "es": "Empleado de oficina",
+      "hi": "ऑफिस कर्मचारी",
+      "pt": "Funcionário de escritório"
+    },
+    "context": {
+      "id": "Slip gaji & HR palsu",
+      "en": "Fake payroll & HR",
+      "es": "Nómina y RRHH falsos",
+      "hi": "नकली पेरोल और HR",
+      "pt": "Folha de pagamento e RH falsos"
+    }
   },
   {
     "id": "orangtua",
-    "tags": ["orangtua"],
+    "tags": [
+      "orangtua"
+    ],
     "language": "id",
-    "name": {"id": "Orang tua", "en": "Parent"},
-    "context": {"id": "E-wallet & sekolah", "en": "E-wallet & school fees"}
+    "name": {
+      "id": "Orang tua",
+      "en": "Parent",
+      "es": "Padre/Madre",
+      "hi": "अभिभावक",
+      "pt": "Pai/Mãe"
+    },
+    "context": {
+      "id": "E-wallet & sekolah",
+      "en": "E-wallet & school fees",
+      "es": "E-wallet y colegio",
+      "hi": "ई-वॉलेट और स्कूल",
+      "pt": "E-wallet e escola"
+    }
   },
   {
     "id": "pensiunan",
-    "tags": ["pensiunan"],
+    "tags": [
+      "pensiunan"
+    ],
     "language": "id",
-    "name": {"id": "Pensiunan", "en": "Retiree"},
-    "context": {"id": "Bantuan & transfer", "en": "Benefit & transfer scam"}
+    "name": {
+      "id": "Pensiunan",
+      "en": "Retiree",
+      "es": "Jubilado",
+      "hi": "सेवानिवृत्त",
+      "pt": "Aposentado"
+    },
+    "context": {
+      "id": "Bantuan & transfer",
+      "en": "Benefit & transfer scam",
+      "es": "Ayuda y transferencia",
+      "hi": "सहायता और ट्रांसफर",
+      "pt": "Auxílio e transferência"
+    }
   },
   {
     "id": "umum",
-    "tags": ["umum"],
+    "tags": [
+      "umum"
+    ],
     "language": "id",
-    "name": {"id": "Langsung mulai", "en": "Just start"},
-    "context": {"id": "Hadiah kuota umum", "en": "Generic prize scam"}
+    "name": {
+      "id": "Langsung mulai",
+      "en": "Just start",
+      "es": "Empezar directo",
+      "hi": "सीधे शुरू करें",
+      "pt": "Começar direto"
+    },
+    "context": {
+      "id": "Hadiah kuota umum",
+      "en": "Generic prize scam",
+      "es": "Premio genérico",
+      "hi": "सामान्य इनाम घोटाला",
+      "pt": "Prêmio genérico"
+    }
   }
 ]
