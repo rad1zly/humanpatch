@@ -80,12 +80,7 @@ class MockLLM:
         # coach mode: debrief prompts get a canned coach reply
         en = any(m in system for m in ("reply ONLY in English", "In English", "In Spanish", "In Hindi", "In Portuguese"))
         if "cybersecurity coach" in system:
-            return self.COACH_EN if en else (
-                "Baik, santai — ini latihan, dan hasilnya bisa dibenerin. "
-                "Yang perlu kamu ingat: pihak bank tidak pernah meminta OTP/PIN "
-                "lewat chat atau telepon. Tekanan waktu ('rekening terblokir 10 menit') "
-                "selalu jadi tanda bahaya. Kalau dapat chat macam gini: tutup, buka "
-                "aplikasi resmi, atau hubungi call center di belakang kartu kamu.")
+            return self.COACH_EN if en else self.COACH_ID
 
         def marker(name):
             for line in system.splitlines():
