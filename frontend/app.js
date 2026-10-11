@@ -534,6 +534,7 @@ function vHomeScreen() {
 function vAppWindow() {
   const w = state.world;
   const app = state.openApp;
+  if (app === "chatloop" && state.openChat) return vChatThread(state.openChat);
   const meta = w.apps.find(a => a.id === app) || { name: app, icon: "📱", bg: "#64748B" };
   let body = "";
   if (app === "chatloop") body = vChatLoop();
@@ -562,9 +563,10 @@ function openApp(id) {
     setTimeout(() => startEncounter(), 400);
   }
 }
-function closeApp() { state.openApp = null; render(); }
+function closeApp() { state.openApp = null; state.openChat = null; render(); }
 
 function vChatLoop() {
+  if (state.openChat) return vChatThread(state.openChat);
   const w = state.world;
   const atk = w.attack;
   const atkThread = atk && atk.app === "chatloop" && !atk.done ? atk : null;
@@ -581,7 +583,7 @@ function vChatLoop() {
     ${w.contacts.map(c => {
       const msg = chatPreview(c.id);
       return `
-      <div class="chat-list-item" onclick="toast('${esc(c.name)}: &quot;${esc(msg)}&quot;')">
+      <div class="chat-list-item" onclick="openChat('${c.id}')">
         <div class="cav" style="background:${c.color}">${c.avatar}</div>
         <div class="cb">
           <div class="ct"><strong>${esc(c.name)}</strong><time>08:${String(30 + (c.name.length % 20)).padStart(2, "0")}</time></div>
@@ -591,6 +593,62 @@ function vChatLoop() {
     }).join("")}`;
 }
 function chatPreview(cid) { return chatPreviewFor(cid); }
+
+/* ---------- normal chat conversation (chatbot-style replies) ---------- */
+function openChat(cid) {
+  state.openChat = cid;
+  state.openApp = "chatloop";
+  trackEvent(`💬 ${cid}`);
+  render();
+  const el = $("#chat-scroll"); if (el) el.scrollTop = el.scrollHeight;
+}
+function closeChat() { state.openChat = null; render(); }
+
+async function sendNormChat() {
+  const input = $("#chat-in");
+  const text = input.value.trim();
+  if (!text || !state.openChat) return;
+  input.value = "";
+  const cid = state.openChat;
+  state.normChat = state.normChat || {};
+  state.normChat[cid] = state.normChat[cid] || [];
+  state.normChat[cid].push({ who: "me", text });
+  state.busyNorm = true;
+  render();
+  scrollNorm();
+  await new Promise(r => setTimeout(r, 900 + Math.random() * 700));
+  const reply = CONTACT_REPLIES[cid];
+  state.normChat[cid].push({ who: "them", text: reply ? L(reply) : "…" });
+  state.busyNorm = false;
+  render();
+  scrollNorm();
+}
+function scrollNorm() { const el = $("#chat-scroll"); if (el) el.scrollTop = el.scrollHeight; }
+
+function vChatThread(cid) {
+  const c = state.world.contacts.find(x => x.id === cid) || { name: cid, avatar: "👤", color: "#94A3B8" };
+  const thread = (CONTACT_THREADS[cid] || []).map(m => ({ ...m, text: L(m.text) }));
+  const mine = (state.normChat || {})[cid] || [];
+  const lines = [...thread, ...mine];
+  return `
+  <div class="appwin" style="height:100%">
+    <div class="appbar">
+      <button class="back" onclick="closeChat()" aria-label="back">${icons.back}</button>
+      <h5><span class="cav" style="background:${c.color};width:26px;height:26px;font-size:13px">${c.avatar}</span> ${esc(c.name)}</h5>
+      <button class="back" onclick="normContactInfo('${esc(c.name)}')" aria-label="info">ⓘ</button>
+    </div>
+    <div class="appbody" id="chat-scroll">
+      <p class="chat-day-sep">${t("chat_encrypted")}</p>
+      ${lines.map(l => `<div class="bubble-row ${l.who === "me" ? "me" : "them"}"><div class="bubble">${esc(l.text)}</div></div>`).join("")}
+      ${state.busyNorm ? `<div class="typing"><i></i><i></i><i></i></div>` : ""}
+    </div>
+    <div class="chat-input-row">
+      <input id="chat-in" placeholder="${t("chat_placeholder")}" autocomplete="off" onkeydown="if(event.key==='Enter')sendNormChat()">
+      <button onclick="sendNormChat()" aria-label="send">${icons.send}</button>
+    </div>
+  </div>`;
+}
+function normContactInfo(name) { toast("ℹ️ " + name); }
 
 function vMessageBox() {
   const w = state.world;
@@ -642,12 +700,23 @@ function vSecurityApp() {
 
 function vSettingsApp() {
   const rows = INAPP.settings.map(s => [s.icon, L(s.label), L(s.value)]);
-  return rows.map(r => `
+  return `
+    ${rows.map(r => `
     <div class="card" style="padding:12px;display:flex;gap:10px;align-items:center" onclick="toast('⚙')">
       <span style="font-size:18px">${r[0]}</span>
       <div style="flex:1"><strong class="small">${r[1]}</strong></div>
-      <span class="dim">${r[2]}</span>
-    </div>`).join("");
+      <span class="dim">${esc(r[2])} ›</span>
+    </div>`).join("")}
+    <div class="card" style="padding:12px;display:flex;gap:10px;align-items:center;border-left:3px solid var(--amber)" onclick="openPerms()">
+      <span style="font-size:18px">🛡️</span>
+      <div style="flex:1"><strong class="small">${t("perm_link")}</strong><p class="small dim" style="margin:0">${t("perm_link_sub")}</p></div>
+      <span class="dim">›</span>
+    </div>`;
+}
+function openPerms() {
+  trackEvent("🛡️ permissions");
+  state.openApp = "security";
+  render();
 }
 
 function vGenericApp(meta) {
