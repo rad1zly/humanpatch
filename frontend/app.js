@@ -932,7 +932,20 @@ function render() {
   root.innerHTML = v();
 }
 
-/* boot */
+/* boot — hardened: recover from corrupt/cached localStorage */
 loadLocal();
 if (state.user) state.screen = "profiles";
-render();
+try {
+  render();
+} catch (e) {
+  console.error("boot render failed:", e);
+  // nuke possibly-corrupt local state and retry clean
+  try {
+    localStorage.removeItem("hp2_user");
+    localStorage.removeItem("hp2_profiles");
+    localStorage.removeItem("hp2_active");
+  } catch (_) {}
+  state.user = null; state.profiles = []; state.activeProfileId = null;
+  state.screen = "landing";
+  render();
+}
