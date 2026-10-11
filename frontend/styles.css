@@ -417,3 +417,17 @@ footer.site .fine { font-size: 11.5px; color: var(--muted); }
   .hv-n strong { font-size: 11px; display: block; }
   .hv-n p { font-size: 10.5px; color: var(--muted); margin: 0; }
 }
+
+
+/* ---------- Day-1 objective card ---------- */
+.obj-card { background: rgba(255,255,255,.94); border-radius: 16px; padding: 12px 14px; margin: 0 14px 10px; box-shadow: 0 4px 14px rgba(17,24,39,.18); }
+.obj-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.obj-head strong { font-size: 12.5px; letter-spacing: .02em; }
+.obj-count { font-size: 11px; font-weight: 800; color: var(--teal); background: var(--mint); padding: 2px 8px; border-radius: 999px; }
+.obj-list { list-style: none; margin: 0 0 8px; padding: 0; display: grid; gap: 4px; }
+.obj-list li { font-size: 12px; color: #334155; display: flex; gap: 6px; align-items: baseline; }
+.obj-list li.done { color: #0F766E; font-weight: 600; text-decoration: line-through; text-decoration-color: rgba(15,118,110,.4); }
+.obj-hint { font-size: 11px; color: #64748B; margin: 0; }
+
+/* statusbar is now a button — normalize */
+button.statusbar { background: none; border: none; width: 100%; cursor: pointer; }

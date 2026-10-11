@@ -255,6 +255,7 @@ function buildWorld(profile, day = 1) {
   apps.find(a => a.id === "journal").badge = day;
 
   const notifs = tpl.normalNotifs.map(n => ({ ...n, id: nid(), read: false, from: L(n.from), text: L(n.text) }));
+  INAPP.sms.forEach(s => notifs.push({ id: nid(), app: "messagebox", from: L(s.from), text: L(s.text), read: false }));
   if (attack && day >= 2) {
     notifs.unshift({ id: nid(), app: attack.app, from: attack.from, text: attack.notifText, attack: true, read: false });
   }
@@ -278,6 +279,8 @@ const INAPP = {
   sms: [
     { from: {id:"PocketPay",en:"PocketPay"}, text: {id:"Top-up Rp100.000 berhasil. Saldo Rp384.210.", en:"Top-up Rp100,000 successful. Balance Rp384,210."}, time: {id:"08:12",en:"08:12"} },
     { from: {id:"DailyMart",en:"DailyMart"}, text: {id:"Pesanan #DM-2214 diambil kurir. Sampai besok.", en:"Order #DM-2214 picked up. Arriving tomorrow."}, time: {id:"Kemarin",en:"Yesterday"} },
+    { from: {id:"Kurir Andi",en:"Andi (Courier)",es:"Andi (Mensajero)",pt:"Andi (Entregador)",hi:"आंदी (कूरियर)"}, text: {id:"Paket #PRJ-88 dititip di pos ronda.", en:"Package #PRJ-88 left at the guard post.", es:"Paquete #PRJ-88 en el puesto de guardia.", pt:"Encomenda #PRJ-88 na portaria.", hi:"पार्सल #PRJ-88 गार्ड पोस्ट पर।"}, time: {id:"07:58",en:"07:58"} },
+    { from: {id:"Bank Nusantara",en:"Nusantara Bank",es:"Banco Nusantara",pt:"Banco Nusantara",hi:"नुसंतारा बैंक"}, text: {id:"Transaksi Rp50.000 berhasil. Saldo Rp1.2••••.", en:"Transaction Rp50,000 successful. Balance Rp1.2••••.", es:"Transacción Rp50.000 exitosa.", pt:"Transação Rp50.000 concluída.", hi:"लेन-देन Rp50,000 सफल।"}, time: {id:"Kemarin",en:"Yesterday"} },
   ],
   perms: [
     { app: {id:"SenterPro",en:"TorchPro"}, icon: "🔦", perms: {id:"SMS · Kontak · Mikrofon", en:"SMS · Contacts · Microphone"}, bad: true },
