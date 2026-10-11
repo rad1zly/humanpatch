@@ -362,3 +362,37 @@ footer.site .fine { font-size: 11.5px; color: var(--muted); }
 .center { text-align: center; }
 .dim { color: var(--muted); }
 .small { font-size: 12.5px; }
+
+
+/* ---------- language switcher ---------- */
+.langs { display: flex; gap: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
+.lang-btn { min-height: 30px; min-width: 34px; border-radius: 999px; font-size: 12px; font-weight: 700; color: var(--muted); padding: 0 8px; }
+.lang-btn.sel { background: var(--teal); color: #fff; }
+.langs-dark .lang-btn { color: #94A3B8; }
+.langs-dark .lang-btn.sel { background: var(--teal); color: #fff; }
+.nav-btn { min-height: 38px; padding: 0 14px; font-size: 13px; }
+
+/* ---------- hero kicker ---------- */
+.hero-kicker { color: var(--teal); font-weight: 800; font-size: 11px; letter-spacing: .14em; }
+
+/* ---------- chat sys line ---------- */
+.sys-line { align-self: center; text-align: center; font-size: 10.5px; color: var(--muted); background: #F1F5F9; border-radius: 999px; padding: 4px 12px; max-width: 90%; margin: 2px auto; }
+
+/* ---------- desktop layout (>=900px): phone-sim stays phone-shaped; product pages go 2-col ---------- */
+@media (min-width: 900px) {
+  .hero { display: grid; grid-template-columns: 1.2fr .8fr; gap: 40px; align-items: center; padding: 60px 0 40px; }
+  .hero h1 { font-size: 44px; }
+  .section { padding: 40px 0; }
+  .cards { grid-template-columns: repeat(3, 1fr); }
+  .domain-grid { grid-template-columns: repeat(3, 1fr); }
+  .persona-demo { grid-template-columns: 1fr 1fr; }
+  .dash-hero { align-items: flex-start; }
+  .journey { max-width: 520px; }
+  .dash-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .auth-card { max-width: 440px; }
+  .choice-grid { max-width: 560px; }
+  .wizard-wrap { max-width: 640px; margin: 0 auto; }
+}
+@media (min-width: 1200px) {
+  .domain-grid { grid-template-columns: repeat(6, 1fr); }
+}
