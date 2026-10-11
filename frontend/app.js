@@ -455,6 +455,8 @@ function vSplash() {
 /* ============================================================
    THE SIMULATED PHONE
    ============================================================ */
+function unreadTotal() { return state.world ? state.world.notifs.filter(n => !n.read).length : 0; }
+
 function vPhone() {
   const w = state.world;
   const story = STORY_DAYS[w.day - 1];
@@ -466,10 +468,10 @@ function vPhone() {
       <span class="demo-flag">${t("demo_flag")}</span>
     </div>
     <div class="phone-frame">
-      <div class="statusbar">
+      <button class="statusbar" onclick="toggleNotif(true)" aria-label="${t("notif_h")(unreadTotal())}">
         <span>${w.phoneTime}</span>
         <span class="sicons"><span class="sbatt">🔋${w.battery}%</span><span>▮▮▮</span></span>
-      </div>
+      </button>
       ${state.openApp ? vAppWindow() : vHomeScreen()}
       ${state.notifOpen ? vNotifPanel() : ""}
       ${state.sheet ? vSheet() : ""}
@@ -477,6 +479,8 @@ function vPhone() {
     ${state.toast ? `<div class="toast">${esc(typeof state.toast === "function" ? state.toast() : state.toast)}</div>` : ""}
   </div>`;
 }
+
+function unreadFor(appId) { return state.world.notifs.filter(n => n.app === appId && !n.read).length; }
 
 function vHomeScreen() {
   const w = state.world;
@@ -491,10 +495,22 @@ function vHomeScreen() {
       <h3>${t("morning")(archName(p.archetype).split(" ")[0])}</h3>
       <p>${w.day === 1 ? t("day1_hint")(unread) : t("day2_hint")(unread)}</p>
     </div>
+    ${w.day === 1 ? `
+    <div class="obj-card">
+      <div class="obj-head">
+        <strong>${t("day1_obj_h")}</strong>
+        <span class="obj-count">${day1Objectives().filter(o => o.done).length}/${day1Objectives().length}</span>
+      </div>
+      <ul class="obj-list">
+        ${day1Objectives().map(o => `<li class="${o.done ? "done" : ""}">${o.done ? "✔" : "○"} ${esc(L(o.label))}</li>`).join("")}
+      </ul>
+      ${day1Done() ? `<button class="btn btn-primary btn-block" style="min-height:44px" onclick="endDay1()">${t("end_day1")}</button>` : `<p class="obj-hint">${t("day1_obj_hint")}</p>`}
+    </div>` : ""}
     <div class="app-grid">
       ${w.apps.map(a => {
         const isAtk = a.id === atkApp && w.attack;
-        const badge = a.id === "journal" ? w.day : (isAtk ? "!" : 0);
+        const unreadN = unreadFor(a.id);
+        const badge = isAtk ? "!" : (unreadN > 9 ? "9+" : unreadN || "");
         return `<button class="app-icon" onclick="openApp('${a.id}')">
           <span class="ai" style="background:${a.bg}">${a.icon}${badge ? `<span class="badge">${badge}</span>` : ""}</span>
           <span class="label">${a.name}</span>
@@ -504,8 +520,10 @@ function vHomeScreen() {
     <div class="dock">
       ${["chatloop", "messagebox", "safebrowse", "settings"].map(id => {
         const a = w.apps.find(x => x.id === id) || w.apps[0];
+        const unreadN = unreadFor(a.id);
+        const badge = (a.id === atkApp && w.attack) ? "!" : (unreadN > 9 ? "9+" : unreadN || "");
         return `<button class="app-icon" onclick="openApp('${a.id}')" aria-label="${a.name}">
-          <span class="ai" style="background:${a.bg};width:46px;height:46px;font-size:20px">${a.icon}${a.id === atkApp && w.attack ? `<span class="badge">!</span>` : ""}</span>
+          <span class="ai" style="background:${a.bg};width:46px;height:46px;font-size:20px">${a.icon}${badge ? `<span class="badge">${badge}</span>` : ""}</span>
         </button>`;
       }).join("")}
     </div>
@@ -535,6 +553,9 @@ function vAppWindow() {
 }
 function openApp(id) {
   state.openApp = id;
+  if (id === "chatloop") state.openedChat = true;
+  if (id === "security") state.openedSecurity = true;
+  if (id === "journal") state.openedJournal = true;
   render();
   const w = state.world;
   if (w.attack && w.attack.app === id && !w.attack.done) {
@@ -575,7 +596,7 @@ function vMessageBox() {
   const w = state.world;
   const atk = w.attack;
   const atkThread = atk && atk.app === "messagebox" && !atk.done ? atk : null;
-  const smsList = INAPP.sms.map(s => ({ from: L(s.from), text: L(s.text), time: L(s.time) }));
+  const smsList = w.notifs.filter(n => n.app === "messagebox").map(n => ({ id: n.id, from: n.from, text: n.text, read: n.read }));
   return `
     ${atkThread ? `
     <div class="chat-list-item unread" onclick="startEncounter()">
@@ -586,9 +607,10 @@ function vMessageBox() {
       </div><span class="dot-un"></span>
     </div>` : ""}
     ${smsList.map(s => `
-      <div class="chat-list-item" onclick="toast('${esc(s.from)}: &quot;${esc(s.text)}&quot;')">
+      <div class="chat-list-item ${s.read ? "" : "unread"}" onclick="readSms('${s.id}', '${esc(s.from)}', '${esc(s.text).replace(/'/g, "&#39;")}')">
         <div class="cav" style="background:#DBEAFE">💬</div>
-        <div class="cb"><div class="ct"><strong>${esc(s.from)}</strong><time>${s.time}</time></div><p>${esc(s.text)}</p></div>
+        <div class="cb"><div class="ct"><strong>${esc(s.from)}</strong></div><p>${esc(s.text)}</p></div>
+        ${s.read ? "" : '<span class="dot-un"></span>'}
       </div>`).join("")}`;
 }
 
@@ -662,7 +684,34 @@ function vNotifPanel() {
     </div>
   </div>`;
 }
-function toggleNotif(open) { state.notifOpen = open ?? !state.notifOpen; render(); }
+function readSms(id, from, text) {
+  const n = state.world.notifs.find(x => x.id === id);
+  if (n && !n.read) {
+    n.read = true;
+    if (n.attack) { startEncounter(); return; }
+    trackEvent(`📬 ${from}`);
+    render();
+    toast(`💬 ${text.slice(0, 60)}`);
+  }
+}
+
+/* ---------- Day-1 exploration objectives ---------- */
+function day1Objectives() {
+  return [
+    { id: "open_msg",    label: {id:"Buka MessageBox dan baca SMS", en:"Open MessageBox and read an SMS", es:"Abre MessageBox y lee un SMS", pt:"Abra o MessageBox e leia um SMS", hi:"MessageBox खोलें और SMS पढ़ें"}, done: state.events.some(e => e.startsWith("📬")) },
+    { id: "open_chat",   label: {id:"Buka ChatLoop dan baca chat", en:"Open ChatLoop and read a chat", es:"Abre ChatLoop y lee un chat", pt:"Abra o ChatLoop e leia um chat", hi:"ChatLoop खोलें और चैट पढ़ें"}, done: state.openedChat || false },
+    { id: "check_notif", label: {id:"Buka panel notifikasi (ketuk jam)", en:"Open the notification panel (tap the clock)", es:"Abre el panel de notificaciones (toca el reloj)", pt:"Abra o painel de notificações (toque no relógio)", hi:"सूचना पैनल खोलें (घड़ी टैप करें)"}, done: state.notifSeen || false },
+    { id: "check_perm",  label: {id:"Cek izin aplikasi di Security", en:"Check app permissions in Security", es:"Revisa permisos en Security", pt:"Verifique permissões no Security", hi:"Security में ऐप अनुमतियाँ देखें"}, done: state.events.some(e => e.startsWith("🛡")) || state.openedSecurity || false },
+    { id: "open_journal",label: {id:"Buka Journal dan cek misimu", en:"Open Journal and check your mission", es:"Abre Journal y revisa tu misión", pt:"Abra o Journal e veja sua missão", hi:"Journal खोलें और मिशन देखें"}, done: state.openedJournal || false },
+  ];
+}
+function day1Done() { return day1Objectives().every(o => o.done); }
+
+function toggleNotif(open) {
+  state.notifOpen = open ?? !state.notifOpen;
+  if (state.notifOpen) state.notifSeen = true;
+  render();
+}
 function clearNotifs() { state.world.notifs.forEach(n => n.read = true); render(); }
 function readNotif(id) { const n = state.world.notifs.find(x => x.id === id); if (n) { n.read = true; trackEvent("📄 " + n.from); } render(); }
 function actDismiss(id) {
@@ -833,7 +882,8 @@ function vDebrief() {
   const ST = { "Teramati": ["ok", t("pill_ok")], "Belum teramati": ["no", t("pill_no")], "Perlu diuji": ["todo", t("pill_todo")],
                "Observed": ["ok", t("pill_ok")], "Not observed": ["no", t("pill_no")], "Needs testing": ["todo", t("pill_todo")] };
   const inds = Object.entries(s.indicators || {});
-  const xpEarn = (s.outcome === "survived" || s.outcome === "survived_reported" ? 100 : 60) + (s.risky_actions === 0 ? 20 : 0);
+  const isExploration = !!d?.exploration;
+  const xpEarn = isExploration ? d.xp : ((s.outcome === "survived" || s.outcome === "survived_reported" ? 100 : 60) + (s.risky_actions === 0 ? 20 : 0));
   return `
   <div class="debrief-wrap"><div class="wrap">
     <p class="kicker">${t("deb_kicker")(state.world.day)}</p>
@@ -841,11 +891,17 @@ function vDebrief() {
     <p class="xp-note">${t("deb_xp_note")(xpEarn)}</p>
     <div class="deb-cards">
       <div class="deb-card"><h3>${t("coach_h")}</h3><p class="coach">${esc(d?.coach || "-")}</p></div>
+      ${isExploration ? `
+      <div class="deb-card"><h3>${t("day1_done_h")}</h3>
+        <ul class="ind-list">
+          ${day1Objectives().map(o => `<li><span>${esc(L(o.label))}</span><span class="pill ${o.done ? "ok" : "todo"}">${o.done ? t("pill_ok") : t("pill_todo")}</span></li>`).join("")}
+        </ul>
+      </div>` : `
       <div class="deb-card"><h3>${t("ind_h")}</h3>
         <ul class="ind-list">
           ${inds.map(([k, v]) => `<li><span>${t("ind" + ({verify_source:1,under_pressure:2,protect_data:3,report_threat:4}[k] || 0)) || esc(k)}</span><span class="pill ${(ST[v] || [])[0] || "todo"}">${(ST[v] || [])[1] || esc(v)}</span></li>`).join("") || "<li>—</li>"}
         </ul>
-      </div>
+      </div>`}
       <div class="deb-card"><h3>${t("log_h")}</h3>
         <ol class="log-list">${state.events.map((e, i) => `<li><b>${i + 1}</b><span>${esc(e)}</span></li>`).join("") || "<li>—</li>"}</ol>
       </div>
@@ -882,6 +938,19 @@ function finishChapter() {
 /* ============================================================
    PHONE top
    ============================================================ */
+function endDay1() {
+  const p = activeProfile();
+  const xp = 100 + state.events.length * 5;
+  state.debrief = {
+    summary: { outcome: "survived", indicators: {} },
+    coach: t("day1_coach"),
+    xp,
+    exploration: true,
+  };
+  state.screen = "debrief";
+  render();
+}
+
 function enterPhone() { state.screen = "phone"; state.notifOpen = false; render(); }
 function exitPhone() {
   go("dashboard");
