@@ -604,6 +604,8 @@ function openChat(cid) {
 }
 function closeChat() { state.openChat = null; render(); }
 
+const NORM_CHAT_CAP = 2; // template replies per contact per day — then they "move on"
+
 async function sendNormChat() {
   const input = $("#chat-in");
   const text = input.value.trim();
@@ -617,13 +619,31 @@ async function sendNormChat() {
   render();
   scrollNorm();
   await new Promise(r => setTimeout(r, 900 + Math.random() * 700));
-  const reply = CONTACT_REPLIES[cid];
-  state.normChat[cid].push({ who: "them", text: reply ? L(reply) : "…" });
+  const sent = state.normChat[cid].filter(m => m.who === "me").length;
+  let reply;
+  if (sent <= NORM_CHAT_CAP) {
+    // TEMPLATE ONLY — no AI, no network. Rotate variants if array.
+    const r = CONTACT_REPLIES[cid];
+    reply = Array.isArray(r) ? L(r[(sent - 1) % r.length]) : (r ? L(r) : null);
+  } else {
+    reply = L(NORM_CHAT_END.pick()); // contact moves on
+  }
+  state.normChat[cid].push({ who: "them", text: reply || "…" });
   state.busyNorm = false;
   render();
   scrollNorm();
 }
 function scrollNorm() { const el = $("#chat-scroll"); if (el) el.scrollTop = el.scrollHeight; }
+
+/* end-of-conversation templates — contacts are people, not chatbots */
+const NORM_CHAT_END = {
+  items: [
+    {id:"Oke ya, aku ada urusan dulu. Chat lagi nanti 👋", en:"Okay, I've got things to do. Talk later 👋", es:"Ok, tengo cosas que hacer. Hablamos luego 👋", pt:"Ok, tenho coisas a fazer. Falamos depois 👋", hi:"ठीक है, मुझे काम है। बाद में बात करते हैं 👋"},
+    {id:"Sip dicatat! Aku offline dulu ya", en:"Noted! Going offline for now", es:"¡Anotado! Me desconecto un rato", pt:"Anotado! Vou desconectar um pouco", hi:"नोट किया! अभी ऑफलाइन हो रहा हूँ"},
+    {id:"Hehe oke deh. Nanti dilanjut ya!", en:"Haha okay. We'll continue later!", es:"Jaja ok. ¡Seguimos luego!", pt:"Haha ok. Continuamos depois!", hi:"हहा ठीक। बाद में जारी रखेंगे!"},
+  ],
+  pick() { return this.items[Math.floor(Math.random() * this.items.length)]; },
+};
 
 function vChatThread(cid) {
   const c = state.world.contacts.find(x => x.id === cid) || { name: cid, avatar: "👤", color: "#94A3B8" };
