@@ -380,7 +380,7 @@ footer.site .fine { font-size: 11.5px; color: var(--muted); }
 
 /* ---------- desktop layout (>=900px): phone-sim stays phone-shaped; product pages go 2-col ---------- */
 @media (min-width: 900px) {
-  .hero { display: grid; grid-template-columns: 1.2fr .8fr; gap: 40px; align-items: center; padding: 60px 0 40px; }
+  .hero { padding: 60px 0 40px; }
   .hero h1 { font-size: 44px; }
   .section { padding: 40px 0; }
   .cards { grid-template-columns: repeat(3, 1fr); }
@@ -395,4 +395,25 @@ footer.site .fine { font-size: 11.5px; color: var(--muted); }
 }
 @media (min-width: 1200px) {
   .domain-grid { grid-template-columns: repeat(6, 1fr); }
+}
+
+
+/* ---------- hero phone preview (real components, desktop) ---------- */
+.hero-visual { display: none; }
+@media (min-width: 900px) {
+  .hero { display: grid; grid-template-columns: 1.15fr .85fr; gap: 48px; align-items: center; }
+  .hero-visual { display: block; position: relative; }
+  .hero-visual::before { content: ""; position: absolute; inset: -12% -8%; background: radial-gradient(60% 60% at 50% 40%, rgba(15,118,110,.18), transparent 70%); z-index: -1; }
+  .hv-phone { width: 300px; margin: 0 auto; background: var(--offwhite); border-radius: 34px; border: 1px solid var(--line); box-shadow: 0 30px 70px rgba(17,24,39,.35); overflow: hidden; animation: prepFloat 4s ease-in-out infinite; }
+  .hv-status { display: flex; justify-content: space-between; padding: 10px 18px 6px; font-size: 11.5px; font-weight: 600; color: var(--ink); }
+  .hv-widget { margin: 6px 12px 12px; background: linear-gradient(150deg, #134E4A, #0F172A); color: #fff; border-radius: 16px; padding: 12px 14px; }
+  .hv-widget strong { font-size: 13px; display: block; }
+  .hv-widget span { font-size: 11px; color: #99F6E4; }
+  .hv-apps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 0 14px 12px; }
+  .hv-app { aspect-ratio: 1; border-radius: 14px; display: grid; place-items: center; font-size: 20px; box-shadow: 0 3px 8px rgba(17,24,39,.14); }
+  .hv-notif { padding: 0 12px 14px; display: grid; gap: 6px; }
+  .hv-n { display: flex; gap: 8px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 8px 10px; }
+  .hv-ni { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; font-size: 13px; flex-shrink: 0; }
+  .hv-n strong { font-size: 11px; display: block; }
+  .hv-n p { font-size: 10.5px; color: var(--muted); margin: 0; }
 }

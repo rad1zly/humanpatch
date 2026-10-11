@@ -84,16 +84,35 @@ function vLanding() {
       <button class="btn btn-ghost nav-btn" onclick="go('auth')">${t("nav_login")}</button>
     </div>
   </div></header>
-  <main class="wrap">
+  <main class="wrap-wide">
     <section class="hero">
-      <p class="kicker hero-kicker">${t("hero_kicker")}</p>
-      <h1>${t("hero_h1a")} <em>${t("hero_h1b")}</em></h1>
-      <p class="lead">${t("hero_lead")}</p>
-      <div class="ctas">
-        <button class="btn btn-primary" onclick="go('auth')">${t("hero_cta")}</button>
-        <button class="btn btn-ghost" onclick="scrollToSec()">${t("hero_cta2")}</button>
+      <div class="hero-copy">
+        <p class="kicker hero-kicker">${t("hero_kicker")}</p>
+        <h1>${t("hero_h1a")} <em>${t("hero_h1b")}</em></h1>
+        <p class="lead">${t("hero_lead")}</p>
+        <div class="ctas">
+          <button class="btn btn-primary" onclick="go('auth')">${t("hero_cta")}</button>
+          <button class="btn btn-ghost" onclick="scrollToSec()">${t("hero_cta2")}</button>
+        </div>
+        <p class="note">${t("hero_note")}</p>
       </div>
-      <p class="note">${t("hero_note")}</p>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="hv-phone">
+          <div class="hv-status"><span>08:47</span><span>🔋 78%</span></div>
+          <div class="hv-widget">
+            <strong>Hari 2 — Ada yang Perasaan</strong>
+            <span>3 notifikasi baru</span>
+          </div>
+          <div class="hv-apps">
+            ${[["💬","#0F766E"],["✉️","#2563EB"],["📧","#DC2626"],["🌐","#334155"],["👛","#7C3AED"],["🛒","#EA580C"],["📸","#DB2777"],["🎓","#0891B2"]].map(a =>
+              `<span class="hv-app" style="background:${a[1]}">${a[0]}</span>`).join("")}
+          </div>
+          <div class="hv-notif">
+            <div class="hv-n"><span class="hv-ni" style="background:#EA580C">🛒</span><div><strong>DailyMart</strong><p>Pesanan #DM-2214 diambil kurir…</p></div></div>
+            <div class="hv-n"><span class="hv-ni" style="background:#64748B">👤</span><div><strong>0813-5563-•••</strong><p>Selamat! Kamu terpilih untuk…</p></div></div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="section" id="how">
