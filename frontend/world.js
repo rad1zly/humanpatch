@@ -131,6 +131,107 @@ const STORY_DAYS = [
   { day: 5, engTitle: "Recover & Respond" },
 ];
 
+/* ---------- conversation threads per contact (multilingual) ---------- */
+const CONTACT_THREADS = {
+  ibu: [
+    { who: "them", text: {id:"Nak, sudah makan belum? Jam segini masih di kampus?", en:"Sweetie, have you eaten? Still on campus at this hour?", es:"Cariño, ¿ya comiste? ¿Todavía en el campus?", pt:"Querido, já comeu? Ainda no campus?", hi:"बेटा, खाना खा लिया? अभी भी कैंपस पर हो?"} },
+    { who: "them", text: {id:"Ibu transfer uang saku tambahan ya tadi sore. Cek dulu sebelum dipakai.", en:"Mom sent extra allowance this afternoon. Check it before spending.", es:"Mamá envió dinero extra esta tarde. Verifícalo antes de gastar.", pt:"Mãe mandou mesada extra hoje. Confere antes de gastar.", hi:"माँ ने आज दोपहर अतिरिक्त पैसे भेजे। खर्च करने से पहले जाँच लो।"} },
+  ],
+  bimo: [
+    { who: "them", text: {id:"Bro bsk konser kampus, gas gak? Tiket sisanya dikit", en:"Bro, campus concert tomorrow, you in? Few tickets left", es:"Bro, mañana el concierto del campus, ¿vas? Quedan pocas entradas", pt:"Bro, show do campus amanhã, vai? Sobram poucos ingressos", hi:"यार, कल कैंपस कॉन्सर्ट है, चलेगा? कुछ ही टिकट बचे"} },
+  ],
+  dosen: [
+    { who: "them", text: {id:"Rani, progress bab 3 skripsimu bagaimana? Minggu ini konsultasi ya.", en:"Rani, how's chapter 3 of your thesis? Consultation this week.", es:"Rani, ¿cómo va el capítulo 3? Consulta esta semana.", pt:"Rani, como vai o capítulo 3? Consulta esta semana.", hi:"रानी, थीसिस का चैप्टर 3 कैसा चल रहा है? इस हफ्ते मिलना।"} },
+  ],
+  kelas: [
+    { who: "them", text: {id:"Bimo: udah pada isi absen kewarganegaraan belum? buruan jam 12 ditutup", en:"Bimo: has everyone filled the civics attendance? Hurry, closes at 12", es:"Bimo: ¿todos firmaron asistencia? Corre, cierra a las 12", pt:"Bimo: todo mundo preencheu a chamada? Corre, fecha às 12", hi:"बिमो: सबने उपस्थिति भरी? जल्दी करो, 12 बजे बंद"} },
+  ],
+  kos: [
+    { who: "them", text: {id:"Dek, besok kerja bakti jam 7 ya. Jangan lupa bangun pagi.", en:"Dear, cleanup duty at 7 tomorrow. Don't forget to wake up early.", es:"Cariño, limpieza a las 7 mañana. Despiértate temprano.", pt:"Querido, mutirão às 7 amanhã. Acorda cedo.", hi:"कल सुबह 7 बजे सफाई है। जल्दी उठना।"} },
+  ],
+  supplier: [
+    { who: "them", text: {id:"Mbak, stok baru datang besok subuh. Yang kemarin laku semua.", en:"Ma'am, new stock arrives at dawn. Yesterday's batch sold out.", es:"Señora, stock nuevo llega al amanecer. El de ayer se vendió todo.", pt:"Dono, estoque novo chega de madrugada. O de ontem vendeu tudo.", hi:"नया स्टॉक सुबह आएगा। कल का सारा बिक गया।"} },
+  ],
+  pelanggan: [
+    { who: "them", text: {id:"Mbak, stok yang kemarin ada lagi gak? Mau repeat order 3 pcs.", en:"Hi, is last week's item back? Want to reorder 3 pcs.", es:"Hola, ¿volvió el producto? Quiero repetir 3 uds.", pt:"Oi, voltou o produto? Quero repetir 3 un.", hi:"पिछला प्रोडक्ट वापस आया? 3 पीस और चाहिए।"} },
+  ],
+  kurir: [
+    { who: "them", text: {id:"Mbak, paket #PRJ-88 udah kutinggal di pos ronda ya. Terima kasih.", en:"Ma'am, package #PRJ-88 left at the guard post. Thanks.", es:"Señora, paquete #PRJ-88 en el puesto de guardia. Gracias.", pt:"Dono, encomenda #PRJ-88 na portaria. Obrigado.", hi:"पार्सल #PRJ-88 गार्ड पोस्ट पर रख दिया। धन्यवाद।"} },
+  ],
+  grupdagang: [
+    { who: "them", text: {id:"Pak Jaya: harga kulakan naik dikit minggu ini, stok aman dulu ya.", en:"Mr. Jaya: wholesale prices up a bit this week, stock up now.", es:"Sr. Jaya: precios al por mayor suben un poco, abastezcan.", pt:"Sr. Jaya: preços de atacado subiram um pouco, estoquem.", hi:"जया: इस हफ्ते थोक दाम थोड़े बढ़े, स्टॉक कर लो।"} },
+  ],
+  suami: [
+    { who: "them", text: {id:"Dek, tadi aku transfer jatah bulanan. Cek ya sebelum belanja online 😄", en:"Dear, I sent the monthly allowance. Check before shopping online 😄", es:"Cariño, envié la mesada. Revisa antes de comprar online 😄", pt:"Querido, mandei a mesada. Confere antes de comprar online 😄", hi:"महीने का खर्च भेज दिया। ऑनलाइन खरीदने से पहले जाँच लो 😄"} },
+  ],
+  boss: [
+    { who: "them", text: {id:"Deck untuk klien besok siang aku review ya. Jangan lupa lampiran filenya.", en:"I'll review the client deck tomorrow noon. Don't forget the attachment.", es:"Reviso el deck mañana al mediodía. No olvides el adjunto.", pt:"Reviso o deck amanhã ao meio-dia. Não esqueça o anexo.", hi:"कल दोपहर डेक रिव्यू करूँगा। अटैचमेंट मत भूलना।"} },
+  ],
+  hrd: [
+    { who: "them", text: {id:"Pengumuman: slip gaji bulan ini bisa diunduh mulai tanggal 25.", en:"Announcement: this month's payslip downloads from the 25th.", es:"Anuncio: la boleta se descarga desde el día 25.", pt:"Aviso: o contracheque baixa a partir do dia 25.", hi:"घोषणा: सैलरी स्लिप 25 से डाउनलोड होगी।"} },
+  ],
+  temankantor: [
+    { who: "them", text: {id:"Mau ikut lunch nanti? Warung baru sebelah kantor katanya enak.", en:"Joining lunch? New place next to the office is supposedly good.", es:"¿Almuerzas con nosotros? El lugar nuevo es bueno.", pt:"Vai almoçar? O lugar novo ao lado é bom.", hi:"लंच चलोगे? नयी जगह अच्छी है।"} },
+  ],
+  grupkantor: [
+    { who: "them", text: {id:"Dimas: meeting jam 10 pindah ke ruang 3 ya semua.", en:"Dimas: 10am meeting moved to room 3, everyone.", es:"Dimas: reunión de 10 movida a sala 3.", pt:"Dimas: reunião das 10 mudou p/ sala 3.", hi:"दिमास: 10 बजे की मीटिंग रूम 3 में।"} },
+  ],
+  bendahara: [
+    { who: "them", text: {id:"Reimburse akhir bulan diproses minggu depan. Siapkan nota ya.", en:"Month-end reimbursements process next week. Prepare receipts.", es:"Reembolsos se procesan la próxima semana. Guarda recibos.", pt:"Reembolsos processados na próxima semana. Guarde recibos.", hi:"रिइंबर्समेंट अगले हफ्ते। रसीद रखो।"} },
+  ],
+  anak: [
+    { who: "them", text: {id:"Mi, nanti diambil jam 4 ya ada ekskul. Jangan lupa bawa uang kas.", en:"Mom, pick me up at 4, I have club. Bring the class fund.", es:"Mamá, recógeme a las 4, tengo extraescolar. Trae la cuota.", pt:"Mãe, me busca às 4, tenho atividade. Traz a taxa.", hi:"माँ, 4 बजे लेना, एक्टिविटी है। क्लास फंड लाना।"} },
+  ],
+  walikelas: [
+    { who: "them", text: {id:"Bu, info study tour kelas Nadia: pembayaran sampai Jumat via TU sekolah.", en:"Ma'am, Nadia's class study tour: payment due Friday via school admin.", es:"Señora, viaje de la clase de Nadia: pago hasta viernes en administración.", pt:"Sra., excursão da classe da Nadia: pagamento até sexta na secretaria.", hi:"नादिया की क्लास का ट्रिप: शुक्रवार तक स्कूल ऑफिस में भुगतान।"} },
+  ],
+  gruportu: [
+    { who: "them", text: {id:"Bu Guru: mari cek announcement grup untuk info SPP semester baru.", en:"Teacher: please check the group announcement for new semester fees.", es:"Profesora: revisa el anuncio del grupo para las cuotas.", pt:"Professora: veja o anúncio do grupo sobre as mensalidades.", hi:"टीचर: नए सेमेस्टर की फीस के लिए ग्रुप घोषणा देखें।"} },
+  ],
+  arisan: [
+    { who: "them", text: {id:"Mbak Yuli: arisan undian bulan ini di rumah Bu Nani, jangan lupa ya.", en:"Yuli: this month's club draw is at Mrs. Nani's, don't forget.", es:"Yuli: el sorteo es en casa de la Sra. Nani.", pt:"Yuli: o sorteio é na casa da Sra. Nani.", hi:"यूली: इस महीने का ड्रा नानी आंटी के घर।"} },
+  ],
+  temen: [
+    { who: "them", text: {id:"Bro, Sabtu nonton bareng? Kata orang filmnya bagus.", en:"Bro, movie Saturday? People say it's good.", es:"Bro, ¿película el sábado? Dicen que es buena.", pt:"Bro, filme sábado? Dizem que é bom.", hi:"यार, शनिवार मूवी? सब कह रहे अच्छी है।"} },
+  ],
+  bank: [
+    { who: "them", text: {id:"Transaksi Rp50.000 berhasil pukul 08.02 WIB. Saldo Rp1.2••••", en:"Transaction Rp50,000 successful at 08:02. Balance Rp1.2••••", es:"Transacción Rp50.000 exitosa a las 08:02.", pt:"Transação Rp50.000 concluída às 08:02.", hi:"लेन-देन Rp50,000 सफल, सुबह 8:02।"} },
+  ],
+  gruprt: [
+    { who: "them", text: {id:"Pak RT: Minggu pagi kerja bakti, tiap rumah minimal 1 orang hadir.", en:"Neighborhood head: Sunday cleanup, at least 1 person per house.", es:"Jefe del barrio: limpieza el domingo, 1 por casa.", pt:"Líder do bairro: mutirão domingo, 1 por casa.", hi:"मोहल्ला प्रमुख: रविवार सफाई, हर घर से 1 आदमी।"} },
+  ],
+  keluarga: [
+    { who: "them", text: {id:"Om Sam: Minggu depan reuni keluarga di rumahnya, jam 10 pagi.", en:"Uncle Sam: family reunion at his place next Sunday, 10am.", es:"Tío Sam: reunión familiar el domingo, 10am.", pt:"Tio Sam: reunião familiar domingo, 10h.", hi:"अंकल सैम: रविवार को पारिवारिक मिलन, सुबह 10 बजे।"} },
+  ],
+};
+
+/* smart canned auto-replies per contact when player sends free text (chatbot feel) */
+const CONTACT_REPLIES = {
+  ibu: {id:"Ya Nak, hati-hati ya. Kalau ada yang aneh cerita ke Ibu.", en:"Okay sweetie, stay careful. If something odd happens, tell Mom.", es:"Ok cariño, cuídate. Si pasa algo raro, cuéntame.", pt:"Ok querido, se cuida. Se algo estranho acontecer, me conta.", hi:"ठीक है बेटा, सावधान रहना। कुछ अजीब हो तो बताना।"},
+  bimo: {id:"Haha santai bro. Yaudah kuy nonton ya sabtu depan!", en:"Haha chill bro. Alright, movie next Saturday then!", es:"Jaja tranqui. ¡Va, cine el sábado!", pt:"Haha tranquilo. Fechado, cinema sábado!", hi:"हहा ठीक है यार। तो शनिवार मूवी पक्की!"},
+  dosen: {id:"Baik, catat ya konsultasi hari Kamis jam 10. Siapkan draft bab 3.", en:"Noted — consultation Thursday 10am. Prepare the chapter 3 draft.", es:"Anotado: consulta jueves 10am. Prepara el borrador.", pt:"Anotado: consulta quinta 10h. Prepare o rascunho.", hi:"नोट किया: गुरुवार 10 बजे मिलना। ड्राफ्ट तैयार करो।"},
+  kelas: {id:"Bimo: sip udah aku tandain. Jangan lupa yang lain!", en:"Bimo: marked. Don't forget the others!", es:"Bimo: anotado. ¡No olviden los demás!", pt:"Bimo: anotado. Não esqueçam o resto!", hi:"बिमो: नोट किया। बाकी लोग मत भूलना!"},
+  kos: {id:"Siap Bu, nanti aku bawa sapu ya 😄", en:"Yes ma'am, I'll bring a broom 😄", es:"Sí señora, llevo una escoba 😄", pt:"Sim senhora, levo uma vassoura 😄", hi:"जी आंटी, झाड़ू ले आऊँगा 😄"},
+  supplier: {id:"Pak Jaya: siap Mbak, besok subuh langsung kirim ya.", en:"Mr. Jaya: yes ma'am, shipping at dawn tomorrow.", es:"Sr. Jaya: sí señora, envío al amanecer.", pt:"Sr. Jaya: sim dona, envio de madrugada.", hi:"जया: जी, कल सुबह भेज दूँगा।"},
+  pelanggan: {id:"Mbak Sari: wah makasih infonya! Nanti aku order ya kak 🙏", en:"Mrs. Sari: thanks for the info! I'll order later 🙏", es:"Sra. Sari: ¡gracias por el aviso! Pido luego 🙏", pt:"Sra. Sari: obrigada pelo aviso! Peço depois 🙏", hi:"सारी: जानकारी के लिए धन्यवाद! बाद में ऑर्डर करूँगी 🙏"},
+  kurir: {id:"Andi: siap Mbak, kalau ada kendala hubungi aku ya.", en:"Andi: yes ma'am, call me if there's any issue.", es:"Andi: sí señora, llámeme si hay problemas.", pt:"Andi: sim dona, me chama se precisar.", hi:"आंदी: जी, कोई दिक्कत हो तो बुलाइए।"},
+  grupdagang: {id:"Pak Jaya: noted Mbak. Aman stoknya minggu ini.", en:"Mr. Jaya: noted. Stock is safe this week.", es:"Sr. Jaya: anotado. Stock seguro esta semana.", pt:"Sr. Jaya: anotado. Estoque seguro esta semana.", hi:"जया: नोट किया। इस हफ्ते स्टॉक ठीक है।"},
+  suami: {id:"Hehe iya Dek. Belanja secukupnya ya, akhir bulan ini panjang 😄", en:"Hehe yes dear. Shop moderately, it's a long month 😄", es:"Jaja sí cariño. Compra con moderación 😄", pt:"Hehe sim querida. Compra com moderação 😄", hi:"हहा हाँ। थोड़ा संतुलित खर्च करना, महीना लंबा है 😄"},
+  boss: {id:"Sudah kulampirkan filenya Bu Ratna. Terima kasih.", en:"I've attached the file, Mrs. Ratna. Thank you.", es:"Adjunté el archivo, Sra. Ratna. Gracias.", pt:"Anexei o arquivo, Sra. Ratna. Obrigado.", hi:"फाइल अटैच कर दी है, रत्ना मैडम। धन्यवाद।"},
+  hrd: {id:"Terima kasih infonya. Akan saya cek tanggal 25 nanti.", en:"Thanks for the info. I'll check on the 25th.", es:"Gracias por el aviso. Revisaré el día 25.", pt:"Obrigado pelo aviso. Vou conferir dia 25.", hi:"जानकारी के लिए धन्यवाद। 25 को देखूँगा।"},
+  temankantor: {id:"Gas! Aku ikut, jam 12 ya.", en:"Let's go! I'm in, 12pm then.", es:"¡Va! Me apunto, a las 12.", pt:"Bora! Eu vou, 12h então.", hi:"चलो! मैं आ रहा हूँ, 12 बजे।"},
+  grupkantor: {id:"Dimas: oke ruang 3, noted. Sampai jumpa jam 10.", en:"Dimas: room 3, noted. See you at 10.", es:"Dimas: sala 3, anotado. Nos vemos a las 10.", pt:"Dimas: sala 3, anotado. Até às 10.", hi:"दिमास: रूम 3, नोट किया। 10 बजे मिलते हैं।"},
+  bendahara: {id:"Pak Eko: siap, nota sudah saya kumpulkan. Terima kasih.", en:"Mr. Eko: ready, receipts collected. Thank you.", es:"Sr. Eko: listo, recibos recolectados.", pt:"Sr. Eko: pronto, recibos guardados.", hi:"एको: तैयार, रसीद जमा कर दी। धन्यवाद।"},
+  anak: {id:"Nadia: iya Mi! Eh Mi, jangan lupa kasih tahu Ayah jam 4 diambil ya.", en:"Nadia: okay Mom! Mom, tell Dad pickup is at 4.", es:"Nadia: ¡ok mamá! Mamá, avisa a papá que a las 4.", pt:"Nadia: ok mãe! Mãe, avisa o pai que às 4.", hi:"नादिया: ठीक माँ! पापा को बोल देना 4 बजे।"},
+  walikelas: {id:"Baik Bu, akan saya bayarkan Jumat lewat TU. Terima kasih.", en:"Alright, I'll pay Friday via the school office. Thank you.", es:"Bien, pagaré el viernes en administración.", pt:"Certo, pago sexta na secretaria.", hi:"ठीक है, शुक्रवार को स्कूल ऑफिस से भुगतान करूँगा।"},
+  gruportu: {id:"Bu Guru: terima kasih sudah cek. Mari disampaikan ke yang lain ya Bu.", en:"Teacher: thanks for checking. Please pass it on.", es:"Profesora: gracias por revisar. Coméntalo con las demás.", pt:"Professora: obrigada por conferir. Repasse às demais.", hi:"टीचर: जाँचने के लिए धन्यवाद। बाकियों को बता दीजिए।"},
+  arisan: {id:"Mbak Yuli: siap Mbak! Sampai jumpa Sabtu ya.", en:"Yuli: see you Saturday then!", es:"Yuli: ¡nos vemos el sábado!", pt:"Yuli: até sábado!", hi:"यूली: तो शनिवार मिलते हैं!"},
+  temen: {id:"Reza: gas bro! Aku booking tiketnya ya.", en:"Reza: let's go! I'll book the tickets.", es:"Reza: ¡va! Yo reservo las entradas.", pt:"Reza: bora! Eu reservo os ingressos.", hi:"रेज़ा: चलो! मैं टिकट बुक करता हूँ।"},
+  bank: {id:"Customer service otomatis: terima kasih telah menghubungi Bank Nusantara.", en:"Automated service: thank you for contacting Nusantara Bank.", es:"Servicio automático: gracias por contactar al Banco Nusantara.", pt:"Atendimento automático: obrigado por contatar o Banco Nusantara.", hi:"स्वचालित सेवा: नुसंतारा बैंक से संपर्क के लिए धन्यवाद।"},
+  gruprt: {id:"Pak RT: siap Pak, rumah kami akan hadir. Terima kasih.", en:"Neighborhood head: noted, our house will attend. Thank you.", es:"Jefe del barrio: anotado, asistiremos.", pt:"Líder do bairro: anotado, estaremos lá.", hi:"प्रमुख: जी, हमारे घर से आएँगे। धन्यवाद।"},
+  keluarga: {id:"Om Sam: wah asik! Kami datang jam 10 ya. Jangan lupa ajak Nadia.", en:"Uncle Sam: nice! We'll come at 10. Don't forget to bring Nadia.", es:"Tío Sam: ¡genial! Vamos a las 10. Trae a Nadia.", pt:"Tio Sam: ótimo! Vamos às 10. Traz a Nadia.", hi:"सैम: बढ़िया! हम 10 बजे आएँगे। नादिया को लाना।"},
+};
+
 /* ---------- chat previews per contact per lang ---------- */
 const CHAT_PREVIEWS = {
   ibu:   {id:"Jangan lupa makan ya, Nak.", en:"Don't forget to eat, sweetie.", es:"No olvides comer, cariño.", pt:"Não esquece de comer, querido.", hi:"खाना खाना मत भूलना।"},

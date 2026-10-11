@@ -12,6 +12,9 @@ function t(k) {
 const I18N = {
 id: {
   day_word: "Hari",
+  chat_encrypted: "🔒 Percakapan terenkripsi end-to-end (dunia fiktif)",
+  perm_link: "Izin & Privasi Aplikasi",
+  perm_link_sub: "Cek aplikasi mana yang minta akses berlebihan",
   day1_obj_h: "Misi Hari 1 — kenali HP-mu",
   day1_obj_hint: "Selesaikan semua misi untuk mengakhiri hari.",
   end_day1: "Akhiri Hari 1 ▸",
@@ -109,6 +112,9 @@ id: {
 },
 en: {
   day_word: "Day",
+  chat_encrypted: "🔒 End-to-end encrypted conversation (fictional world)",
+  perm_link: "App Permissions & Privacy",
+  perm_link_sub: "Check which apps ask for excessive access",
   day1_obj_h: "Day 1 mission — know your phone",
   day1_obj_hint: "Complete all missions to end the day.",
   end_day1: "End Day 1 ▸",
@@ -212,6 +218,9 @@ en: {
 },
 es: {
   day_word: "Día",
+  chat_encrypted: "🔒 Conversación cifrada de extremo a extremo (mundo ficticio)",
+  perm_link: "Permisos y Privacidad de Apps",
+  perm_link_sub: "Revisa qué apps piden acceso excesivo",
   day1_obj_h: "Misión Día 1 — conoce tu teléfono",
   day1_obj_hint: "Completa todas las misiones para terminar el día.",
   end_day1: "Terminar Día 1 ▸",
@@ -253,6 +262,9 @@ es: {
 },
 hi: {
   day_word: "दिन",
+  chat_encrypted: "🔒 एंड-टू-एंड एन्क्रिप्टेड बातचीत (काल्पनिक दुनिया)",
+  perm_link: "ऐप अनुमतियाँ और गोपनीयता",
+  perm_link_sub: "देखें कौन सी ऐप अत्यधिक एक्सेस मांगती हैं",
   day1_obj_h: "दिन 1 मिशन — अपना फ़ोन जानें",
   day1_obj_hint: "दिन खत्म करने के लिए सभी मिशन पूरे करें।",
   end_day1: "दिन 1 समाप्त करें ▸",
@@ -294,6 +306,9 @@ hi: {
 },
 pt: {
   day_word: "Dia",
+  chat_encrypted: "🔒 Conversa criptografada de ponta a ponta (mundo fictício)",
+  perm_link: "Permissões e Privacidade de Apps",
+  perm_link_sub: "Veja quais apps pedem acesso excessivo",
   day1_obj_h: "Missão Dia 1 — conheça seu celular",
   day1_obj_hint: "Complete todas as missões para terminar o dia.",
   end_day1: "Terminar Dia 1 ▸",
