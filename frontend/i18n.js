@@ -6,7 +6,7 @@ const LANGS = [
 let LANG = "id";
 function t(k) {
   const T = I18N[LANG] || I18N.id;
-  return T[k] ?? I18N.id[k] ?? k;
+  return T[k] ?? I18N.en[k] ?? I18N.id[k] ?? k;
 }
 
 const I18N = {
@@ -104,6 +104,12 @@ id: {
 },
 en: {
   day_word: "Day",
+  sender_hint: "· tap for sender details",
+  back_dash: "Back",
+  journey_sub: "Complete days to unlock the next.",
+  world_h: (n)=>`${n} world`,
+  world_sub: "Fictional contacts living in your phone.",
+  day2_hint: (u)=>`${u} new notifications. Some might matter.`,
   brand_sub: "Digital life simulator", nav_login: "Sign in", nav_logout: "Exit",
   hero_kicker: "DIGITAL LIFE SIMULATOR",
   hero_h1a: "Your digital life", hero_h1b: "becomes the game.",
@@ -196,6 +202,13 @@ en: {
 },
 es: {
   day_word: "Día",
+  sender_hint: "· toca para detalles del remitente",
+  back_dash: "Volver",
+  journey_sub: "Completa días para desbloquear el siguiente.",
+  world_h: (n)=>`Mundo ${n}`,
+  world_sub: "Contactos ficticios que viven en tu teléfono.",
+  day2_hint: (u)=>`Tienes ${u} notificaciones nuevas. Algunas importan.`,
+  chap_day_of: (d)=>`CAPÍTULO 1 · DÍA ${d} DE 5`,
   brand_sub: "Simulador de vida digital", nav_login: "Entrar", nav_logout: "Salir",
   hero_kicker: "SIMULADOR DE VIDA DIGITAL",
   hero_h1a: "Tu vida digital", hero_h1b: "se convierte en el juego.",
@@ -225,6 +238,13 @@ es: {
 },
 hi: {
   day_word: "दिन",
+  sender_hint: "· भेजने वाले की जानकारी के लिए टैप करें",
+  back_dash: "वापस",
+  journey_sub: "अगला दिन खोलने के लिए दिन पूरे करें।",
+  world_h: (n)=>`${n} की दुनिया`,
+  world_sub: "आपके फ़ोन में रहने वाले काल्पनिक संपर्क।",
+  day2_hint: (u)=>`${u} नई सूचनाएँ। कुछ ज़रूरी हो सकती हैं।`,
+  chap_day_of: (d)=>`अध्याय 1 · दिन ${d} / 5`,
   brand_sub: "डिजिटल लाइफ सिम्युलेटर", nav_login: "साइन इन", nav_logout: "बाहर",
   hero_kicker: "डिजिटल लाइफ सिम्युलेटर",
   hero_h1a: "आपका डिजिटल जीवन", hero_h1b: "ही खेल बन जाता है।",
@@ -254,6 +274,13 @@ hi: {
 },
 pt: {
   day_word: "Dia",
+  sender_hint: "· toque para detalhes do remetente",
+  back_dash: "Voltar",
+  journey_sub: "Complete dias para desbloquear o próximo.",
+  world_h: (n)=>`Mundo ${n}`,
+  world_sub: "Contatos fictícios que vivem no seu celular.",
+  day2_hint: (u)=>`Você tem ${u} notificações novas. Algumas importam.`,
+  chap_day_of: (d)=>`CAPÍTULO 1 · DIA ${d} DE 5`,
   brand_sub: "Simulador de vida digital", nav_login: "Entrar", nav_logout: "Sair",
   hero_kicker: "SIMULADOR DE VIDA DIGITAL",
   hero_h1a: "Sua vida digital", hero_h1b: "vira o jogo.",

@@ -100,16 +100,16 @@ function vLanding() {
         <div class="hv-phone">
           <div class="hv-status"><span>08:47</span><span>🔋 78%</span></div>
           <div class="hv-widget">
-            <strong>Hari 2 — Ada yang Perasaan</strong>
-            <span>3 notifikasi baru</span>
+            <strong>${t("day2_t")}</strong>
+            <span>${t("day2_hint")(3)}</span>
           </div>
           <div class="hv-apps">
             ${[["💬","#0F766E"],["✉️","#2563EB"],["📧","#DC2626"],["🌐","#334155"],["👛","#7C3AED"],["🛒","#EA580C"],["📸","#DB2777"],["🎓","#0891B2"]].map(a =>
               `<span class="hv-app" style="background:${a[1]}">${a[0]}</span>`).join("")}
           </div>
           <div class="hv-notif">
-            <div class="hv-n"><span class="hv-ni" style="background:#EA580C">🛒</span><div><strong>DailyMart</strong><p>Pesanan #DM-2214 diambil kurir…</p></div></div>
-            <div class="hv-n"><span class="hv-ni" style="background:#64748B">👤</span><div><strong>0813-5563-•••</strong><p>Selamat! Kamu terpilih untuk…</p></div></div>
+            <div class="hv-n"><span class="hv-ni" style="background:#EA580C">🛒</span><div><strong>DailyMart</strong><p>${L(INAPP.sms[1].text).slice(0, 40)}…</p></div></div>
+            <div class="hv-n"><span class="hv-ni" style="background:#64748B">👤</span><div><strong>0813-5563-•••</strong><p>${t("atk_generic")}</p></div></div>
           </div>
         </div>
       </div>
@@ -424,7 +424,7 @@ function vDashboard() {
         ${(WORLD_TEMPLATES[p.archetype]?.contacts || []).slice(0, 4).map(c => `
           <div class="card" style="display:flex;gap:10px;align-items:center;padding:12px">
             <div style="width:36px;height:36px;border-radius:50%;background:${c.color};display:grid;place-items:center;font-size:17px">${c.avatar}</div>
-            <div><strong class="small">${esc(c.name)}</strong><p style="margin:0" class="small dim">${esc(c.rel)}</p></div>
+            <div><strong class="small">${esc(L(c.name))}</strong><p style="margin:0" class="small dim">${esc(L(c.rel))}</p></div>
           </div>`).join("")}
       </div>
     </section>
@@ -569,43 +569,13 @@ function vChatLoop() {
       </div>`;
     }).join("")}`;
 }
-function chatPreview(cid) {
-  const map = {
-    ibu: "Jangan lupa makan ya, Nak.",
-    bimo: "Bsk gas nonton konser kampus?",
-    dosen: "Progress skripsimu bagaimana?",
-    kelas: "Bimo: udah pada isi absen belum?",
-    kos: "Dek, kerja bakti besok jam 7 ya.",
-    supplier: "Stok baru datang besok subuh.",
-    pelanggan: "Mbak, stok yang kemarin ada lagi?",
-    kurir: "Paket sudah ditinggal di pos ronda, Mbak.",
-    grupdagang: "Pak Jaya: harga naik dikit minggu ini.",
-    suami: "Tadi transfer jatah bulanan, cek ya.",
-    boss: "Deck-ku kirim sebelum siang ya.",
-    hrd: "Slip gaji sudah bisa diunduh.",
-    temankantor: "Mau ikut lunch nanti?",
-    grupkantor: "Meeting 10 pindah ke ruang 3.",
-    bendahara: "Reimburse-ku sudah masuk?",
-    anak: "Mi, nanti diambil jam 4 ya.",
-    walikelas: "Study tour pembayaran sampai Jumat.",
-    gruportu: "Bu Guru: cek announcement ya bu.",
-    arisan: "Arisan bulan ini di rumah Bu Nani.",
-    temen: "Bro, nonton bareng Sabtu?",
-    bank: "Transaksi berhasil. Saldo Rp••••.",
-    gruprt: "Pak RT: kerja bakti Minggu pagi.",
-    keluarga: "Minggu reuni di rumah Om Sam.",
-  };
-  return map[cid] || "👍";
-}
+function chatPreview(cid) { return chatPreviewFor(cid); }
 
 function vMessageBox() {
   const w = state.world;
   const atk = w.attack;
   const atkThread = atk && atk.app === "messagebox" && !atk.done ? atk : null;
-  const smsList = [
-    { from: "PocketPay", text: "Top-up Rp100.000 berhasil. Saldo Rp384.210.", time: "08:12" },
-    { from: "DailyMart", text: "Pesanan #DM-2214 diambil kurir. Sampai besok.", time: "Kemarin" },
-  ];
+  const smsList = INAPP.sms.map(s => ({ from: L(s.from), text: L(s.text), time: L(s.time) }));
   return `
     ${atkThread ? `
     <div class="chat-list-item unread" onclick="startEncounter()">
@@ -634,12 +604,7 @@ function vJournalApp() {
 }
 
 function vSecurityApp() {
-  const perms = [
-    ["SenterPro", "🔦", "SMS · Kontak · Mikrofon", true],
-    ["SocialSquare", "📸", "Kamera · Lokasi", false],
-    ["PocketPay", "👛", "Kamera (scan QR)", false],
-    ["SafeBrowse", "🌐", "Lokasi (opsional)", true],
-  ];
+  const perms = INAPP.perms.map(p => [L(p.app), p.icon, L(p.perms), p.bad]);
   return `
     <div class="card"><strong>${t("scan_h")}</strong><p class="small dim">${t("sec_last")}</p></div>
     ${perms.map(x => `
@@ -654,13 +619,7 @@ function vSecurityApp() {
 }
 
 function vSettingsApp() {
-  const rows = [
-    ["📶", "Jaringan & WiFi", "RumahKita_5G"],
-    ["🔔", t("notif_h")(0).split("·")[0], "42"],
-    ["🔐", "Kunci layar", "PIN 6 digit"],
-    ["👤", "Akun", "1"],
-    ["🧩", "Aplikasi", "10"],
-  ];
+  const rows = INAPP.settings.map(s => [s.icon, L(s.label), L(s.value)]);
   return rows.map(r => `
     <div class="card" style="padding:12px;display:flex;gap:10px;align-items:center" onclick="toast('⚙')">
       <span style="font-size:18px">${r[0]}</span>
