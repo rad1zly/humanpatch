@@ -78,7 +78,9 @@ def generate_scenario(profile: str, domain: str = "phishing_social", lang: str =
         "id": "Bahasa Indonesia (match the profile's tone; casual for young, polite for older)",
         "en": "English (natural, conversational; match the profile's tone)",
         "es": "Spanish (Latin American, natural, conversational; match the profile's tone)",
-        "hi": "Hindi (Devanagari script, natural conversational; match the profile's tone)",
+        "fr": "French (natural conversational; match the profile's tone)",
+        "it": "Italian (natural conversational; match the profile's tone)",
+        "de": "German (natural conversational; match the profile's tone)",
         "pt": "Portuguese (Brazilian, natural, conversational; match the profile's tone)",
     }.get(lang, "Bahasa Indonesia")
     prompt = DIRECTOR_PROMPT.format(profile=profile[:800], domain=domain, slug=slug, language=language_rule)
