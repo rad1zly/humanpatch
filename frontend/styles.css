@@ -505,3 +505,55 @@ button.statusbar { background: none; border: none; width: 100%; cursor: pointer;
 .doc-pager button:hover { border-color: var(--teal); }
 .doc-pager .pg-label { display: block; font-size: 10.5px; color: var(--muted); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 .doc-pager .pg-title { font-size: 13.5px; color: var(--ink); font-weight: 700; }
+
+
+/* ============================================================
+   FULL-PAGE SCROLL-SNAP LANDING + FLUID FULL-BLEED
+   ============================================================ */
+html { scroll-behavior: smooth; }
+.snap-pages { display: block; padding: 0 !important; max-width: none !important; width: 100%; }
+.snap-page {
+  min-height: 100dvh;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 96px clamp(20px, 6vw, 96px) 48px;
+  scroll-snap-align: start;
+  position: relative;
+}
+body { scroll-snap-type: y proximity; } /* gentle snap, still free-scrolls inside long sections */
+.snap-page .section-inner, .snap-page > .cards, .snap-page > .domain-grid, .snap-page > .persona-demo {
+  width: min(1180px, 100%);
+  margin-left: auto; margin-right: auto;
+}
+.snap-page h2 { width: min(1180px, 100%); margin-left: auto; margin-right: auto; }
+.snap-page .sub { width: min(1180px, 100%); margin-left: auto; margin-right: auto; }
+
+/* hero stays 2-col but full-bleed width */
+.hero.snap-page { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(28px, 5vw, 80px); align-items: center; max-width: 1280px; margin: 0 auto; width: 100%; }
+@media (max-width: 899px) { .hero.snap-page { grid-template-columns: 1fr; } .hero-visual { display: none !important; } }
+
+/* fixed topbar over snap pages */
+.topbar-fixed { position: fixed; top: 0; left: 0; right: 0; z-index: 50; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); background: color-mix(in srgb, var(--navy) 72%, transparent); border-bottom: 1px solid rgba(148,163,184,.14); }
+.snap-page:first-of-type { padding-top: 120px; }
+
+/* three.js canvas layer */
+#bg3d { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+.snap-pages { position: relative; z-index: 1; }
+
+/* scroll cue */
+.scroll-cue { display: inline-flex; align-items: center; gap: 10px; margin-top: 26px; background: none; border: none; color: var(--muted); font-weight: 700; font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; }
+.scroll-cue:hover { color: var(--mint); }
+.sc-track { width: 22px; height: 34px; border: 2px solid #475569; border-radius: 12px; display: inline-flex; justify-content: center; padding-top: 5px; }
+.sc-dot { width: 4px; height: 8px; border-radius: 4px; background: var(--teal); animation: scDot 1.6s ease-in-out infinite; }
+@keyframes scDot { 0% { transform: translateY(0); opacity: 1; } 70% { transform: translateY(10px); opacity: 0; } 100% { opacity: 0; } }
+
+/* disabled old padding rules that fought snap */
+.snap-page .section-inner { padding: 0; }
+
+/* ============================================================
+   DOC PAGE bottom fix — full-height layout, footer at bottom
+   ============================================================ */
+.doc-page { min-height: 100dvh; display: flex; flex-direction: column; background: var(--offwhite); }
+.doc-page .banner { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--navy) 85%, transparent); backdrop-filter: blur(10px); }
+.doc-wrap { flex: 1; width: min(860px, 100%); margin: 0 auto; padding: 34px 22px 48px; }
+.site-footer { margin-top: auto; }
+@media (min-width: 1600px) { .doc-wrap { max-width: 960px; } }

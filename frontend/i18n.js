@@ -12,6 +12,7 @@ function t(k) {
 const I18N = {
 id: {
   day_word: "Hari",
+  scroll_cue: "Gulir untuk menjelajah",
   foot_note: "HumanPatch adalah petualangan pelatihan. Pesan, halaman, dan jaringan di dalam dunianya disimulasikan.",
   foot_sim: "Semua karakter & pesan fiktif",
   pg_prev: "Sebelumnya", pg_next: "Berikutnya",
@@ -116,6 +117,7 @@ id: {
 },
 en: {
   day_word: "Day",
+  scroll_cue: "Scroll to explore",
   foot_note: "HumanPatch is a training adventure. Messages, pages, and networks inside the world are simulated.",
   foot_sim: "All characters & messages are fictional",
   pg_prev: "Previous", pg_next: "Next",
@@ -226,6 +228,7 @@ en: {
 },
 es: {
   day_word: "Día",
+  scroll_cue: "Desplázate para explorar",
   foot_note: "HumanPatch es una aventura de entrenamiento. Todo dentro del mundo está simulado.",
   foot_sim: "Todos los personajes y mensajes son ficticios",
   pg_prev: "Anterior", pg_next: "Siguiente",
@@ -274,6 +277,7 @@ es: {
 },
 hi: {
   day_word: "दिन",
+  scroll_cue: "स्क्रॉल करें",
   foot_note: "HumanPatch एक प्रशिक्षण एडवेंचर है। दुनिया की हर चीज़ सिम्युलेटेड है।",
   foot_sim: "सभी किरदार और संदेश काल्पनिक हैं",
   pg_prev: "पिछला", pg_next: "अगला",
@@ -322,6 +326,7 @@ hi: {
 },
 pt: {
   day_word: "Dia",
+  scroll_cue: "Role para explorar",
   foot_note: "HumanPatch é uma aventura de treinamento. Tudo dentro do mundo é simulado.",
   foot_sim: "Todos os personagens e mensagens são fictícios",
   pg_prev: "Anterior", pg_next: "Próximo",
