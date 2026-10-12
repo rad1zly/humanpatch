@@ -435,3 +435,73 @@ button.statusbar { background: none; border: none; width: 100%; cursor: pointer;
 
 /* chat day separator */
 .chat-day-sep { text-align: center; font-size: 10px; color: var(--muted); background: #F1F5F9; border-radius: 999px; padding: 4px 10px; width: fit-content; margin: 6px auto; }
+
+
+/* ============================================================
+   ULTRAWIDE / CURVED-SCREEN ADAPTIVE (>=1600px)
+   - product pages widen & scale up (no dead center void)
+   - phone-sim gets ambient side panels so the stage feels full
+   ============================================================ */
+@media (min-width: 1600px) {
+  html { font-size: 17.5px; }
+  .wrap-wide { max-width: 1280px; }
+  .hero h1 { font-size: 56px; }
+  .hero { grid-template-columns: 1.2fr .8fr; gap: 64px; }
+  .cards { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .domain-grid { grid-template-columns: repeat(6, 1fr); }
+  .dash-grid-2 { gap: 24px; }
+  .auth-card { max-width: 480px; }
+  .wizard-wrap { max-width: 720px; }
+  .journey { max-width: 620px; }
+}
+
+@media (min-width: 2000px) {
+  html { font-size: 19px; }
+  .wrap-wide { max-width: 1400px; }
+  .hero h1 { font-size: 62px; }
+}
+
+/* phone-sim stage on ultrawide: center phone, ambient panels left/right */
+@media (min-width: 1100px) {
+  .phone-stage { align-items: center; }
+  .phone-wrap { position: relative; }
+  .phone-wrap::before, .phone-wrap::after {
+    content: "";
+    position: absolute; top: 12%; height: 40%; width: 150px;
+    background: radial-gradient(60% 60% at 50% 50%, rgba(45,212,191,.10), transparent 75%);
+    pointer-events: none;
+  }
+  .phone-wrap::before { left: -190px; }
+  .phone-wrap::after { right: -190px; }
+}
+
+/* ============================================================
+   SITE FOOTER (docs pages nav) — from HumanPatch-GUI concept
+   ============================================================ */
+.site-footer { border-top: 1px solid var(--line); margin-top: 56px; background: var(--navy); }
+.site-footer .inner { max-width: 1080px; margin: 0 auto; padding: 28px 20px 34px; }
+@media (min-width: 1600px) { .site-footer .inner { max-width: 1280px; } }
+.footer-brand { display: flex; align-items: center; gap: 8px; color: #E2E8F0; font-weight: 800; letter-spacing: .02em; margin-bottom: 14px; }
+.footer-note { color: #94A3B8; font-size: 12.5px; max-width: 560px; margin: 0 0 16px; line-height: 1.6; }
+.footer-nav { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-bottom: 18px; }
+.footer-nav a, .footer-nav button { color: #CBD5E1; font-size: 13px; text-decoration: none; background: none; border: none; padding: 0; cursor: pointer; font-weight: 600; }
+.footer-nav a:hover, .footer-nav button:hover { color: var(--mint); }
+.footer-meta { display: flex; flex-wrap: wrap; gap: 8px 18px; color: #64748B; font-size: 11.5px; border-top: 1px solid rgba(148,163,184,.15); padding-top: 14px; }
+.footer-meta .dot-sep::before { content: "·"; margin-right: 18px; color: #475569; }
+
+/* doc page (About/Privacy/Terms/...) */
+.doc-page { min-height: 100dvh; background: var(--offwhite); }
+.doc-wrap { max-width: 760px; margin: 0 auto; padding: 28px 20px 40px; }
+.doc-kicker { color: var(--teal); font-weight: 800; letter-spacing: .14em; font-size: 11px; text-transform: uppercase; }
+.doc-wrap h1 { font-size: clamp(30px, 4vw, 44px); margin: 6px 0 18px; }
+.doc-wrap h2 { font-size: 19px; margin: 26px 0 8px; }
+.doc-wrap p, .doc-wrap li { color: #334155; line-height: 1.75; font-size: 14.5px; }
+.doc-wrap ul { padding-left: 20px; }
+.doc-back { display: inline-flex; align-items: center; gap: 6px; margin-top: 26px; color: var(--teal); font-weight: 700; background: none; border: none; font-size: 14px; cursor: pointer; }
+
+/* doc pagination */
+.doc-pager { display: flex; justify-content: space-between; gap: 12px; margin-top: 34px; border-top: 1px solid var(--line); padding-top: 18px; }
+.doc-pager button { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; cursor: pointer; text-align: left; max-width: 48%; }
+.doc-pager button:hover { border-color: var(--teal); }
+.doc-pager .pg-label { display: block; font-size: 10.5px; color: var(--muted); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.doc-pager .pg-title { font-size: 13.5px; color: var(--ink); font-weight: 700; }
