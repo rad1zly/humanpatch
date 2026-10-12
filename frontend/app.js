@@ -69,12 +69,41 @@ function syncBg3d() {
   else if (typeof hpStopBg3d === "function") hpStopBg3d();
 }
 
-/* language switcher chip-row */
-function langSwitcher(dark = false) {
-  return `<div class="langs ${dark ? "langs-dark" : ""}" role="group" aria-label="Language">
-    ${LANGS.map(l => `<button class="lang-btn ${LANG === l.id ? "sel" : ""}" onclick="setLang('${l.id}')" aria-label="${l.id}">${l.label}</button>`).join("")}
+/* language dropdown (globe) */
+function langDropdown() {
+  const cur = LANGS.find(l => l.id === LANG) || LANGS[0];
+  return `
+  <div class="langdd" role="group">
+    <button class="langdd-btn" onclick="toggleLangDD(event)" aria-haspopup="true" aria-expanded="${state.langDD ? "true" : "false"}">
+      🌐 <span>${cur.label}</span> <span class="caret">▾</span>
+    </button>
+    ${state.langDD ? `<div class="langdd-menu">${LANGS.map(l =>
+      `<button class="${l.id === LANG ? "sel" : ""}" onclick="setLang('${l.id}'); state.langDD=false;">${l.flag || ""} ${l.label}${l.id === LANG ? " ✓" : ""}</button>`).join("")}
+    </div>` : ""}
   </div>`;
 }
+function toggleLangDD(e) { e.stopPropagation(); state.langDD = !state.langDD; render(); }
+document.addEventListener("click", (e) => { if (state.langDD && !e.target.closest(".langdd")) { state.langDD = false; render(); } });
+
+/* landing snap-page nav (dropdown on mobile) */
+const NAV_SECTIONS = [
+  ["how", "nav_how"], ["domains", "nav_learn"], ["persona", "nav_stories"], ["progress", "nav_progress"],
+];
+function navLinks() {
+  return NAV_SECTIONS.map(([id, key]) =>
+    `<button class="navlink" onclick="snapTo('${id}')">${t(key)}</button>`).join("");
+}
+function snapTo(id) {
+  state.navDD = false;
+  const el = id === "domains" ? document.getElementById("domains-h") :
+             id === "persona" ? document.getElementById("persona-h") :
+             id === "progress" ? document.getElementById("progress-h") :
+             document.getElementById(id);
+  if (el) el.closest(".snap-page").scrollIntoView({ behavior: "smooth" });
+  else document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+}
+function toggleNavDD(e) { e.stopPropagation(); state.navDD = !state.navDD; state.langDD = false; render(); }
+document.addEventListener("click", (e) => { if (state.navDD && !e.target.closest(".navwrap")) { state.navDD = false; render(); } });
 
 /* ============================================================
    LANDING
@@ -84,8 +113,13 @@ function vLanding() {
   <div id="bg3d" aria-hidden="true"></div>
   <header class="topbar topbar-fixed"><div class="wrap-wide topbar-inner">
     <div class="brand"><div class="brand-mark">${icons.shield}</div><span>HumanPatch<small>${t("brand_sub")}</small></span></div>
+    <div class="navwrap">
+      <nav class="navlinks" aria-label="Sections">${navLinks()}</nav>
+      <button class="navburger" onclick="toggleNavDD(event)" aria-label="Menu">☰</button>
+      ${state.navDD ? `<div class="navdd-menu">${navLinks()}</div>` : ""}
+    </div>
     <div style="display:flex;gap:10px;align-items:center">
-      ${langSwitcher()}
+      ${langDropdown()}
       <button class="btn btn-ghost nav-btn" onclick="go('auth')">${t("nav_login")}</button>
     </div>
   </div></header>
@@ -134,7 +168,7 @@ function vLanding() {
     </section>
 
     <section class="section snap-page">
-      <h2>${t("learn_h2")}</h2>
+      <h2 id="domains-h">${t("learn_h2")}</h2>
       <p class="sub">${t("learn_sub")}</p>
       <div class="domain-grid">
         ${[["🔐","d1"],["🎣","d2"],["🌐","d3"],["📸","d4"],["📱","d5"],["🚨","d6"]].map(d =>
@@ -143,7 +177,7 @@ function vLanding() {
     </section>
 
     <section class="section snap-page">
-      <h2>${t("pers_h2")}</h2>
+      <h2 id="persona-h">${t("pers_h2")}</h2>
       <p class="sub">${t("pers_sub")}</p>
       <div class="persona-demo">
         <div class="persona-card"><span class="tag">${t("tag_student")}</span><h4>Rani, 21</h4><ul><li>ChatLoop · PocketPay · CampusHub</li><li>🌍 ${t("arch_student_d")}</li></ul></div>
@@ -152,7 +186,7 @@ function vLanding() {
     </section>
 
     <section class="section snap-page">
-      <h2>${t("prog_h2")}</h2>
+      <h2 id="progress-h">${t("prog_h2")}</h2>
       <p class="sub">${t("prog_sub")}</p>
       <div class="card"><p style="margin:0">${t("prog_card")}</p></div>
     </section>
@@ -179,7 +213,7 @@ function vAuth() {
   <div class="auth-wrap"><div class="wrap auth-main">
     <div class="auth-card">
       <div class="brand" style="margin-bottom:14px"><div class="brand-mark">${icons.shield}</div><span>HumanPatch</span></div>
-      ${langSwitcher()}
+      ${langDropdown()}
       <h1 style="margin-top:12px">${isLogin ? t("auth_login_h") : t("auth_signup_h")}</h1>
       <p class="sub">${isLogin ? t("auth_login_sub") : t("auth_signup_sub")}</p>
       ${isLogin ? "" : `
@@ -231,7 +265,7 @@ function vProfiles() {
   <header class="topbar"><div class="wrap-wide topbar-inner">
     <div class="brand"><div class="brand-mark">${icons.shield}</div><span>HumanPatch</span></div>
     <div style="display:flex;gap:10px;align-items:center">
-      ${langSwitcher()}
+      ${langDropdown()}
       <button class="btn btn-ghost nav-btn" onclick="logout()">${t("nav_logout")}</button>
     </div>
   </div></header>
@@ -385,7 +419,7 @@ function vDashboard() {
   <header class="topbar"><div class="wrap-wide topbar-inner">
     <div class="brand"><div class="brand-mark">${icons.shield}</div><span>HumanPatch</span></div>
     <div style="display:flex;gap:10px;align-items:center">
-      ${langSwitcher()}
+      ${langDropdown()}
       <button class="btn btn-ghost nav-btn" onclick="go('profiles')">${t("profiles_h1").split(" ")[0]}</button>
     </div>
   </div></header>
@@ -1119,9 +1153,12 @@ function vDoc(id) {
   const blocks = doc.body[LANG] || doc.body.en || doc.body.id;
   return `
   <div class="doc-page">
-    <header class="banner"><div class="banner-inner">
-      <button class="brand" onclick="go('landing'); location.hash='';">🛡️ HumanPatch</button>
-      <div class="lang-switch">${LANGS.map(l => `<button class="${l.id === LANG ? "on" : ""}" onclick="setLang('${l.id}')">${l.label}</button>`).join("")}</div>
+    <header class="topbar topbar-fixed"><div class="wrap-wide topbar-inner">
+      <button class="brand brand-btn" onclick="go('landing'); location.hash='';"><div class="brand-mark">${icons.shield}</div><span>HumanPatch</span></button>
+      <div style="margin-left:auto;display:flex;gap:10px;align-items:center">
+        ${langDropdown()}
+        <button class="btn btn-ghost nav-btn" onclick="go('landing'); location.hash='';">‹ ${t("back_home")}</button>
+      </div>
     </div></header>
     <div class="doc-wrap">
       <p class="doc-kicker">HumanPatch</p>
