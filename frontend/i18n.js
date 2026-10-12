@@ -14,6 +14,7 @@ function t(k) {
 const I18N = {
 id: {
   day_word: "Hari",
+  auth_err_name: "Isi nama dulu ya", auth_err_exists: "Nama udah dipakai — masuk aja", auth_err_wrong: "Nama atau password salah", auth_needed: "Masuk dulu buat mulai — sesi terpisah per akun",
   finale_kicker: "BAB 1 SELESAI", finale_h: "Lima hari, satu HP, banyak keputusan.",
   finale_sub: "Ini rekap perjalananmu — dan kebiasaan digital yang mulai terbentuk.",
   finale_score_h: "Skor perjalanan", finale_lv: "Level ", finale_domains_note: "Rekap ini mencakup 10 domain keamanan: sandi, phishing, browsing, privasi, HP, lapor, telepon palsu, pembayaran, psikologi penipuan, keluarga.",
@@ -136,6 +137,7 @@ id: {
 },
 en: {
   day_word: "Day",
+  auth_err_name: "Please enter a name", auth_err_exists: "Name taken — log in instead", auth_err_wrong: "Wrong name or password", auth_needed: "Log in first — sessions are separate per account",
   finale_kicker: "CHAPTER 1 COMPLETE", finale_h: "Five days, one phone, many decisions.",
   finale_sub: "Here's your journey recap — and the digital habits taking shape.",
   finale_score_h: "Journey score", finale_lv: "Level ", finale_domains_note: "This recap spans 10 security domains: passwords, phishing, browsing, privacy, phone, reporting, scam calls, payments, scam psychology, family.",
@@ -264,6 +266,7 @@ en: {
 },
 es: {
   day_word: "Día",
+  auth_err_name: "Escribe un nombre", auth_err_exists: "Nombre en uso — inicia sesión", auth_err_wrong: "Nombre o contraseña incorrectos", auth_needed: "Inicia sesión primero — sesiones separadas",
   finale_kicker: "CAPÍTULO 1 COMPLETO", finale_h: "Cinco días, un teléfono, muchas decisiones.",
   finale_sub: "Tu recorrido — y los hábitos digitales que se forman.",
   finale_score_h: "Puntaje", finale_lv: "Nivel ", finale_domains_note: "Este resumen abarca 10 dominios: contraseñas, phishing, navegación, privacidad, móvil, reportes, llamadas falsas, pagos, psicología, familia.",
@@ -336,6 +339,7 @@ es: {
 },
 fr: {
   day_word: "Jour",
+  auth_err_name: "Entrez un nom", auth_err_exists: "Nom pris — connectez-vous", auth_err_wrong: "Nom ou mot de passe incorrect", auth_needed: "Connectez-vous d'abord — sessions séparées",
   finale_kicker: "CHAPITRE 1 TERMINÉ", finale_h: "Cinq jours, un téléphone, beaucoup de décisions.",
   finale_sub: "Votre récap — et les habitudes numériques qui se forment.",
   finale_score_h: "Score", finale_lv: "Niveau ", finale_domains_note: "Ce récap couvre 10 domaines : mots de passe, phishing, navigation, vie privée, mobile, signalement, faux appels, paiements, psychologie, famille.",
@@ -409,6 +413,7 @@ fr: {
 
 it: {
   day_word: "Giorno",
+  auth_err_name: "Inserisci un nome", auth_err_exists: "Nome usato — accedi", auth_err_wrong: "Nome o password errati", auth_needed: "Accedi prima — sessioni separate",
   finale_kicker: "CAPITOLO 1 COMPLETO", finale_h: "Cinque giorni, un telefono, tante decisioni.",
   finale_sub: "Il tuo percorso — e le abitudini digitali in formazione.",
   finale_score_h: "Punteggio", finale_lv: "Livello ", finale_domains_note: "Questo riepilogo copre 10 domini: password, phishing, navigazione, privacy, mobile, segnalazioni, false chiamate, pagamenti, psicologia, famiglia.",
@@ -482,6 +487,7 @@ it: {
 
 de: {
   day_word: "Tag",
+  auth_err_name: "Namen eingeben", auth_err_exists: "Name vergeben — melde dich an", auth_err_wrong: "Falscher Name oder Passwort", auth_needed: "Erst anmelden — getrennte Sitzungen",
   finale_kicker: "KAPITEL 1 ABGESCHLOSSEN", finale_h: "Fünf Tage, ein Handy, viele Entscheidungen.",
   finale_sub: "Dein Rückblick — und die digitalen Gewohnheiten, die entstehen.",
   finale_score_h: "Punkte", finale_lv: "Level ", finale_domains_note: "Dieses Fazit umfasst 10 Domänen: Passwörter, Phishing, Surfen, Privatsphäre, Handy, Melden, Betrugsanrufe, Zahlungen, Psychologie, Familie.",
@@ -555,6 +561,7 @@ de: {
 
 pt: {
   day_word: "Dia",
+  auth_err_name: "Digite um nome", auth_err_exists: "Nome em uso — entre", auth_err_wrong: "Nome ou senha errados", auth_needed: "Entre primeiro — sessões separadas",
   finale_kicker: "CAPÍTULO 1 COMPLETO", finale_h: "Cinco dias, um celular, muitas decisões.",
   finale_sub: "Seu percurso — e os hábitos digitais se formando.",
   finale_score_h: "Pontuação", finale_lv: "Nível ", finale_domains_note: "Este resumo cobre 10 domínios: senhas, phishing, navegação, privacidade, celular, denúncia, ligações falsas, pagamentos, psicologia, família.",
