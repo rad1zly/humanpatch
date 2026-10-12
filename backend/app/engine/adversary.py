@@ -105,8 +105,15 @@ class Adversary:
         )
 
         import json as _json
+        # LLMs sometimes wrap JSON in ```json fences — strip before parsing
+        cleaned = raw.strip()
+        if cleaned.startswith("```"):
+            cleaned = cleaned.strip("`")
+            if cleaned.lower().startswith("json"):
+                cleaned = cleaned[4:]
+            cleaned = cleaned.strip()
         try:
-            data = _json.loads(raw)
+            data = _json.loads(cleaned)
             message = data.get("message", str(raw))
             requested = data.get("tactic_switch", "")
             # engine may allow LLM-requested de-escalation only

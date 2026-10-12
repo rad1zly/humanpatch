@@ -1093,13 +1093,103 @@ function nextDay(xpEarn) {
   saveLocal();
   go("dashboard");
 }
-function finishChapter() {
+async function finishChapter() {
   const p = activeProfile();
   p.xp += 50;
   if (!p.done.includes(5)) p.done.push(5);
   saveLocal();
-  toast(t("chap_done"));
-  go("dashboard");
+  // aggregate behavior across the run for the finale
+  const dom = { risky: 0, verify: 0, refuse: 0 };
+  (p.log || []).forEach(e => {
+    if (/risky|klik|kirim|OTP|data/i.test(e)) dom.risky++;
+    if (/cek|verif|detail|lapor/i.test(e)) dom.verify++;
+    if (/tolak|abaik|batal|block/i.test(e)) dom.refuse++;
+  });
+  state.finale = {
+    xp: p.xp,
+    level: p.level || Math.min(5, 1 + Math.floor(p.xp / 200)),
+    days: 5,
+    counts: dom,
+    loadingCoach: true,
+    coach: "",
+  };
+  state.screen = "finale";
+  render();
+  // fetch AI coach chapter recap (falls back to template on error)
+  try {
+    const body = {
+      lang: LANG,
+      profile: { name: p.name, archetype: p.archetype, level: state.finale.level },
+      chapter: 1,
+      counts: dom,
+      log: (p.log || []).slice(-12),
+    };
+    const r = await fetch(API + "/chapter-recap", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const j = await r.json();
+    state.finale.coach = j.coach || "";
+    state.finale.loadingCoach = false;
+  } catch (e) {
+    state.finale.coach = t("finale_coach_fallback");
+    state.finale.loadingCoach = false;
+  }
+  render();
+}
+
+function vFinale() {
+  const f = state.finale || {};
+  const grade = f.counts
+    ? (f.counts.verify + f.counts.refuse * 2 > f.counts.risky * 2 ? "A" :
+       f.counts.verify + f.counts.refuse > f.counts.risky ? "B" : "C")
+    : "?";
+  return `
+  <div class="finale-wrap">
+    <div class="finale-hero">
+      <div class="finale-badge">🎉</div>
+      <p class="kicker">${t("finale_kicker")}</p>
+      <h1>${t("finale_h")}</h1>
+      <p class="sub">${t("finale_sub")}</p>
+    </div>
+    <div class="finale-grid">
+      <div class="finale-card">
+        <h3>${t("finale_score_h")}</h3>
+        <div class="finale-score"><span class="grade">${grade}</span>
+          <div><strong>${f.xp || 0} XP</strong><span>${t("finale_lv")}${f.level || 1}</span></div>
+        </div>
+        <div class="finale-bars">
+          <div class="fbar"><span>${t("finale_b_verify")}</span><div><i style="width:${Math.min(100, (f.counts?.verify||0) * 25)}%"></i></div><b>${f.counts?.verify || 0}</b></div>
+          <div class="fbar"><span>${t("finale_b_refuse")}</span><div><i style="width:${Math.min(100, (f.counts?.refuse||0) * 25)}%"></i></div><b>${f.counts?.refuse || 0}</b></div>
+          <div class="fbar bad"><span>${t("finale_b_risky")}</span><div><i style="width:${Math.min(100, (f.counts?.risky||0) * 25)}%"></i></div><b>${f.counts?.risky || 0}</b></div>
+        </div>
+      </div>
+      <div class="finale-card coach-card">
+        <h3>🧠 ${t("coach_h").replace(/^🧠\s*/, "")}</h3>
+        ${f.loadingCoach
+          ? `<div class="coach-loading"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>`
+          : `<p class="coach-text">${esc(f.coach || "")}</p>`}
+        <p class="coach-domains">${t("finale_domains_note")}</p>
+      </div>
+      <div class="finale-card">
+        <h3>${t("finale_lessons_h")}</h3>
+        <ul class="finale-lessons">
+          ${[1,2,3,4,5].map(d => `<li><span>✦</span>${t("p"+d)}</li>`).join("")}
+        </ul>
+      </div>
+    </div>
+    <div class="finale-next">
+      <div class="fn-box">
+        <span class="tag">BAB 2</span>
+        <h4>${t("finale_next_h")}</h4>
+        <p>${t("finale_next_p")}</p>
+      </div>
+      <div class="finale-actions">
+        <button class="btn btn-primary" onclick="go('profiles')">${t("finale_other_world")}</button>
+        <button class="btn btn-ghost" onclick="go('dashboard')">${t("back_dash")}</button>
+      </div>
+    </div>
+  </div>`;
 }
 
 /* ============================================================
@@ -1142,7 +1232,7 @@ function render() {
   const views = {
     landing: vLanding, auth: vAuth, profiles: vProfiles, wizard: vWizard,
     prep: vPrep, dashboard: vDashboard, splash: vSplash, phone: vPhone,
-    encounter: vEncounter, debrief: vDebrief,
+    encounter: vEncounter, debrief: vDebrief, finale: vFinale,
   };
   const v = views[state.screen] || vLanding;
   root.innerHTML = v();

@@ -12,14 +12,72 @@ import random
 
 
 class LLMClient:
-    """OpenAI-compatible client (vLLM serve ... on AMD Instinct)."""
+    """OpenAI-compatible client. Three deployment targets:
+
+    1. vLLM on AMD Instinct (MI300X/ROCm) — the hackathon target (LLM_PROVIDER=amd).
+    2. MiniMax API (LLM_PROVIDER=minimax) — cloud fallback for demos without GPU.
+    3. Any OpenAI-compatible endpoint via LLM_BASE_URL/LLM_API_KEY/LLM_MODEL.
+
+    API keys are read from environment (backend/.env), NEVER hardcoded.
+    """
+
+    PROVIDERS = {
+        "amd": {
+            "base_url": "http://localhost:8001/v1",
+            "model": "Qwen/Qwen2.5-7B-Instruct",
+            "key_env": None,  # local vLLM: no auth
+        },
+        "minimax": {
+            "base_url": "https://api.minimax.io/v1",
+            "model": "MiniMax-M2.1",
+            "key_env": "MINIMAX_API_KEY",
+        },
+        "tokenrouter": {
+            "base_url": "https://api.tokenrouter.com/v1",
+            "model": "MiniMax-M3",
+            "key_env": "TOKENROUTER_API_KEY",
+        },
+    }
 
     def __init__(self, base_url=None, model=None):
-        self.base_url = (base_url or os.environ.get(
-            "LLM_BASE_URL", "http://localhost:8001/v1")).rstrip("/")
-        self.model = model or os.environ.get("LLM_MODEL", "Qwen/Qwen2.5-7B-Instruct")
+        provider = os.environ.get("LLM_PROVIDER", "").strip().lower()
+        conf = self.PROVIDERS.get(provider, {})
+        self.base_url = (base_url or os.environ.get("LLM_BASE_URL") or
+                         conf.get("base_url", "http://localhost:8001/v1")).rstrip("/")
+        self.model = model or os.environ.get("LLM_MODEL") or conf.get(
+            "model", "Qwen/Qwen2.5-7B-Instruct")
+        key_env = conf.get("key_env")
+        api_key = os.environ.get("LLM_API_KEY") or (
+            os.environ.get(key_env, "") if key_env else "")
+        self.headers = {"Authorization": f"Bearer {api_key}"} if api_key else {}
 
-    def chat(self, system, messages, temperature=0.8, max_tokens=320):
+    # scripts that must never appear in output (leak guard for reasoning models)
+    import re as _re
+    _FOREIGN = _re.compile(r"[\u0400-\u04FF\u4E00-\u9FFF\u3040-\u30FF\uAC00-\uD7AF]")
+
+    def chat(self, system, messages, temperature=0.8, max_tokens=700):
+        content = self._chat_once(system, messages, temperature, max_tokens)
+        # language-leak guard: reasoning models occasionally slip into
+        # Cyrillic/CJK mid-sentence — retry once with an explicit correction
+        if self._FOREIGN.search(content):
+            fixed = self._chat_once(
+                system,
+                messages + [{"role": "user", "content":
+                    "IMPORTANT: your previous reply contained Cyrillic or CJK characters. "
+                    "Rewrite the ENTIRE reply strictly in the language required above. "
+                    "No other scripts allowed."}],
+                temperature, max_tokens)
+            if not self._FOREIGN.search(fixed):
+                return fixed
+            # second chance failed → drop offending sentences
+            import re
+            parts = re.split(r"(?<=[.!?])\s+", content)
+            clean = " ".join(p for p in parts if not self._FOREIGN.search(p)).strip()
+            if clean:
+                return clean
+        return content
+
+    def _chat_once(self, system, messages, temperature, max_tokens):
         import httpx  # local import so Mock mode needs no net deps timing-wise
         payload = {
             "model": self.model,
@@ -27,9 +85,24 @@ class LLMClient:
             "temperature": temperature,
             "max_tokens": max_tokens,
         }
-        r = httpx.post(f"{self.base_url}/chat/completions", json=payload, timeout=45)
+        r = httpx.post(f"{self.base_url}/chat/completions", json=payload,
+                       headers=self.headers, timeout=60)
         r.raise_for_status()
-        return r.json()["choices"][0]["message"]["content"]
+        content = r.json()["choices"][0]["message"]["content"] or ""
+        # reasoning models (MiniMax M-series) inline <think>...</think>.
+        # If the budget cut the reply inside <think>, take the LAST usable
+        # sentence-like fragment instead of returning the raw reasoning.
+        if "<think>" in content:
+            after = content.split("</think>", 1)[-1].strip()
+            if after:
+                content = after
+            else:
+                # unclosed <think>: salvage tail of reasoning (often the drafted reply)
+                tail = content.split("<think>", 1)[-1]
+                tail = tail.strip().strip("-").strip()
+                sentences = [s.strip() for s in tail.replace("\n", " ").split(". ") if len(s.strip()) > 20]
+                content = sentences[-1] + ("." if sentences and not sentences[-1].endswith(".") else "")
+        return content.strip()
 
 
 class MockLLM:
@@ -76,7 +149,7 @@ class MockLLM:
                 "minutes') is always a red flag. If you get a message like that: close it, open the "
                 "official app, or call the number on the back of your card.")
 
-    def chat(self, system, messages, temperature=0.8, max_tokens=320):
+    def chat(self, system, messages, temperature=0.8, max_tokens=700):
         # coach mode: debrief prompts get a canned coach reply
         en = any(m in system for m in ("reply ONLY in English", "In English", "In Spanish", "In Hindi", "In Portuguese"))
         if "cybersecurity coach" in system:
