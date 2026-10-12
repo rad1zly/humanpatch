@@ -63,7 +63,11 @@ function toast(msg) {
   clearTimeout(_toastTimer);
   _toastTimer = setTimeout(() => { state.toast = null; render(); }, 2600);
 }
-function go(screen) { state.screen = screen; render(); window.scrollTo(0, 0); }
+function go(screen) { state.screen = screen; render(); window.scrollTo(0, 0); syncBg3d(); }
+function syncBg3d() {
+  if (state.screen === "landing" && typeof hpStartBg3d === "function") hpStartBg3d();
+  else if (typeof hpStopBg3d === "function") hpStopBg3d();
+}
 
 /* language switcher chip-row */
 function langSwitcher(dark = false) {
@@ -77,15 +81,16 @@ function langSwitcher(dark = false) {
    ============================================================ */
 function vLanding() {
   return `
-  <header class="topbar"><div class="wrap-wide topbar-inner">
+  <div id="bg3d" aria-hidden="true"></div>
+  <header class="topbar topbar-fixed"><div class="wrap-wide topbar-inner">
     <div class="brand"><div class="brand-mark">${icons.shield}</div><span>HumanPatch<small>${t("brand_sub")}</small></span></div>
     <div style="display:flex;gap:10px;align-items:center">
       ${langSwitcher()}
       <button class="btn btn-ghost nav-btn" onclick="go('auth')">${t("nav_login")}</button>
     </div>
   </div></header>
-  <main class="wrap-wide">
-    <section class="hero">
+  <main class="wrap-wide snap-pages">
+    <section class="hero snap-page">
       <div class="hero-copy">
         <p class="kicker hero-kicker">${t("hero_kicker")}</p>
         <h1>${t("hero_h1a")} <em>${t("hero_h1b")}</em></h1>
@@ -95,6 +100,9 @@ function vLanding() {
           <button class="btn btn-ghost" onclick="scrollToSec()">${t("hero_cta2")}</button>
         </div>
         <p class="note">${t("hero_note")}</p>
+        <button class="scroll-cue" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})" aria-label="${t("hero_cta2")}">
+          <span class="sc-track"><span class="sc-dot"></span></span>${t("scroll_cue")}
+        </button>
       </div>
       <div class="hero-visual" aria-hidden="true">
         <div class="hv-phone">
@@ -115,7 +123,7 @@ function vLanding() {
       </div>
     </section>
 
-    <section class="section" id="how">
+    <section class="section snap-page" id="how">
       <h2>${t("how_h2")}</h2>
       <p class="sub">${t("how_sub")}</p>
       <div class="cards">
@@ -125,7 +133,7 @@ function vLanding() {
       </div>
     </section>
 
-    <section class="section">
+    <section class="section snap-page">
       <h2>${t("learn_h2")}</h2>
       <p class="sub">${t("learn_sub")}</p>
       <div class="domain-grid">
@@ -134,7 +142,7 @@ function vLanding() {
       </div>
     </section>
 
-    <section class="section">
+    <section class="section snap-page">
       <h2>${t("pers_h2")}</h2>
       <p class="sub">${t("pers_sub")}</p>
       <div class="persona-demo">
@@ -143,17 +151,17 @@ function vLanding() {
       </div>
     </section>
 
-    <section class="section">
+    <section class="section snap-page">
       <h2>${t("prog_h2")}</h2>
       <p class="sub">${t("prog_sub")}</p>
       <div class="card"><p style="margin:0">${t("prog_card")}</p></div>
     </section>
 
-    <section class="section">
+    <section class="section snap-page">
       <div class="trust-box"><strong>${t("trust_t")}</strong><p>${t("trust_p")}</p></div>
     </section>
 
-    <section class="section center">
+    <section class="section snap-page center">
       <h2>${t("final_h2")}</h2>
       <button class="btn btn-primary btn-block mt16" onclick="go('auth')">${t("hero_cta")}</button>
     </section>
@@ -1057,7 +1065,7 @@ const WALL_CSS = {
 function render() {
   const root = $("#root");
   const dr = docRoute();
-  if (dr) { root.innerHTML = vDoc(dr); window.scrollTo(0, 0); return; }
+  if (dr) { root.innerHTML = vDoc(dr); window.scrollTo(0, 0); if (typeof hpStopBg3d === "function") hpStopBg3d(); return; }
   const views = {
     landing: vLanding, auth: vAuth, profiles: vProfiles, wizard: vWizard,
     prep: vPrep, dashboard: vDashboard, splash: vSplash, phone: vPhone,
@@ -1135,6 +1143,7 @@ loadLocal();
 if (state.user) state.screen = "profiles";
 try {
   render();
+  syncBg3d();
 } catch (e) {
   console.error("boot render failed:", e);
   // nuke possibly-corrupt local state and retry clean
