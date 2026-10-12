@@ -158,10 +158,7 @@ function vLanding() {
       <button class="btn btn-primary btn-block mt16" onclick="go('auth')">${t("hero_cta")}</button>
     </section>
   </main>
-  <footer class="site"><div class="wrap">
-    <div class="links"><span>${t("brand_sub")}</span></div>
-    <p class="fine">${t("footer_fine")}</p>
-  </div></footer>`;
+  ${siteFooter()}`;
 }
 function scrollToSec() { document.getElementById("how")?.scrollIntoView({ behavior: "smooth" }); }
 
@@ -249,7 +246,7 @@ function vProfiles() {
       ${ps.length === 0 ? `<div class="card center"><p>${t("profiles_empty")}</p></div>` : ""}
     </div>
     <button class="btn btn-dark btn-block mt16" onclick="go('wizard')">${t("btn_new_profile")}</button>
-  </main>`;
+  </main>` + siteFooter();
 }
 function logout() { state.user = null; saveLocal(); go("landing"); }
 function playProfile(id) { state.activeProfileId = id; saveLocal(); go("dashboard"); }
@@ -1059,6 +1056,8 @@ const WALL_CSS = {
    ============================================================ */
 function render() {
   const root = $("#root");
+  const dr = docRoute();
+  if (dr) { root.innerHTML = vDoc(dr); window.scrollTo(0, 0); return; }
   const views = {
     landing: vLanding, auth: vAuth, profiles: vProfiles, wizard: vWizard,
     prep: vPrep, dashboard: vDashboard, splash: vSplash, phone: vPhone,
@@ -1068,7 +1067,70 @@ function render() {
   root.innerHTML = v();
 }
 
+
+/* ============================================================
+   SITE DOCS — footer + doc pages + hash router (#/docs/<id>)
+   ============================================================ */
+function siteFooter() {
+  const yr = new Date().getFullYear();
+  return `
+  <footer class="site-footer">
+    <div class="inner">
+      <div class="footer-brand">🛡️ HumanPatch</div>
+      <p class="footer-note">${t("foot_note")}</p>
+      <nav class="footer-nav">
+        ${DOC_ORDER.map(d => `<button onclick="openDoc('${d}')">${L(DOCS[d].title)}</button>`).join("")}
+      </nav>
+      <div class="footer-meta">
+        <span>© ${yr} HumanPatch — AMD ACT III</span>
+        <span class="dot-sep">${t("foot_sim")}</span>
+        <span class="dot-sep">ID · EN · ES · HI · PT</span>
+      </div>
+    </div>
+  </footer>`;
+}
+
+function openDoc(id) { location.hash = "docs/" + id; }
+function docRoute() {
+  const m = location.hash.match(/^#docs\/(\w+)$/);
+  return m ? m[1] : null;
+}
+function docPager(id) {
+  const i = DOC_ORDER.indexOf(id);
+  const prev = DOC_ORDER[(i - 1 + DOC_ORDER.length) % DOC_ORDER.length];
+  const next = DOC_ORDER[(i + 1) % DOC_ORDER.length];
+  return `
+  <div class="doc-pager">
+    <button onclick="openDoc('${prev}')"><span class="pg-label">‹ ${t("pg_prev")}</span><span class="pg-title">${L(DOCS[prev].title)}</span></button>
+    <button onclick="openDoc('${next}')" style="text-align:right"><span class="pg-label">${t("pg_next")} ›</span><span class="pg-title">${L(DOCS[next].title)}</span></button>
+  </div>`;
+}
+function vDoc(id) {
+  const doc = DOCS[id];
+  if (!doc) return vLanding();
+  const blocks = doc.body[LANG] || doc.body.en || doc.body.id;
+  return `
+  <div class="doc-page">
+    <header class="banner"><div class="banner-inner">
+      <button class="brand" onclick="go('landing'); location.hash='';">🛡️ HumanPatch</button>
+      <div class="lang-switch">${LANGS.map(l => `<button class="${l.id === LANG ? "on" : ""}" onclick="setLang('${l.id}')">${l.label}</button>`).join("")}</div>
+    </div></header>
+    <div class="doc-wrap">
+      <p class="doc-kicker">HumanPatch</p>
+      <h1>${L(doc.title)}</h1>
+      ${blocks.map(([kind, content]) =>
+        kind === "p" ? `<p>${esc(content)}</p>` :
+        kind === "h" ? `<h2>${esc(content)}</h2>` :
+        `<ul>${content.map(li => `<li>${esc(li)}</li>`).join("")}</ul>`).join("")}
+      ${docPager(id)}
+      <button class="doc-back" onclick="go('landing'); location.hash='';">‹ ${t("back_home")}</button>
+    </div>
+    ${siteFooter()}
+  </div>`;
+}
+
 /* boot — hardened: recover from corrupt/cached localStorage */
+window.addEventListener("hashchange", () => render());
 loadLocal();
 if (state.user) state.screen = "profiles";
 try {

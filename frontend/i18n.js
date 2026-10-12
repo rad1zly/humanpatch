@@ -12,6 +12,10 @@ function t(k) {
 const I18N = {
 id: {
   day_word: "Hari",
+  foot_note: "HumanPatch adalah petualangan pelatihan. Pesan, halaman, dan jaringan di dalam dunianya disimulasikan.",
+  foot_sim: "Semua karakter & pesan fiktif",
+  pg_prev: "Sebelumnya", pg_next: "Berikutnya",
+  back_home: "Kembali ke Beranda",
   chat_encrypted: "🔒 Percakapan terenkripsi end-to-end (dunia fiktif)",
   perm_link: "Izin & Privasi Aplikasi",
   perm_link_sub: "Cek aplikasi mana yang minta akses berlebihan",
@@ -112,6 +116,10 @@ id: {
 },
 en: {
   day_word: "Day",
+  foot_note: "HumanPatch is a training adventure. Messages, pages, and networks inside the world are simulated.",
+  foot_sim: "All characters & messages are fictional",
+  pg_prev: "Previous", pg_next: "Next",
+  back_home: "Back to Home",
   chat_encrypted: "🔒 End-to-end encrypted conversation (fictional world)",
   perm_link: "App Permissions & Privacy",
   perm_link_sub: "Check which apps ask for excessive access",
@@ -218,6 +226,10 @@ en: {
 },
 es: {
   day_word: "Día",
+  foot_note: "HumanPatch es una aventura de entrenamiento. Todo dentro del mundo está simulado.",
+  foot_sim: "Todos los personajes y mensajes son ficticios",
+  pg_prev: "Anterior", pg_next: "Siguiente",
+  back_home: "Volver al inicio",
   chat_encrypted: "🔒 Conversación cifrada de extremo a extremo (mundo ficticio)",
   perm_link: "Permisos y Privacidad de Apps",
   perm_link_sub: "Revisa qué apps piden acceso excesivo",
@@ -262,6 +274,10 @@ es: {
 },
 hi: {
   day_word: "दिन",
+  foot_note: "HumanPatch एक प्रशिक्षण एडवेंचर है। दुनिया की हर चीज़ सिम्युलेटेड है।",
+  foot_sim: "सभी किरदार और संदेश काल्पनिक हैं",
+  pg_prev: "पिछला", pg_next: "अगला",
+  back_home: "होम पर वापस",
   chat_encrypted: "🔒 एंड-टू-एंड एन्क्रिप्टेड बातचीत (काल्पनिक दुनिया)",
   perm_link: "ऐप अनुमतियाँ और गोपनीयता",
   perm_link_sub: "देखें कौन सी ऐप अत्यधिक एक्सेस मांगती हैं",
@@ -306,6 +322,10 @@ hi: {
 },
 pt: {
   day_word: "Dia",
+  foot_note: "HumanPatch é uma aventura de treinamento. Tudo dentro do mundo é simulado.",
+  foot_sim: "Todos os personagens e mensagens são fictícios",
+  pg_prev: "Anterior", pg_next: "Próximo",
+  back_home: "Voltar ao início",
   chat_encrypted: "🔒 Conversa criptografada de ponta a ponta (mundo fictício)",
   perm_link: "Permissões e Privacidade de Apps",
   perm_link_sub: "Veja quais apps pedem acesso excessivo",
