@@ -94,6 +94,11 @@ const WORLD_PATHS = [
   { arch: "general",  emoji: "🌐", name: t("arch_general"), bg: "#E0E7FF" },
 ];
 function setWorldFilter(f) { state.worldFilter = f; render(); }
+function startWorldPath(arch) {
+  state.wizard.archetype = arch;
+  state.wizard.step = 2; // archetype preselected → jump to customization
+  go("wizard");
+}
 
 /* landing snap-page nav (dropdown on mobile) */
 const NAV_SECTIONS = [
@@ -216,7 +221,7 @@ function vLanding() {
               <div class="pc-bar"><span style="width:${Math.max(pct, prof ? 8 : 0)}%"></span></div>
               <span class="pc-pct">${prof ? `${days}/5 ${t("wp_days_word")}` : t("wp_not_started")}</span>
             </div>
-            <button class="btn ${prof ? "btn-primary" : "btn-ghost"} pc-cta" onclick="${prof ? `playProfile('${prof.id}')` : `go('wizard')`}">
+            <button class="btn ${prof ? "btn-primary" : "btn-ghost"} pc-cta" onclick="${prof ? `playProfile('${prof.id}')` : `startWorldPath('${p.arch}')`}">
               ${prof ? t("wp_continue") : t("wp_start")}
             </button>
           </article>`;
