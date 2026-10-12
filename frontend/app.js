@@ -171,7 +171,7 @@ function vLanding() {
       <h2 id="domains-h">${t("learn_h2")}</h2>
       <p class="sub">${t("learn_sub")}</p>
       <div class="domain-grid">
-        ${[["🔐","d1"],["🎣","d2"],["🌐","d3"],["📸","d4"],["📱","d5"],["🚨","d6"]].map(d =>
+        ${[["🔐","d1"],["🎣","d2"],["🌐","d3"],["📸","d4"],["📱","d5"],["🚨","d6"],["📞","d7"],["💳","d8"],["🎭","d9"],["👨‍👩‍👧","d10"]].map(d =>
           `<div class="domain-item"><div class="di" style="background:var(--mint)">${d[0]}</div><div><strong>${t(d[1]+"_t")}</strong><span>${t(d[1]+"_p")}</span></div></div>`).join("")}
       </div>
     </section>
