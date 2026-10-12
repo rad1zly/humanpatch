@@ -123,7 +123,7 @@ function vLanding() {
       <button class="btn btn-ghost nav-btn" onclick="go('auth')">${t("nav_login")}</button>
     </div>
   </div></header>
-  <main class="wrap-wide snap-pages">
+  <main class="snap-pages">
     <section class="hero snap-page">
       <div class="hero-copy">
         <p class="kicker hero-kicker">${t("hero_kicker")}</p>
