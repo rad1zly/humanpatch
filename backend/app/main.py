@@ -1,4 +1,14 @@
 """FastAPI app: mission API + AI coach debrief."""
+import os
+# --- .env loader (keys live in backend/.env, gitignored) ---
+from pathlib import Path as _P
+_env_file = _P(__file__).resolve().parents[1] / ".env"
+if _env_file.exists():
+    for _line in _env_file.read_text().splitlines():
+        if "=" in _line and not _line.strip().startswith("#"):
+            _k, _, _v = _line.partition("=")
+            os.environ.setdefault(_k.strip(), _v.strip())
+
 import json
 import os
 import uuid
@@ -189,6 +199,58 @@ def report(mid: str):
     return m.report()
 
 
+class ChapterRecapReq(BaseModel):
+    lang: str = "id"
+    profile: dict = {}
+    chapter: int = 1
+    counts: dict = {}
+    log: list = []
+
+
+@app.post("/api/chapter-recap")
+def chapter_recap(req: ChapterRecapReq):
+    """AI coach: chapter-level recap grounded in the run's behavior counts."""
+    lang = req.lang if req.lang in ("id", "en", "es", "fr", "it", "de", "pt") else "id"
+    lang_rule = {
+        "id": "In Bahasa Indonesia (informal 'kamu'), 4-6 kalimat.",
+        "en": "In English, 4-6 sentences.",
+        "es": "In Spanish, 4-6 frases.",
+        "fr": "En français, 4-6 phrases.",
+        "it": "In italiano, 4-6 frasi.",
+        "de": "Auf Deutsch, 4-6 Sätze.",
+        "pt": "In Portuguese (Brazilian), 4-6 frases.",
+    }[lang]
+    cjk_lock = (" CRITICAL: write ONLY in the specified language. "
+                "Never output Chinese/Japanese/Korean characters.")
+    prompt = (
+        "You are a warm cybersecurity coach reviewing a player who just finished "
+        f"Chapter 1 (5 days) of a phone-simulation game. Player: {req.profile.get('name','player')} "
+        f"({req.profile.get('archetype','general')} world, level {req.profile.get('level',1)}). "
+        f"Behavior this run: {req.counts.get('verify',0)} verification habits "
+        f"(checking sender details, verifying through official channels), "
+        f"{req.counts.get('refuse',0)} refusals (declining/blocking suspicious asks), "
+        f"{req.counts.get('risky',0)} risky actions (clicking shady links, sharing data/OTP). "
+        "Write a recap that: (1) celebrates 1-2 strongest moments concretely, "
+        "(2) names the single riskiest pattern and why it matters in real life, "
+        "(3) gives ONE specific habit to practice next chapter. "
+        f"{lang_rule} Warm, no shaming, plain text.{cjk_lock}"
+    )
+    llm = get_llm()
+    try:
+        text = llm.chat(system=prompt,
+                        messages=[{"role": "user", "content": "Chapter recap, please."}],
+                        temperature=0.5, max_tokens=900)
+    except Exception:
+        text = {
+            "id": ("Lima hari, banyak keputusan. Kebiasaan memeriksa pengirim dan menolak "
+                   "permintaan aneh adalah benteng terbaikmu. Bab depan: latih ragu lebih "
+                   "cepat saat ada tekanan waktu."),
+            "en": ("Five days, many decisions. Checking senders and refusing odd requests are "
+                   "your best defenses. Next chapter: learn to doubt faster under time pressure."),
+        }.get(lang, "Good run — keep verifying senders and refusing odd requests.")
+    return {"coach": text}
+
+
 @app.get("/api/mission/{mid}/debrief")
 def debrief(mid: str):
     """AI coach: personalized debrief grounded in THIS run's events."""
@@ -209,6 +271,10 @@ def debrief(mid: str):
         "de": "Auf Deutsch, 4-6 Sätze... Sprich natürlich mit dem Nutzer.",
         "pt": "In Portuguese (Brazilian), 4-6 sentences... Speak naturally to the user.",
     }[lang if lang in ("id", "en", "es", "fr", "it", "de", "pt") else "id"]
+    # hard language lock — reasoning models occasionally drift to CJK otherwise
+    cjk_lock = (" CRITICAL: write ONLY in the language just specified. "
+                "Never output Chinese/Japanese/Korean characters or English words "
+                "when writing in another language.")
     prompt = (
         "You are a warm, concise cybersecurity coach. The user just finished a "
         f"simulation: '{m.scenario['title']}' and their outcome was: {summary['outcome']}. "
@@ -217,11 +283,11 @@ def debrief(mid: str):
         f"{lang_rule.replace('...', ' (1) one-line verdict, no shaming; ')}"
         "(2) the specific red flags they should have caught: " + "; ".join(flags[:3]) + ". "
         "(3) the safe action: " + m.scenario.get("safe_response", "") + " "
-        "Plain text only."
+        "Plain text only." + cjk_lock
     )
     try:
         text = llm.chat(system=prompt, messages=[{"role": "user", "content": "Debrief, please."}],
-                        temperature=0.4, max_tokens=250)
+                        temperature=0.4, max_tokens=900)
         # if a JSON payload sneaks through, unwrap it
         try:
             _j = json.loads(text)

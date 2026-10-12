@@ -703,3 +703,43 @@ body { scroll-snap-type: y proximity; } /* gentle snap, still free-scrolls insid
 .pc-cta { margin-top: auto; }
 .wstatline { text-align: center; color: var(--muted); font-size: 13px; margin-top: clamp(14px, 2vh, 22px); width: min(1360px,100%); margin-left: auto; margin-right: auto; }
 @media (min-width: 1800px) { .wfilter, .path-grid, .wstatline { width: min(var(--content-cap, 1600px), 100%); } }
+
+
+/* ============================================================
+   CHAPTER FINALE
+   ============================================================ */
+.finale-wrap { max-width: 1080px; margin: 0 auto; padding: 84px 22px 60px; }
+.finale-hero { text-align: center; margin-bottom: 30px; }
+.finale-badge { font-size: 56px; margin-bottom: 8px; animation: pop .5s ease; }
+@keyframes pop { 0% { transform: scale(0); } 70% { transform: scale(1.2); } 100% { transform: scale(1); } }
+.finale-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px,100%), 1fr)); gap: 16px; margin-bottom: 26px; }
+.finale-card { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 22px; }
+.finale-card h3 { margin: 0 0 14px; font-size: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.finale-score { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+.finale-score .grade { font-size: 54px; font-weight: 900; color: var(--teal); line-height: 1; }
+.finale-score strong { display: block; font-size: 20px; }
+.finale-score span:not(.grade) { font-size: 12.5px; color: var(--muted); }
+.fbar { display: grid; grid-template-columns: 92px 1fr 24px; align-items: center; gap: 10px; margin: 8px 0; font-size: 12.5px; }
+.fbar span { color: var(--muted); font-weight: 600; }
+.fbar div { height: 8px; background: #E2E8F0; border-radius: 99px; overflow: hidden; }
+.fbar i { display: block; height: 100%; background: linear-gradient(90deg, var(--teal), var(--mint)); border-radius: 99px; }
+.fbar.bad i { background: linear-gradient(90deg, #F87171, #FB923C); }
+.fbar b { text-align: right; }
+.coach-card { background: linear-gradient(160deg, #0F766E11, #F0FDFA); border-color: #CCFBF1; }
+.coach-text { font-size: 15px; line-height: 1.75; margin: 0 0 12px; }
+.coach-domains { font-size: 12px; color: var(--muted); margin: 0; }
+.coach-loading { display: flex; gap: 6px; padding: 20px 0; }
+.coach-loading .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); animation: cload 1s infinite; }
+.coach-loading .dot:nth-child(2) { animation-delay: .15s; }
+.coach-loading .dot:nth-child(3) { animation-delay: .3s; }
+@keyframes cload { 0%,100% { opacity: .25; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-4px); } }
+.finale-lessons { list-style: none; margin: 0; padding: 0; }
+.finale-lessons li { display: flex; gap: 10px; padding: 9px 0; border-bottom: 1px solid #F1F5F9; font-size: 14px; line-height: 1.55; }
+.finale-lessons li:last-child { border-bottom: none; }
+.finale-lessons span { color: var(--teal); }
+.finale-next { display: flex; flex-wrap: wrap; gap: 16px; align-items: stretch; justify-content: space-between; }
+.fn-box { flex: 1; min-width: 260px; background: var(--ink); color: #fff; border-radius: 18px; padding: 22px; }
+.fn-box .tag { background: var(--teal); color: #fff; }
+.fn-box h4 { margin: 10px 0 6px; font-size: 19px; }
+.fn-box p { margin: 0; color: #CBD5E1; font-size: 13.5px; line-height: 1.6; }
+.finale-actions { display: flex; flex-direction: column; gap: 10px; justify-content: center; }
