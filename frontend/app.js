@@ -1126,7 +1126,7 @@ function siteFooter() {
       <div class="footer-meta">
         <span>© ${yr} HumanPatch — AMD ACT III</span>
         <span class="dot-sep">${t("foot_sim")}</span>
-        <span class="dot-sep">ID · EN · ES · HI · PT</span>
+        <span class="dot-sep">ID · EN · ES · FR · IT · DE · PT</span>
       </div>
     </div>
   </footer>`;

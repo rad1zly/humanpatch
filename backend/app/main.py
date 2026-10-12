@@ -63,7 +63,7 @@ def health():
 
 @app.get("/api/personas")
 def personas(lang: str = "id"):
-    lang = lang if lang in ("id", "en", "es", "hi", "pt") else "id"
+    lang = lang if lang in ("id", "en", "es", "fr", "it", "de", "pt") else "id"
     out = []
     for p in PERSONAS:
         out.append({
@@ -88,7 +88,7 @@ def start_session(req: StartReq):
     persona = next((p for p in PERSONAS if p["id"] == req.persona_id), None)
     if not persona:
         return {"error": "unknown persona"}
-    lang = req.lang if req.lang in ("id", "en", "es", "hi", "pt") else "id"
+    lang = req.lang if req.lang in ("id", "en", "es", "fr", "it", "de", "pt") else "id"
     if req.profile_text:
         persona = {**persona, "context": req.profile_text[:800]}
     persona = {**persona, "lang": lang}
@@ -204,9 +204,11 @@ def debrief(mid: str):
         "id": "In Bahasa Indonesia, 4-6 sentences... Speak as 'kamu' to the user.",
         "en": "In English, 4-6 sentences... Speak naturally to the user.",
         "es": "In Spanish, 4-6 sentences... Speak naturally to the user.",
-        "hi": "In Hindi (Devanagari), 4-6 sentences... Speak naturally to the user.",
+        "fr": "En français, 4-6 phrases... Parlez naturellement à l'utilisateur.",
+        "it": "In italiano, 4-6 frasi... Parla naturalmente all'utente.",
+        "de": "Auf Deutsch, 4-6 Sätze... Sprich natürlich mit dem Nutzer.",
         "pt": "In Portuguese (Brazilian), 4-6 sentences... Speak naturally to the user.",
-    }[lang if lang in ("id", "en", "es", "hi", "pt") else "id"]
+    }[lang if lang in ("id", "en", "es", "fr", "it", "de", "pt") else "id"]
     prompt = (
         "You are a warm, concise cybersecurity coach. The user just finished a "
         f"simulation: '{m.scenario['title']}' and their outcome was: {summary['outcome']}. "

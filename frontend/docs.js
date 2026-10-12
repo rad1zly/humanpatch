@@ -7,7 +7,7 @@ const DOC_ORDER = ["about", "privacy", "terms", "access", "contact"];
 
 const DOCS = {
   about: {
-    title: {id: "Tentang", en: "About", es: "Acerca de", hi: "परिचय", pt: "Sobre"},
+    title: {id: "Tentang", en: "About", es: "Acerca de", fr: "À propos", it: "Informazioni", de: "Über", pt: "Sobre"},
     body: {id: [
       ["p", "HumanPatch adalah petualangan keamanan siber yang adaptif. Peta dan alur ceritanya sama — tetapi dialog, pesan, dan tantangan berubah sesuai karakter yang kamu mainkan dan keputusan yang kamu ambil."],
       ["p", "Lawanmu adalah mesin skenario terkontrol. Teks generatif (AI) menyusul di lapisan adversary. Dunia di dalam HP ini fiktif: aplikasi, kontak, dan pesan semuanya simulasi."],
@@ -23,12 +23,11 @@ const DOCS = {
       ["p", "El adversario es un motor de escenarios controlado. Todo dentro de este teléfono es simulado."],
       ["h", "Para quién"],
       ["ul", ["Usuarios primerizos en países en desarrollo", "Quien prefiera aprender viviendo estafas de forma segura", "Formadores que necesiten una simulación segura"]],
-    ], hi: [
-      ["p", "HumanPatch एक अनुकूली साइबर सुरक्षा एडवेंचर है। नक्शा एक जैसा है — लेकिन संवाद, संदेश और चुनौतियाँ आपके किरदार और फैसलों के साथ बदलती हैं।"],
-      ["p", "विरोधी एक नियंत्रित परिदृश्य इंजन है। इस फ़ोन की हर चीज़ सिम्युलेटेड है।"],
-      ["h", "किसके लिए"],
-      ["ul", ["विकासशील देशों के नए इंटरनेट उपयोगकर्ता", "जो व्याख्यान से नहीं, अनुभव से सीखना चाहते हैं", "प्रशिक्षक जिन्हें सुरक्षित सिमुलेशन चाहिए"]],
-    ], pt: [
+    ],
+    fr: [["p", "HumanPatch est une aventure de cybersécurité adaptative. Le dialogue, les messages et les défis changent selon le personnage joué et vos décisions. Tout est simulé."]],
+    it: [["p", "HumanPatch è un'avventura di cybersicurezza adattiva. Dialoghi, messaggi e sfide cambiano col personaggio e le tue decisioni. Tutto è simulato."]],
+    de: [["p", "HumanPatch ist ein adaptives Cybersicherheits-Abenteuer. Dialoge, Nachrichten und Herausforderungen ändern sich mit Charakter und Entscheidungen. Alles ist simuliert."]],
+    pt: [
       ["p", "HumanPatch é uma aventura adaptativa de segurança digital. O mapa é compartilhado — diálogos, mensagens e desafios mudam com o personagem e suas escolhas."],
       ["p", "O adversário é um motor de cenários controlado. Tudo dentro deste celular é simulado."],
       ["h", "Para quem"],
@@ -36,7 +35,7 @@ const DOCS = {
     ]},
   },
   privacy: {
-    title: {id: "Privasi", en: "Privacy", es: "Privacidad", hi: "गोपनीयता", pt: "Privacidade"},
+    title: {id: "Privasi", en: "Privacy", es: "Privacidad", fr: "Confidentialité", it: "Privacy", de: "Datenschutz", pt: "Privacidade"},
     body: {id: [
       ["p", "Akun demo, hash kata sandi, dan progres karakter tersimpan di browser ini. Tidak ada yang dikirim ke server HumanPatch selain interaksi latihan yang dianonimkan."],
       ["p", "Nama karakter fiktif. Jangan pernah memasukkan kata sandi atau data rahasia asli ke halaman simulasi — kolom itu tidak disimpan sebagai kredensial."],
@@ -46,16 +45,17 @@ const DOCS = {
     ], es: [
       ["p", "Las cuentas demo y el progreso se quedan en este navegador. Nada se envía salvo interacciones anonimizadas."],
       ["p", "Los nombres son ficticios. Nunca ingreses contraseñas reales en páginas simuladas."],
-    ], hi: [
-      ["p", "डेमो खाते और प्रगति इस ब्राउज़र में रहते हैं। गुमनाम अभ्यास के अलावा कुछ नहीं भेजा जाता।"],
-      ["p", "किरदार काल्पनिक हैं। सिम्युलेटेड पेजों में असली पासवर्ड कभी न डालें।"],
-    ], pt: [
+    ],
+    fr: [["p", "Les comptes démo et la progression restent dans ce navigateur. N'entrez jamais de vrais mots de passe dans des pages simulées."]],
+    it: [["p", "Gli account demo e i progressi restano in questo browser. Non inserire mai password vere in pagine simulate."]],
+    de: [["p", "Demo-Konten und Fortschritt bleiben in diesem Browser. Gib nie echte Passwörter in simulierte Seiten ein."]],
+    pt: [
       ["p", "Contas demo e progresso ficam neste navegador. Nada é enviado além de interações anonimizadas."],
       ["p", "Nomes são fictícios. Nunca digite senhas reais em páginas simuladas."],
     ]},
   },
   terms: {
-    title: {id: "Ketentuan", en: "Terms", es: "Términos", hi: "शर्तें", pt: "Termos"},
+    title: {id: "Ketentuan", en: "Terms", es: "Términos", fr: "Conditions", it: "Termini", de: "Nutzungsbedingungen", pt: "Termos"},
     body: {id: [
       ["p", "HumanPatch adalah demo pelatihan. Ini bukan keamanan akun produksi, dan tidak mengirim email phishing sungguhan."],
       ["p", "Adegan, pengirim, dan halaman di dalam dunia adalah fiktif. Jangan menggunakannya terhadap orang sungguhan."],
@@ -65,16 +65,17 @@ const DOCS = {
     ], es: [
       ["p", "HumanPatch es una demo de entrenamiento. No envía correos de phishing reales."],
       ["p", "Escenas y remitentes son ficticios. No los uses contra personas reales."],
-    ], hi: [
-      ["p", "HumanPatch एक प्रशिक्षण डेमो है। यह असली फ़िशिंग मेल नहीं भेजता।"],
-      ["p", "दुनिया के दृश्य और प्रेषक काल्पनिक हैं। इन्हें असली लोगों पर न आज़माएँ।"],
-    ], pt: [
+    ],
+    fr: [["p", "HumanPatch est une démo de formation. Elle n'envoie pas de vrais mails de phishing. Les scènes sont fictives."]],
+    it: [["p", "HumanPatch è una demo di formazione. Non invia vere email di phishing. Le scene sono immaginarie."]],
+    de: [["p", "HumanPatch ist eine Trainings-Demo. Keine echten Phishing-Mails. Alle Szenen sind fiktiv."]],
+    pt: [
       ["p", "HumanPatch é uma demo de treinamento. Não envia e-mails de phishing reais."],
       ["p", "Cenas e remetentes são fictícios. Não use contra pessoas reais."],
     ]},
   },
   access: {
-    title: {id: "Aksesibilitas", en: "Accessibility", es: "Accesibilidad", hi: "सुगम्यता", pt: "Acessibilidade"},
+    title: {id: "Aksesibilitas", en: "Accessibility", es: "Accesibilidad", fr: "Accessibilité", it: "Accessibilità", de: "Barrierefreiheit", pt: "Acessibilidade"},
     body: {id: [
       ["p", "Teks dan kontrol memenuhi target sentuh 44px. Dunia bisa dimainkan sepenuhnya dengan keyboard."],
       ["p", "Animasi berhenti ketika sistem meminta reduced motion. Warna bukan satu-satunya cara membaca status — selalu ada ikon atau teks."],
@@ -84,16 +85,17 @@ const DOCS = {
     ], es: [
       ["p", "Controles con objetivo táctil de 44px. El mundo es jugable con teclado."],
       ["p", "La animación se detiene con 'reduced motion'. El color nunca es la única señal."],
-    ], hi: [
-      ["p", "टच टारगेट 44px है। दुनिया कीबोर्ड से खेली जा सकती है।"],
-      ["p", "'reduced motion' पर एनिमेशन रुकता है। रंग कभी इकलौता संकेत नहीं होता।"],
-    ], pt: [
+    ],
+    fr: [["p", "Contrôles avec cible tactile de 44px. Jouable au clavier. Les animations s'arrêtent si le système demande « reduced motion »."]],
+    it: [["p", "Controlli con target tattile da 44px. Giocabile con la tastiera. Le animazioni si fermano con « reduced motion »."]],
+    de: [["p", "Steuerung mit 44px-Touchziel. Mit Tastatur spielbar. Animationen stoppen bei reduced motion."]],
+    pt: [
       ["p", "Controles com alvo de toque de 44px. O mundo é jogável com teclado."],
       ["p", "Animações param com 'reduced motion'. Cor nunca é o único sinal."],
     ]},
   },
   contact: {
-    title: {id: "Kontak", en: "Contact", es: "Contacto", hi: "संपर्क", pt: "Contato"},
+    title: {id: "Kontak", en: "Contact", es: "Contacto", fr: "Contact", it: "Contatti", de: "Kontakt", pt: "Contato"},
     body: {id: [
       ["p", "Demo ini tidak punya inbox dukungan. Pertanyaan tentang sebuah adegan seharusnya muncul di debrief — di sana setiap keputusan dijelaskan."],
       ["p", "Untuk korespondensi tim (hackathon/juri), hubungi melalui halaman tim di platform acara."],
@@ -103,10 +105,11 @@ const DOCS = {
     ], es: [
       ["p", "Esta demo no tiene buzón de soporte. Las preguntas pertenecen al debrief."],
       ["p", "Para el equipo del hackathon, escríbenos vía la plataforma del evento."],
-    ], hi: [
-      ["p", "इस डेमो का कोई सपोर्ट इनबॉक्स नहीं है। सवाल डिब्रीफ़ में जाते हैं।"],
-      ["p", "हैकाथॉन टीम से संपर्क के लिए इवेंट प्लेटफ़ॉर्म देखें।"],
-    ], pt: [
+    ],
+    fr: [["p", "Pas de boîte de support pour cette démo. Les questions sur une scène trouvent leur réponse dans le debrief."]],
+    it: [["p", "Nessuna casella di supporto per questa demo. Le domande trovano risposta nel debrief."]],
+    de: [["p", "Kein Support-Postfach für diese Demo. Fragen werden im Debrief beantwortet."]],
+    pt: [
       ["p", "Esta demo não tem caixa de suporte. Perguntas pertencem ao debrief."],
       ["p", "Para a equipe do hackathon, fale pela plataforma do evento."],
     ]},
