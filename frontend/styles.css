@@ -676,3 +676,30 @@ body { scroll-snap-type: y proximity; } /* gentle snap, still free-scrolls insid
 .topbar-fixed .navdd-menu { background: #fff; border-color: #E2E8F0; box-shadow: 0 18px 40px rgba(2,6,23,.14); }
 .topbar-fixed .navdd-menu .navlink { color: #0F172A; }
 .topbar-fixed .navdd-menu .navlink:hover { background: #F1F5F9; color: #0F172A; }
+
+
+/* ============================================================
+   WORLDS — TryHackMe-style path cards + filter tabs
+   ============================================================ */
+.wfilter { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin: clamp(18px, 2.5vh, 30px) auto 0; width: min(1360px,100%); }
+.wtab { background: #fff; border: 1.5px solid var(--line); color: #334155; font-weight: 700; font-size: 13px; padding: 9px 18px; border-radius: 999px; cursor: pointer; transition: all .15s; }
+.wtab:hover { border-color: var(--teal); color: var(--teal); }
+.wtab.on { background: var(--ink); border-color: var(--ink); color: #fff; }
+
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px,100%), 1fr)); gap: clamp(14px, 1.8vw, 24px); width: min(1360px,100%); margin: clamp(16px, 2.5vh, 26px) auto 0; }
+.path-card { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: clamp(16px, 1.8vw, 24px); display: flex; flex-direction: column; gap: 12px; position: relative; overflow: hidden; }
+.path-card.started::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; background: var(--teal); }
+.pc-head { display: flex; gap: 12px; align-items: flex-start; }
+.pc-icon { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; font-size: 26px; flex-shrink: 0; }
+.pc-tag { font-size: 10.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--teal); }
+.path-card h3 { margin: 2px 0 4px; font-size: clamp(17px, 1.6vw, 21px); }
+.path-card .pc-title p { margin: 0; font-size: 13px; color: var(--muted); line-height: 1.5; }
+.pc-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { font-size: 11px; font-weight: 700; color: #475569; background: #F1F5F9; padding: 4px 10px; border-radius: 999px; }
+.pc-barwrap { display: flex; align-items: center; gap: 10px; }
+.pc-bar { flex: 1; height: 8px; background: #E2E8F0; border-radius: 999px; overflow: hidden; }
+.pc-bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--teal), var(--mint)); border-radius: 999px; }
+.pc-pct { font-size: 11.5px; font-weight: 700; color: var(--muted); white-space: nowrap; }
+.pc-cta { margin-top: auto; }
+.wstatline { text-align: center; color: var(--muted); font-size: 13px; margin-top: clamp(14px, 2vh, 22px); width: min(1360px,100%); margin-left: auto; margin-right: auto; }
+@media (min-width: 1800px) { .wfilter, .path-grid, .wstatline { width: min(var(--content-cap, 1600px), 100%); } }

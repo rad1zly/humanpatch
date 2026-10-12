@@ -85,9 +85,19 @@ function langDropdown() {
 function toggleLangDD(e) { e.stopPropagation(); state.langDD = !state.langDD; render(); }
 document.addEventListener("click", (e) => { if (state.langDD && !e.target.closest(".langdd")) { state.langDD = false; render(); } });
 
+/* world paths — TryHackMe-style learning path cards */
+const WORLD_PATHS = [
+  { arch: "student",  emoji: "🎓", name: "Rani, 21",   bg: "#FEF3C7" },
+  { arch: "merchant", emoji: "🛒", name: "Mbak Sari, 34", bg: "#FFE4E6" },
+  { arch: "worker",   emoji: "💼", name: "Budi, 29",   bg: "#DBEAFE" },
+  { arch: "parent",   emoji: "🏡", name: "Pak Hendra, 45", bg: "#DCFCE7" },
+  { arch: "general",  emoji: "🌐", name: t("arch_general"), bg: "#E0E7FF" },
+];
+function setWorldFilter(f) { state.worldFilter = f; render(); }
+
 /* landing snap-page nav (dropdown on mobile) */
 const NAV_SECTIONS = [
-  ["how", "nav_how"], ["domains", "nav_learn"], ["persona", "nav_stories"], ["progress", "nav_progress"],
+  ["how", "nav_how"], ["domains", "nav_learn"], ["worlds", "nav_worlds"],
 ];
 function navLinks() {
   return NAV_SECTIONS.map(([id, key]) =>
@@ -96,8 +106,7 @@ function navLinks() {
 function snapTo(id) {
   state.navDD = false;
   const el = id === "domains" ? document.getElementById("domains-h") :
-             id === "persona" ? document.getElementById("persona-h") :
-             id === "progress" ? document.getElementById("progress-h") :
+             id === "worlds" ? document.getElementById("worlds-h") :
              document.getElementById(id);
   if (el) el.closest(".snap-page").scrollIntoView({ behavior: "smooth" });
   else document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -176,19 +185,44 @@ function vLanding() {
       </div>
     </section>
 
-    <section class="section snap-page">
-      <h2 id="persona-h">${t("pers_h2")}</h2>
-      <p class="sub">${t("pers_sub")}</p>
-      <div class="persona-demo">
-        <div class="persona-card"><span class="tag">${t("tag_student")}</span><h4>Rani, 21</h4><ul><li>ChatLoop · PocketPay · CampusHub</li><li>🌍 ${t("arch_student_d")}</li></ul></div>
-        <div class="persona-card"><span class="tag">${t("tag_merchant")}</span><h4>Mbak Sari, 34</h4><ul><li>ChatLoop · DailyMart · PocketPay</li><li>🌍 ${t("arch_merchant_d")}</li></ul></div>
+    <section class="section snap-page" id="worlds">
+      <h2 id="worlds-h">${t("worlds_h")}</h2>
+      <p class="sub">${t("worlds_sub")}</p>
+      <div class="wfilter" role="tablist" aria-label="Filter dunia">
+        ${["all","student","merchant","worker","parent"].map(f =>
+          `<button class="wtab ${(state.worldFilter||"all")===f?"on":""}" onclick="setWorldFilter('${f}')">${t("wf_"+f)}</button>`).join("")}
       </div>
-    </section>
-
-    <section class="section snap-page">
-      <h2 id="progress-h">${t("prog_h2")}</h2>
-      <p class="sub">${t("prog_sub")}</p>
-      <div class="card"><p style="margin:0">${t("prog_card")}</p></div>
+      <div class="path-grid">
+        ${WORLD_PATHS.filter(p => (state.worldFilter||"all")==="all" || p.arch===state.worldFilter).map(p => {
+          const prof = (state.profiles||[]).find(x => x.archetype === p.arch);
+          const days = prof ? (prof.day - 1) : 0;
+          const pct = Math.round(days / 5 * 100);
+          return `
+          <article class="path-card ${prof ? "started" : ""}">
+            <div class="pc-head">
+              <div class="pc-icon" style="background:${p.bg}">${p.emoji}</div>
+              <div class="pc-title">
+                <span class="pc-tag">${t("arch_" + p.arch)}</span>
+                <h3>${p.name}</h3>
+                <p>${t("arch_" + p.arch + "_d")}</p>
+              </div>
+            </div>
+            <div class="pc-chips">
+              <span class="chip">📅 ${t("wp_days")}</span>
+              <span class="chip">🧩 ${t("wp_domains")}</span>
+              <span class="chip">⭐ ${t("wp_lv")}</span>
+            </div>
+            <div class="pc-barwrap">
+              <div class="pc-bar"><span style="width:${Math.max(pct, prof ? 8 : 0)}%"></span></div>
+              <span class="pc-pct">${prof ? `${days}/5 ${t("wp_days_word")}` : t("wp_not_started")}</span>
+            </div>
+            <button class="btn ${prof ? "btn-primary" : "btn-ghost"} pc-cta" onclick="${prof ? `playProfile('${prof.id}')` : `go('wizard')`}">
+              ${prof ? t("wp_continue") : t("wp_start")}
+            </button>
+          </article>`;
+        }).join("")}
+      </div>
+      <p class="wstatline">${t("wstats")}</p>
     </section>
 
     <section class="section snap-page">

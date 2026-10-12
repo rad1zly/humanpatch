@@ -14,6 +14,11 @@ function t(k) {
 const I18N = {
 id: {
   day_word: "Hari",
+  nav_worlds: "Dunia", worlds_h: "Pilih dunia, jalur belajarmu", worlds_sub: "Tiap dunia = konteks hidup berbeda. Progres tiap profil terpisah dan terukur.",
+  wf_all: "Semua", wf_student: "Pelajar", wf_merchant: "Pedagang", wf_worker: "Pekerja", wf_parent: "Orang Tua",
+  wp_days: "5 hari", wp_domains: "10 domain", wp_lv: "Level 1-5",
+  wp_days_word: "hari", wp_not_started: "Belum mulai", wp_continue: "Lanjutkan ▸", wp_start: "Mulai Dunia Ini ▸",
+  wstats: "Semua dunia mengajarkan domain yang sama — lewat cerita dan risiko yang berbeda.",
   d7_t: "Telepon & CS Palsu", d7_p: "Kurir palsu, CS bank, verifikasi balik",
   d8_t: "Pembayaran Digital", d8_p: "OTP gak untuk dibagikan, waspada QRIS",
   d9_t: "Psikologi Penipuan", d9_p: "Tekanan waktu, iming-iming, ancaman",
@@ -124,6 +129,11 @@ id: {
 },
 en: {
   day_word: "Day",
+  nav_worlds: "Worlds", worlds_h: "Pick your world, your learning path", worlds_sub: "Each world = a different life context. Every profile has separate, measurable progress.",
+  wf_all: "All", wf_student: "Student", wf_merchant: "Merchant", wf_worker: "Worker", wf_parent: "Parent",
+  wp_days: "5 days", wp_domains: "10 domains", wp_lv: "Level 1-5",
+  wp_days_word: "days", wp_not_started: "Not started", wp_continue: "Continue ▸", wp_start: "Start This World ▸",
+  wstats: "Every world teaches the same domains — through different stories and risks.",
   d7_t: "Scam Calls & Fake Support", d7_p: "Fake couriers, bank CS, callback checks",
   d8_t: "Digital Payments", d8_p: "Never share OTP, QR & e-wallet scams",
   d9_t: "Scam Psychology", d9_p: "Urgency, bait, and fear tactics",
@@ -240,6 +250,11 @@ en: {
 },
 es: {
   day_word: "Día",
+  nav_worlds: "Mundos", worlds_h: "Elige tu mundo, tu ruta de aprendizaje", worlds_sub: "Cada mundo = un contexto distinto. Cada perfil tiene progreso propio.",
+  wf_all: "Todos", wf_student: "Estudiante", wf_merchant: "Comerciante", wf_worker: "Oficinista", wf_parent: "Padres",
+  wp_days: "5 días", wp_domains: "10 dominios", wp_lv: "Nivel 1-5",
+  wp_days_word: "días", wp_not_started: "Sin empezar", wp_continue: "Continuar ▸", wp_start: "Empezar ▸",
+  wstats: "Todos los mundos enseñan lo mismo — con historias y riesgos distintos.",
   d1_t: "Contraseñas y Cuentas", d1_p: "Contraseñas únicas, 2FA, recuperación",
   d2_t: "Phishing y Mensajes", d2_p: "Detecta mensajes y enlaces raros",
   d3_t: "Navegación Segura", d3_p: "HTTPS, dominios falsos, WiFi público",
@@ -300,6 +315,11 @@ es: {
 },
 fr: {
   day_word: "Jour",
+  nav_worlds: "Mondes", worlds_h: "Choisissez votre monde, votre parcours", worlds_sub: "Chaque monde = un contexte de vie différent. Chaque profil a sa progression.",
+  wf_all: "Tous", wf_student: "Étudiant", wf_merchant: "Commerçant", wf_worker: "Employé", wf_parent: "Parent",
+  wp_days: "5 jours", wp_domains: "10 domaines", wp_lv: "Niveau 1-5",
+  wp_days_word: "jours", wp_not_started: "Pas commencé", wp_continue: "Continuer ▸", wp_start: "Commencer ▸",
+  wstats: "Tous les mondes enseignent les mêmes domaines — via des histoires différentes.",
   d1_t: "Mots de passe & Comptes", d1_p: "Mots de passe uniques, 2FA, récupération",
   d2_t: "Phishing & Messages", d2_p: "Repérer messages et liens suspects",
   d3_t: "Navigation Sûre", d3_p: "HTTPS, faux domaines, WiFi public",
@@ -361,6 +381,11 @@ fr: {
 
 it: {
   day_word: "Giorno",
+  nav_worlds: "Mondi", worlds_h: "Scegli il tuo mondo, il tuo percorso", worlds_sub: "Ogni mondo = un contesto di vita diverso. Ogni profilo ha i suoi progressi.",
+  wf_all: "Tutti", wf_student: "Studente", wf_merchant: "Commerciante", wf_worker: "Impiegato", wf_parent: "Genitore",
+  wp_days: "5 giorni", wp_domains: "10 domini", wp_lv: "Livello 1-5",
+  wp_days_word: "giorni", wp_not_started: "Non iniziato", wp_continue: "Continua ▸", wp_start: "Inizia ▸",
+  wstats: "Tutti i mondi insegnano gli stessi domini — con storie diverse.",
   d1_t: "Password & Account", d1_p: "Password uniche, 2FA, recupero",
   d2_t: "Phishing & Messaggi", d2_p: "Riconosci messaggi e link sospetti",
   d3_t: "Navigazione Sicura", d3_p: "HTTPS, domini falsi, WiFi pubblico",
@@ -422,6 +447,11 @@ it: {
 
 de: {
   day_word: "Tag",
+  nav_worlds: "Welten", worlds_h: "Wähle deine Welt, deinen Lernpfad", worlds_sub: "Jede Welt = ein anderer Lebenskontext. Jedes Profil hat eigenen Fortschritt.",
+  wf_all: "Alle", wf_student: "Studierende", wf_merchant: "Händler", wf_worker: "Angestellte", wf_parent: "Eltern",
+  wp_days: "5 Tage", wp_domains: "10 Domänen", wp_lv: "Level 1-5",
+  wp_days_word: "Tage", wp_not_started: "Nicht begonnen", wp_continue: "Fortsetzen ▸", wp_start: "Starten ▸",
+  wstats: "Alle Welten lehren dieselben Domänen — mit verschiedenen Geschichten.",
   d1_t: "Passwörter & Konten", d1_p: "Einzigartige Passwörter, 2FA, Wiederherstellung",
   d2_t: "Phishing & Nachrichten", d2_p: "Verdächtige Nachrichten & Links erkennen",
   d3_t: "Sicheres Surfen", d3_p: "HTTPS, Fake-Domains, öffentliches WLAN",
@@ -483,6 +513,11 @@ de: {
 
 pt: {
   day_word: "Dia",
+  nav_worlds: "Mundos", worlds_h: "Escolha seu mundo, sua trilha", worlds_sub: "Cada mundo = um contexto de vida diferente. Cada perfil tem progresso próprio.",
+  wf_all: "Todos", wf_student: "Estudante", wf_merchant: "Comerciante", wf_worker: "Escritório", wf_parent: "Pais",
+  wp_days: "5 dias", wp_domains: "10 domínios", wp_lv: "Nível 1-5",
+  wp_days_word: "dias", wp_not_started: "Não iniciado", wp_continue: "Continuar ▸", wp_start: "Começar ▸",
+  wstats: "Todos os mundos ensinam os mesmos domínios — com histórias diferentes.",
   d1_t: "Senhas & Contas", d1_p: "Senhas únicas, 2FA, recuperação",
   d2_t: "Phishing & Mensagens", d2_p: "Reconheça mensagens e links estranhos",
   d3_t: "Navegação Segura", d3_p: "HTTPS, domínios falsos, WiFi público",
