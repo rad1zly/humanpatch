@@ -1,7 +1,8 @@
 /* HumanPatch i18n — 5 languages (UI chrome). t(key) falls back to id. */
 const LANGS = [
-  { id: "id", label: "ID" }, { id: "en", label: "EN" }, { id: "es", label: "ES" },
-  { id: "hi", label: "हिं" }, { id: "pt", label: "PT" },
+  { id: "id", label: "ID", flag: "🇮🇩" }, { id: "en", label: "EN", flag: "🇬🇧" },
+  { id: "es", label: "ES", flag: "🇪🇸" }, { id: "hi", label: "हिं", flag: "🇮🇳" },
+  { id: "pt", label: "PT", flag: "🇧🇷" },
 ];
 let LANG = "id";
 function t(k) {
@@ -12,6 +13,7 @@ function t(k) {
 const I18N = {
 id: {
   day_word: "Hari",
+  nav_how: "Cara Kerja", nav_learn: "Materi", nav_stories: "Dunia", nav_progress: "Progres",
   scroll_cue: "Gulir untuk menjelajah",
   foot_note: "HumanPatch adalah petualangan pelatihan. Pesan, halaman, dan jaringan di dalam dunianya disimulasikan.",
   foot_sim: "Semua karakter & pesan fiktif",
@@ -117,6 +119,7 @@ id: {
 },
 en: {
   day_word: "Day",
+  nav_how: "How It Works", nav_learn: "Learn", nav_stories: "Worlds", nav_progress: "Progress",
   scroll_cue: "Scroll to explore",
   foot_note: "HumanPatch is a training adventure. Messages, pages, and networks inside the world are simulated.",
   foot_sim: "All characters & messages are fictional",
@@ -228,6 +231,7 @@ en: {
 },
 es: {
   day_word: "Día",
+  nav_how: "Cómo funciona", nav_learn: "Aprende", nav_stories: "Mundos", nav_progress: "Progreso",
   scroll_cue: "Desplázate para explorar",
   foot_note: "HumanPatch es una aventura de entrenamiento. Todo dentro del mundo está simulado.",
   foot_sim: "Todos los personajes y mensajes son ficticios",
@@ -277,6 +281,7 @@ es: {
 },
 hi: {
   day_word: "दिन",
+  nav_how: "कैसे काम करता है", nav_learn: "सीखें", nav_stories: "दुनियाएँ", nav_progress: "प्रगति",
   scroll_cue: "स्क्रॉल करें",
   foot_note: "HumanPatch एक प्रशिक्षण एडवेंचर है। दुनिया की हर चीज़ सिम्युलेटेड है।",
   foot_sim: "सभी किरदार और संदेश काल्पनिक हैं",
@@ -326,6 +331,7 @@ hi: {
 },
 pt: {
   day_word: "Dia",
+  nav_how: "Como funciona", nav_learn: "Aprenda", nav_stories: "Mundos", nav_progress: "Progresso",
   scroll_cue: "Role para explorar",
   foot_note: "HumanPatch é uma aventura de treinamento. Tudo dentro do mundo é simulado.",
   foot_sim: "Todos os personagens e mensagens são fictícios",
