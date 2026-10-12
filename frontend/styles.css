@@ -670,3 +670,9 @@ body { scroll-snap-type: y proximity; } /* gentle snap, still free-scrolls insid
 .hero.snap-page .note { font-size: clamp(12.5px, 1.2vw, 15px); }
 .hero.snap-page .ctas .btn { font-size: clamp(14px, 1.3vw, 17px); padding: 14px clamp(20px, 2vw, 30px); }
 .hv-phone { width: clamp(290px, 26vw, 380px); }
+
+
+/* ---- light dropdowns (nav burger menu) — match langdd ---- */
+.topbar-fixed .navdd-menu { background: #fff; border-color: #E2E8F0; box-shadow: 0 18px 40px rgba(2,6,23,.14); }
+.topbar-fixed .navdd-menu .navlink { color: #0F172A; }
+.topbar-fixed .navdd-menu .navlink:hover { background: #F1F5F9; color: #0F172A; }
