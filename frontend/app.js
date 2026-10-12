@@ -32,16 +32,16 @@ const state = {
 function saveLocal() {
   try {
     localStorage.setItem("hp2_user", JSON.stringify(state.user));
-    localStorage.setItem("hp2_profiles", JSON.stringify(state.profiles));
-    localStorage.setItem("hp2_active", JSON.stringify(state.activeProfileId));
+    localStorage.setItem(userKey(state.user?.name, "profiles"), JSON.stringify(state.profiles));
+    localStorage.setItem(userKey(state.user?.name, "active"), JSON.stringify(state.activeProfileId));
     localStorage.setItem("hp2_lang", JSON.stringify(LANG));
   } catch (e) { /* private mode */ }
 }
 function loadLocal() {
   try {
     state.user = JSON.parse(localStorage.getItem("hp2_user") || "null");
-    state.profiles = JSON.parse(localStorage.getItem("hp2_profiles") || "[]");
-    state.activeProfileId = JSON.parse(localStorage.getItem("hp2_active") || "null");
+    state.profiles = JSON.parse(localStorage.getItem(userKey(state.user?.name, "profiles")) || "[]");
+    state.activeProfileId = JSON.parse(localStorage.getItem(userKey(state.user?.name, "active")) || "null");
     const l = JSON.parse(localStorage.getItem("hp2_lang") || '"id"');
     if (I18N[l]) LANG = l;
   } catch (e) { /* ignore */ }
@@ -221,7 +221,7 @@ function vLanding() {
               <div class="pc-bar"><span style="width:${Math.max(pct, prof ? 8 : 0)}%"></span></div>
               <span class="pc-pct">${prof ? `${days}/5 ${t("wp_days_word")}` : t("wp_not_started")}</span>
             </div>
-            <button class="btn ${prof ? "btn-primary" : "btn-ghost"} pc-cta" onclick="${prof ? `playProfile('${prof.id}')` : `startWorldPath('${p.arch}')`}">
+            <button class="btn ${prof ? "btn-primary" : "btn-ghost"} pc-cta" onclick="${prof ? `requireAuth(playProfile)('${prof.id}')` : `requireAuth(startWorldPath)('${p.arch}')`}">
               ${prof ? t("wp_continue") : t("wp_start")}
             </button>
           </article>`;
@@ -255,8 +255,7 @@ function vAuth() {
       ${langDropdown()}
       <h1 style="margin-top:12px">${isLogin ? t("auth_login_h") : t("auth_signup_h")}</h1>
       <p class="sub">${isLogin ? t("auth_login_sub") : t("auth_signup_sub")}</p>
-      ${isLogin ? "" : `
-      <div class="field"><label for="a-name">${t("f_name")}</label><input id="a-name" autocomplete="nickname" placeholder="mis. Rani"></div>`}
+      <div class="field"><label for="a-name">${t("f_name")}</label><input id="a-name" autocomplete="username" placeholder="${isLogin ? "nama akunmu" : "mis. Rani"}"></div>
       <div class="field"><label for="a-pass">${t("f_pass")}</label>
         <div style="position:relative">
           <input id="a-pass" type="password" placeholder="••••••" autocomplete="off">
@@ -272,18 +271,51 @@ function vAuth() {
 }
 function setAuth(m) { state.authMode = m; render(); }
 function togglePw() { const i = $("#a-pass"); i.type = i.type === "password" ? "text" : "password"; }
+function hashPass(p) {
+  // simple deterministic hash — demo-grade (this is a training sim, not a bank)
+  let h = 5381;
+  for (let i = 0; i < p.length; i++) h = ((h << 5) + h + p.charCodeAt(i)) >>> 0;
+  return "h" + h.toString(36);
+}
 function doAuth() {
   const name = $("#a-name")?.value.trim();
   const pass = $("#a-pass")?.value || "";
+  const users = JSON.parse(localStorage.getItem("hp2_users") || "{}");
   if (state.authMode === "signup") {
-    if (!name) return toast("⚠");
+    if (!name) return toast(t("auth_err_name"));
+    if (name in users) { toast(t("auth_err_exists")); setAuth("login"); return; }
     if (pass.length < 6) { $("#a-pass").closest(".field").classList.add("invalid"); return; }
+    users[name] = { hash: hashPass(pass), created: Date.now() };
+    localStorage.setItem("hp2_users", JSON.stringify(users));
     state.user = { name };
+    switchUserSpace(name);
   } else {
-    if (pass.length < 6) { $("#a-pass").closest(".field").classList.add("invalid"); return; }
-    state.user = { name: state.user?.name || "Pemain" };
+    if (!name) return toast(t("auth_err_name"));
+    const u = users[name];
+    if (!u || u.hash !== hashPass(pass)) { toast(t("auth_err_wrong")); $("#a-pass").closest(".field").classList.add("invalid"); return; }
+    state.user = { name };
+    switchUserSpace(name);
   }
   saveLocal(); go("profiles");
+}
+function logout() { state.user = null; state.activeProfileId = null; saveLocal(); go("landing"); }
+function requireAuth(fn) {
+  return (...args) => {
+    if (!state.user) { go("auth"); toast(t("auth_needed")); return; }
+    return fn(...args);
+  };
+}
+
+/* ============ PER-USER STORAGE ============ */
+function userKey(name, key) { return "hp2_u_" + (name || "guest") + "_" + key; }
+function switchUserSpace(name) {
+  // stash current guest/current-user data under its own key, load the target user's
+  if (state.user) {
+    localStorage.setItem(userKey(state.user.name, "profiles"), JSON.stringify(state.profiles));
+    localStorage.setItem(userKey(state.user.name, "active"), JSON.stringify(state.activeProfileId));
+  }
+  state.profiles = JSON.parse(localStorage.getItem(userKey(name, "profiles")) || "[]");
+  state.activeProfileId = JSON.parse(localStorage.getItem(userKey(name, "active")) || "null");
 }
 
 /* ============================================================
@@ -322,14 +354,13 @@ function vProfiles() {
             <strong style="font-size:15px">${archName(p.archetype)}</strong>
             <p style="margin:0">${t("day_word")} ${p.day} · Lv ${p.level}</p>
           </div>
-          <button class="btn btn-primary" style="min-height:40px;padding:0 16px;font-size:13px" onclick="playProfile('${p.id}')">${t("btn_play")}</button>
+          <button class="btn btn-primary" style="min-height:40px;padding:0 16px;font-size:13px" onclick="requireAuth(playProfile)('${p.id}')">${t("btn_play")}</button>
         </div>`).join("")}
       ${ps.length === 0 ? `<div class="card center"><p>${t("profiles_empty")}</p></div>` : ""}
     </div>
-    <button class="btn btn-dark btn-block mt16" onclick="go('wizard')">${t("btn_new_profile")}</button>
+    <button class="btn btn-dark btn-block mt16" onclick="requireAuth(go)('wizard')">${t("btn_new_profile")}</button>
   </main>` + siteFooter();
 }
-function logout() { state.user = null; saveLocal(); go("landing"); }
 function playProfile(id) { state.activeProfileId = id; saveLocal(); go("dashboard"); }
 
 /* ============================================================
@@ -526,7 +557,7 @@ function vSplash() {
     <p class="dim">${STORY_DAYS[w.day-1].engTitle}</p>
     <div class="obj">${t("obj_prefix")} ${t("day"+w.day+"_o")}</div>
     <button class="btn btn-primary" onclick="enterPhone()">${t("btn_power")}</button>
-    <button class="btn btn-ghost" style="color:#94A3B8;border-color:#334155;margin-top:10px" onclick="go('dashboard')">${t("back_dash")}</button>
+    <button class="btn btn-ghost" style="color:#94A3B8;border-color:#334155;margin-top:10px" onclick="requireAuth(go)('dashboard')">${t("back_dash")}</button>
   </div>`;
 }
 
@@ -1078,7 +1109,7 @@ function vDebrief() {
       ${state.world.day < 5
         ? `<button class="btn btn-primary btn-block" onclick="nextDay(${xpEarn})">${t("btn_next_day")(state.world.day + 1)}</button>`
         : `<button class="btn btn-primary btn-block" onclick="finishChapter()">${t("btn_finish_ch")}</button>`}
-      <button class="btn btn-ghost btn-block" style="color:#CBD5E1;border-color:#334155" onclick="go('dashboard')">${t("back_dash")}</button>
+      <button class="btn btn-ghost btn-block" style="color:#CBD5E1;border-color:#334155" onclick="requireAuth(go)('dashboard')">${t("back_dash")}</button>
     </div>
   </div></div>`;
 }
@@ -1186,7 +1217,7 @@ function vFinale() {
       </div>
       <div class="finale-actions">
         <button class="btn btn-primary" onclick="go('profiles')">${t("finale_other_world")}</button>
-        <button class="btn btn-ghost" onclick="go('dashboard')">${t("back_dash")}</button>
+        <button class="btn btn-ghost" onclick="requireAuth(go)('dashboard')">${t("back_dash")}</button>
       </div>
     </div>
   </div>`;
