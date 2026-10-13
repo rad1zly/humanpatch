@@ -150,7 +150,7 @@ function vLanding() {
   return `
   <div id="bg3d" aria-hidden="true"></div>
   <header class="topbar topbar-fixed"><div class="wrap-wide topbar-inner">
-    <div class="brand"><img class="brand-mark" src="HumanPatch_Logo.svg" alt="CyberLife"><span>HumanPatch<small>${t("brand_sub")}</small></span></div>
+    <button class="brand" onclick="go('landing'); location.hash=''"><img class="brand-mark" src="HumanPatch_Logo.svg" alt="CyberLife"></button>
     <div class="navwrap">
       <nav class="navlinks" aria-label="Sections">${navLinks()}</nav>
       <button class="navburger" onclick="toggleNavDD(event)" aria-label="Menu">☰</button>
@@ -275,7 +275,7 @@ function vAuth() {
   return `
   <div class="auth-wrap"><div class="wrap auth-main">
     <div class="auth-card">
-      <div class="brand" style="margin-bottom:14px"><img class="brand-mark" src="HumanPatch_Logo.svg" alt="CyberLife"><span>HumanPatch</span></div>
+      <div class="brand" style="margin-bottom:14px"><img class="brand-mark" src="HumanPatch_Logo.svg" alt="CyberLife"></div>
       ${langDropdown()}
       <h1 style="margin-top:12px">${isLogin ? t("auth_login_h") : t("auth_signup_h")}</h1>
       <p class="sub">${isLogin ? t("auth_login_sub") : t("auth_signup_sub")}</p>
@@ -367,7 +367,7 @@ function vProfiles() {
   const ps = state.profiles;
   return `
   <header class="topbar"><div class="wrap-wide topbar-inner">
-    <div class="brand"><img class="brand-mark" src="HumanPatch_Logo.svg" alt="CyberLife"><span>HumanPatch</span></div>
+    <div class="brand"><img class="brand-mark" src="HumanPatch_Logo.svg" alt="CyberLife"></div>
     <div style="display:flex;gap:10px;align-items:center">
       ${langDropdown()}
       <button class="btn btn-ghost nav-btn" onclick="logout()">${t("nav_logout")}</button>
@@ -443,7 +443,7 @@ function vWizard() {
   }
   return `
   <header class="topbar"><div class="wrap-wide topbar-inner">
-    <button class="brand" onclick="go('profiles')" style="background:none;border:none"><img class="brand-mark" src="HumanPatch_Logo.svg" alt="CyberLife"><span>HumanPatch</span></button>
+    <button class="brand" onclick="go('profiles')" style="background:none;border:none"><img class="brand-mark" src="HumanPatch_Logo.svg" alt="CyberLife"></button>
     <span class="dim small">${t("step_of")(step)}</span>
   </div></header>
   <main class="wrap" style="padding-bottom:40px">
@@ -520,7 +520,7 @@ function vDashboard() {
   const xpPct = Math.min(100, Math.round((p.xp / xpNeed) * 100));
   return `
   <header class="topbar"><div class="wrap-wide topbar-inner">
-    <div class="brand"><img class="brand-mark" src="HumanPatch_Logo.svg" alt="CyberLife"><span>HumanPatch</span></div>
+    <div class="brand"><img class="brand-mark" src="HumanPatch_Logo.svg" alt="CyberLife"></div>
     <div style="display:flex;gap:10px;align-items:center">
       ${langDropdown()}
       <button class="btn btn-ghost nav-btn" onclick="go('profiles')">${t("profiles_h1").split(" ")[0]}</button>
@@ -1347,7 +1347,7 @@ function vDoc(id) {
   return `
   <div class="doc-page">
     <header class="topbar topbar-fixed"><div class="wrap-wide topbar-inner">
-      <button class="brand brand-btn" onclick="go('landing'); location.hash='';"><img class="brand-mark" src="HumanPatch_Logo.svg" alt="CyberLife"><span>HumanPatch</span></button>
+      <button class="brand brand-btn" onclick="go('landing'); location.hash='';"><img class="brand-mark" src="HumanPatch_Logo.svg" alt="CyberLife"></button>
       <div style="margin-left:auto;display:flex;gap:10px;align-items:center">
         ${langDropdown()}
         <button class="btn btn-ghost nav-btn" onclick="go('landing'); location.hash='';">‹ ${t("back_home")}</button>
