@@ -49,7 +49,7 @@ img { max-width: 100%; }
 }
 .topbar-inner { display: flex; align-items: center; justify-content: space-between; height: 56px; }
 .brand { display: flex; align-items: center; gap: 8px; font-weight: 800; letter-spacing: -.02em; }
-.brand-mark { width: 30px; height: 30px; border-radius: 9px; background: linear-gradient(135deg, var(--teal), #134E4A); display: grid; place-items: center; color: #fff; }
+.brand-mark { width: 80px; height: 54px; border-radius: 8px; display: block; flex-shrink: 0; object-fit: cover; }
 .brand-mark svg { width: 17px; height: 17px; }
 .brand span small { display: block; font-size: 10px; font-weight: 600; color: var(--muted); letter-spacing: .12em; }
 
@@ -600,7 +600,7 @@ body { scroll-snap-type: y proximity; } /* gentle snap, still free-scrolls insid
 }
 .topbar-fixed .brand > span { color: var(--ink); }
 .topbar-fixed .brand small { color: #64748B; }
-.topbar-fixed .brand-mark { color: var(--teal); }
+.topbar-fixed .brand-mark { width: 96px; height: 64px; }
 .topbar-fixed .navlink { color: #334155; }
 .topbar-fixed .navlink:hover { color: #0F172A; background: rgba(15,23,42,.07); }
 .topbar-fixed .navburger { color: #0F172A; border-color: #CBD5E1; background: #fff; }
