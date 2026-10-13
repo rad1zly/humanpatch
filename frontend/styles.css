@@ -743,3 +743,7 @@ body { scroll-snap-type: y proximity; } /* gentle snap, still free-scrolls insid
 .fn-box h4 { margin: 10px 0 6px; font-size: 19px; }
 .fn-box p { margin: 0; color: #CBD5E1; font-size: 13.5px; line-height: 1.6; }
 .finale-actions { display: flex; flex-direction: column; gap: 10px; justify-content: center; }
+
+.topbar-fixed .brand:hover .brand-mark { transform: scale(1.06); }
+
+.topbar-fixed .brand { background: none; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; }
