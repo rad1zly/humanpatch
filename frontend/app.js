@@ -31,17 +31,20 @@ const state = {
 /* ---------------- persistence ---------------- */
 function saveLocal() {
   try {
+    const ns = state.guestMode || !state.user ? "guest" : state.user.name;
     localStorage.setItem("hp2_user", JSON.stringify(state.user));
-    localStorage.setItem(userKey(state.user?.name, "profiles"), JSON.stringify(state.profiles));
-    localStorage.setItem(userKey(state.user?.name, "active"), JSON.stringify(state.activeProfileId));
+    localStorage.setItem(userKey(ns, "profiles"), JSON.stringify(state.profiles));
+    localStorage.setItem(userKey(ns, "active"), JSON.stringify(state.activeProfileId));
     localStorage.setItem("hp2_lang", JSON.stringify(LANG));
   } catch (e) { /* private mode */ }
 }
 function loadLocal() {
   try {
     state.user = JSON.parse(localStorage.getItem("hp2_user") || "null");
-    state.profiles = JSON.parse(localStorage.getItem(userKey(state.user?.name, "profiles")) || "[]");
-    state.activeProfileId = JSON.parse(localStorage.getItem(userKey(state.user?.name, "active")) || "null");
+    state.guestMode = !state.user;
+    const ns = state.user?.name || "guest";
+    state.profiles = JSON.parse(localStorage.getItem(userKey(ns, "profiles")) || "[]");
+    state.activeProfileId = JSON.parse(localStorage.getItem(userKey(ns, "active")) || "null");
     const l = JSON.parse(localStorage.getItem("hp2_lang") || '"id"');
     if (I18N[l]) LANG = l;
   } catch (e) { /* ignore */ }
@@ -87,12 +90,33 @@ document.addEventListener("click", (e) => { if (state.langDD && !e.target.closes
 
 /* world paths — TryHackMe-style learning path cards */
 const WORLD_PATHS = [
-  { arch: "student",  emoji: "🎓", name: "Rani, 21",   bg: "#FEF3C7" },
-  { arch: "merchant", emoji: "🛒", name: "Mbak Sari, 34", bg: "#FFE4E6" },
-  { arch: "worker",   emoji: "💼", name: "Budi, 29",   bg: "#DBEAFE" },
-  { arch: "parent",   emoji: "🏡", name: "Pak Hendra, 45", bg: "#DCFCE7" },
-  { arch: "general",  emoji: "🌐", name: t("arch_general"), bg: "#E0E7FF" },
+  { arch: "student",  emoji: "🎓", color: "#FEF3C7",
+    personas: [
+      { id: "nadia",  flag: "🇮🇩", name: t("per_nadia"),  blurb: t("per_nadia_d")  },
+      { id: "xiaoyu", flag: "🇨🇳", name: t("per_xiaoyu"), blurb: t("per_xiaoyu_d") },
+    ], default: "nadia" },
+  { arch: "merchant", emoji: "🛒", color: "#FFE4E6",
+    personas: [
+      { id: "maddie", flag: "🇺🇸", name: t("per_maddie"), blurb: t("per_maddie_d") },
+      { id: "ananya", flag: "🇮🇳", name: t("per_ananya"), blurb: t("per_ananya_d") },
+    ], default: "maddie" },
+  { arch: "worker",   emoji: "💼", color: "#DBEAFE",
+    personas: [
+      { id: "rizky",  flag: "🇮🇩", name: t("per_rizky"),  blurb: t("per_rizky_d")  },
+      { id: "oliver", flag: "🇬🇧", name: t("per_oliver"), blurb: t("per_oliver_d") },
+    ], default: "rizky" },
+  { arch: "parent",   emoji: "🏡", color: "#DCFCE7",
+    personas: [
+      { id: "elsa",   flag: "🇸🇪", name: t("per_elsa"),   blurb: t("per_elsa_d")   },
+      { id: "emir",   flag: "🇹🇷", name: t("per_emir"),   blurb: t("per_emir_d")   },
+    ], default: "elsa" },
+  { arch: "general",  emoji: "🌐", color: "#E0E7FF",
+    personas: [
+      { id: "chinedu", flag: "🇳🇬", name: t("per_chinedu"), blurb: t("per_chinedu_d") },
+      { id: "diego",   flag: "🇲🇽", name: t("per_diego"),   blurb: t("per_diego_d")   },
+    ], default: "chinedu" },
 ];
+const ALL_PERSONAS = WORLD_PATHS.flatMap(w => w.personas);
 function setWorldFilter(f) { state.worldFilter = f; render(); }
 function startWorldPath(arch) {
   state.wizard.archetype = arch;
@@ -205,10 +229,10 @@ function vLanding() {
           return `
           <article class="path-card ${prof ? "started" : ""}">
             <div class="pc-head">
-              <div class="pc-icon" style="background:${p.bg}">${p.emoji}</div>
+              <div class="pc-icon" style="background:${p.color}">${p.emoji}</div>
               <div class="pc-title">
                 <span class="pc-tag">${t("arch_" + p.arch)}</span>
-                <h3>${p.name}</h3>
+                <h3>${p.personas[0].name}</h3>
                 <p>${t("arch_" + p.arch + "_d")}</p>
               </div>
             </div>
@@ -298,10 +322,13 @@ function doAuth() {
   }
   saveLocal(); go("profiles");
 }
-function logout() { state.user = null; state.activeProfileId = null; saveLocal(); go("landing"); }
+function logout() { state.user = null; state.activeProfileId = null; state.guestMode = true; saveLocal(); go("landing"); }
 function requireAuth(fn) {
   return (...args) => {
-    if (!state.user) { go("auth"); toast(t("auth_needed")); return; }
+    if (!state.user) {
+      // trial: play allowed, data lives in hp2_guest_* namespace (wiped on logout)
+      state.guestMode = true;
+    }
     return fn(...args);
   };
 }
@@ -314,8 +341,14 @@ function switchUserSpace(name) {
     localStorage.setItem(userKey(state.user.name, "profiles"), JSON.stringify(state.profiles));
     localStorage.setItem(userKey(state.user.name, "active"), JSON.stringify(state.activeProfileId));
   }
+  // user logged in — flush any guest trial data (won't carry over by design)
+  if (state.guestMode) {
+    localStorage.removeItem(userKey("guest", "profiles"));
+    localStorage.removeItem(userKey("guest", "active"));
+  }
   state.profiles = JSON.parse(localStorage.getItem(userKey(name, "profiles")) || "[]");
   state.activeProfileId = JSON.parse(localStorage.getItem(userKey(name, "active")) || "null");
+  state.guestMode = false;
 }
 
 /* ============================================================
