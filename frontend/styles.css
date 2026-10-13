@@ -49,8 +49,8 @@ img { max-width: 100%; }
 }
 .topbar-inner { display: flex; align-items: center; justify-content: space-between; height: 56px; }
 .brand { display: flex; align-items: center; gap: 8px; font-weight: 800; letter-spacing: -.02em; }
-.brand-mark { width: 120px; height: 80px; border-radius: 8px; display: block; flex-shrink: 0; object-fit: cover; }
-.brand-mark svg { width: 17px; height: 17px; }
+.brand-mark { width: 160px; height: 65px; display: block; flex-shrink: 0; object-fit: contain; background: transparent; }
+
 .brand span small { display: block; font-size: 10px; font-weight: 600; color: var(--muted); letter-spacing: .12em; }
 
 .btn {
@@ -600,7 +600,7 @@ body { scroll-snap-type: y proximity; } /* gentle snap, still free-scrolls insid
 }
 .topbar-fixed .brand > span { color: var(--ink); }
 .topbar-fixed .brand small { color: #64748B; }
-.topbar-fixed .brand-mark { width: 168px; height: 112px; cursor: pointer; transition: transform .2s; object-fit: contain; background: transparent; }
+.topbar-fixed .brand-mark { width: 200px; height: 81px; cursor: pointer; transition: transform .2s; object-fit: contain; background: transparent; }
 .topbar-fixed .navlink { color: #334155; }
 .topbar-fixed .navlink:hover { color: #0F172A; background: rgba(15,23,42,.07); }
 .topbar-fixed .navburger { color: #0F172A; border-color: #CBD5E1; background: #fff; }
