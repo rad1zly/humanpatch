@@ -92,16 +92,16 @@ document.addEventListener("click", (e) => { if (state.langDD && !e.target.closes
 const WORLD_PATHS = [
   { arch: "student", emoji: "🎓", color: "#FEF3C7",
     personas: [
-      { id: "nadia",   flag: "🇮🇩", name: t("per_nadia"),   blurb: t("per_nadia_d"),   face: "assets/faces/nadia.png" },
-      { id: "xiaoyu",  flag: "🇨🇳", name: t("per_xiaoyu"),  blurb: t("per_xiaoyu_d"),  face: "assets/faces/xiaoyu.png" },
-      { id: "rizky",   flag: "🇮🇩", name: t("per_rizky"),   blurb: t("per_rizky_d"),   face: "assets/faces/rizky.png" },
-      { id: "chinedu", flag: "🇳🇬", name: t("per_chinedu"), blurb: t("per_chinedu_d"), face: "assets/faces/chinedu.png" },
-      { id: "ananya",  flag: "🇮🇳", name: t("per_ananya"),  blurb: t("per_ananya_d"),  face: "assets/faces/ananya.png" },
-      { id: "elsa",    flag: "🇸🇪", name: t("per_elsa"),    blurb: t("per_elsa_d"),    face: "assets/faces/elsa.png" },
-      { id: "maddie",  flag: "🇺🇸", name: t("per_maddie"),  blurb: t("per_maddie_d"),  face: "assets/faces/maddie.png" },
-      { id: "emir",    flag: "🇹🇷", name: t("per_emir"),    blurb: t("per_emir_d"),    face: "assets/faces/emir.png" },
-      { id: "diego",   flag: "🇲🇽", name: t("per_diego"),   blurb: t("per_diego_d"),   face: "assets/faces/diego.png" },
-      { id: "oliver",  flag: "🇬🇧", name: t("per_oliver"),  blurb: t("per_oliver_d"),  face: "assets/faces/oliver.png" },
+      { id: "nadia",   flag: "🇮🇩", nk: "per_nadia",   bk: "per_nadia_d",   face: "assets/faces/nadia.png" },
+      { id: "xiaoyu",  flag: "🇨🇳", nk: "per_xiaoyu",  bk: "per_xiaoyu_d",  face: "assets/faces/xiaoyu.png" },
+      { id: "rizky",   flag: "🇮🇩", nk: "per_rizky",   bk: "per_rizky_d",   face: "assets/faces/rizky.png" },
+      { id: "chinedu", flag: "🇳🇬", nk: "per_chinedu", bk: "per_chinedu_d", face: "assets/faces/chinedu.png" },
+      { id: "ananya",  flag: "🇮🇳", nk: "per_ananya",  bk: "per_ananya_d",  face: "assets/faces/ananya.png" },
+      { id: "elsa",    flag: "🇸🇪", nk: "per_elsa",    bk: "per_elsa_d",    face: "assets/faces/elsa.png" },
+      { id: "maddie",  flag: "🇺🇸", nk: "per_maddie",  bk: "per_maddie_d",  face: "assets/faces/maddie.png" },
+      { id: "emir",    flag: "🇹🇷", nk: "per_emir",    bk: "per_emir_d",    face: "assets/faces/emir.png" },
+      { id: "diego",   flag: "🇲🇽", nk: "per_diego",   bk: "per_diego_d",   face: "assets/faces/diego.png" },
+      { id: "oliver",  flag: "🇬🇧", nk: "per_oliver",  bk: "per_oliver_d",  face: "assets/faces/oliver.png" },
     ], default: "nadia" },
   { arch: "merchant", emoji: "🛒", color: "#FFE4E6", personas: [], default: "" },
   { arch: "worker",   emoji: "💼", color: "#DBEAFE", personas: [], default: "" },
@@ -216,7 +216,7 @@ function vLanding() {
       </div>
       <div class="path-grid">
         ${WORLD_PATHS.filter(p => p.personas.length > 0).filter(p => (state.worldFilter||"all")==="all" || p.arch===state.worldFilter).flatMap(p =>
-          p.personas.map(per => ({ arch: p.arch, color: p.color, emoji: p.emoji, persona: per }))
+          p.personas.map(per => ({ arch: p.arch, color: p.color, emoji: p.emoji, persona: { ...per, name: t(per.nk), blurb: t(per.bk) } }))
         ).map(p => {
           const prof = (state.profiles||[]).find(x => x.archetype === p.arch && x.persona === p.persona.id);
           const days = prof ? (prof.day - 1) : 0;
