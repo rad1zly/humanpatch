@@ -1,36 +1,53 @@
 {
-  "id": "story_komp_d5_threat",
-  "title": "Ancaman 15 Menit",
-  "domain": "phishing_social",
-  "channel": "DM",
-  "sender": "unknown_x9",
-  "language": "id",
-  "level": 5,
-  "persona_tags": [
-    "pelajar"
-  ],
-  "story": "student-01",
-  "story_day": 5,
-  "attacker_character": "pengancam yang mencampur data akurat (dari unggahan publik) dengan ancaman sebar data pribadi",
-  "attacker_goal": "Membuat korban panik dan menuruti instruksi (transfer/kirim data) dalam 15 menit",
-  "opener": "Kami punya informasi pribadimu: [nama lengkap], [sekolah], [alamat] — SEMUA BENAR kan? 15 MENIT dari sekarang kami sebar ke semua teman sekolahmu kalau kamu tidak ikuti instruksi kami. Jangan coba-coba lapor!",
-  "escalation_ladder": [
-    "10 menit lagi. Kamu masih mikir? Sekali sebar, gak bisa ditarik.",
-    "Buktinya? Cek, kami kirim tangkapan layar galeri 'kamu'. (foto hasil kumpulan publik)",
-    "Kalau kamu bayar 300rb sekarang, semua data kami hapus. Janji."
-  ],
-  "red_flags": [
-    "Urgensi ekstrem (15 menit) = manipulasi ketakutan",
-    "Data yang tampak akurat berasal dari unggahan publik, bukan bukti mereka punya data rahasia",
-    "Instruksi 'jangan lapor' = isolasi korban",
-    "Janji 'bayar lalu dihapus' tidak pernah benar — pembayaran memicu tuntutan baru"
-  ],
-  "safe_response": "Jangan panik, jangan balas, simpan bukti (screenshot), blokir, laporkan ke orang tepercaya (guru/ortu) dan platform; jangan pernah membayar",
-  "page": {
-    "title": "Pesan Langsung",
-    "hint": "Pengirim: unknown_x9 — 'Ikuti instruksi atau kami sebar...'",
-    "fields": [
-      "[ Balas pesan ]"
-    ]
+ "id": "story_komp_d5_threat",
+ "title": "Penguntit Anonim",
+ "domain": "scam_psychology",
+ "channel": "ChatLoop",
+ "sender": "unknown_x9",
+ "language": "id",
+ "level": 5,
+ "persona_tags": [
+  "pelajar"
+ ],
+ "story": "student-01",
+ "story_day": 5,
+ "attacker_character": "blackmail/sextortion ringan: penguntit anonim yang tahu data pribadimu (dari kebocoran sebelumnya)",
+ "attacker_goal": "menakut-nakuti korban agar membayar atau menyerahkan data lebih lanjut",
+ "opener": "Kami punya informasi pribadimu: [nama lengkap], [sekolah], [alamat] — SEMUA BENAR. Transfer Rp 500.000 dalam 15 menit atau kami sebar ke semua kontak sekolahmu.",
+ "escalation_ladder": [
+  "data pribadi asli sebagai pembuka (dari bocoran minggu lalu)",
+  "ancaman sebar dalam 15 menit",
+  "naikkan tekanan: 'orang tuamu akan tahu'",
+  "hilang setelah dilaporkan & diblokir"
+ ],
+ "red_flags": [
+  "data pribadi yang akurat bikin terasa nyata",
+  "deadline 15 menit — taktik panik",
+  "ancaman sosial (malu, orang tua)",
+  "minta transfer cepat ke rekening pribadi"
+ ],
+ "safe_response": "jangan bayar; jangan balas; screenshot bukti; blokir; laporkan ke platform, sekolah/orang tua, dan aduan konten (aduankonten.id); pembayaran hanya memperpanjang siksaan",
+ "lesson": "Penjahat pakai data asli dari kebocoran supaya ancaman terasa nyata. Jangan pernah bayar — bayar = dianggap target hidup.Screenshot, blokir, laporkan. Ini bukan salahmu.",
+ "translations": {
+  "en": {
+   "title": "Anonymous Stalker",
+   "sender": "unknown_x9",
+   "attacker_character": "light blackmail: anonymous stalker who knows your real data (from the earlier leak)",
+   "opener": "We have your personal information: [full name], [school], [address] — ALL CORRECT. Transfer Rp 500,000 (~$30) within 15 minutes or we send it to every contact in your school.",
+   "escalation_ladder": [
+    "real personal data as the opener (from last week's leak)",
+    "15-minute doxx threat",
+    "pressure up: 'your parents will know'",
+    "vanishes once reported & blocked"
+   ],
+   "red_flags": [
+    "accurate personal data makes it feel real",
+    "15-minute deadline — panic tactic",
+    "social threats (shame, parents)",
+    "quick transfer to a personal account"
+   ],
+   "safe_response": "don't pay; don't reply; screenshot evidence; block; report to the platform, school/parents, and the content-complaint portal; paying only prolongs the abuse",
+   "lesson": "Criminals use real leaked data to make threats feel real. Never pay — paying marks you as a live target. Screenshot, block, report. It is not your fault."
   }
+ }
 }

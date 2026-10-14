@@ -1,39 +1,55 @@
 {
-  "id": "story_komp_d1_phishing",
-  "title": "Pesan 'Finalis Kompetisi'",
-  "domain": "phishing_social",
-  "channel": "WhatsApp",
-  "sender": "Panitia Kompetisi Nasional",
-  "language": "id",
-  "level": 1,
-  "persona_tags": [
-    "pelajar"
-  ],
-  "story": "student-01",
-  "story_day": 1,
-  "attacker_character": "penipu menyamar sebagai panitia kompetisi memakai logo resmi dan tenggat 10 menit",
-  "attacker_goal": "Mendorong korban membuka tautan palsu dan mengisi data pribadi demi 'konfirmasi slot beasiswa'",
-  "opener": "Selamat! 🎉 Kamu terpilih sebagai PESERTA FINAL kompetisi nasional! Konfirmasi identitasmu SEKARANG melalui link berikut agar slot beasiswamu tidak dibatalkan. Batas waktu 10 menit!",
-  "escalation_ladder": [
-    "Kok belum konfirmasi? Slot kamu tinggal 1 lagi, ada anak sekolah lain yang mau kita pindahkan ke posisimu.",
-    "Ini kan resmi, ada logo panitianya kan? Kamu jangan sampai menyesal kehilangan beasiswa.",
-    "Terakhir ya, 2 menit sebelum sistem menutup. Klik linknya dan isi datamu, gak sampai 1 menit kok!"
-  ],
-  "red_flags": [
-    "Pengumuman final yang tidak pernah ada di kanal resmi sekolah/panitia",
-    "Tenggat waktu sangat singkat (10 menit) = urgensi buatan",
-    "Tautan konfirmasi di luar domain resmi penyelenggara",
-    "Logo resmi bisa disalin siapa saja — logo bukan bukti keaslian"
-  ],
-  "safe_response": "Periksa pengumuman di situs resmi penyelenggara dan hubungi panitia lewat kontak terverifikasi; jangan buka tautan dari pesan mendesak",
-  "page": {
-    "title": "Konfirmasi Finalis",
-    "hint": "Masukkan data identitas untuk mengamankan slot beasiswamu.",
-    "fields": [
-      "Nama lengkap",
-      "NIS",
-      "Nama sekolah",
-      "No. HP orang tua"
-    ]
+ "id": "story_komp_d1_phishing",
+ "title": "Panitia Kompetisi Digital",
+ "domain": "phishing_social",
+ "channel": "ChatLoop",
+ "sender": "Panitia Kompetisi Nasional",
+ "language": "id",
+ "level": 1,
+ "persona_tags": [
+  "pelajar"
+ ],
+ "story": "student-01",
+ "story_day": 1,
+ "attacker_character": "penipu yang mengaku panitia lomba, nada resmi-gembira, buru-buru",
+ "attacker_goal": "menggiring korban ke link konfirmasi data palsu untuk mencuri identitas",
+ "opener": "Selamat! 🎉 Kamu terpilih sebagai FINALIS 10 BESAR Kompetisi Digital Nasional! Segera isi formulir konfirmasi data peserta di kompetisi-nasional[.]id/daftar sebelum jam 12 siang ya, slot kamu hangis dalam 3 jam!",
+ "escalation_ladder": [
+  "klaim finalis + deadline 3 jam",
+  "suruh isi formulir data diri lengkap di link",
+  "minta nomor HP aktif + nama ibu kandung 'untuk verifikasi'",
+  "ancaman slot diberikan ke peserta lain jika tidak sekarang"
+ ],
+ "red_flags": [
+  "pengirim tidak dikenal & tidak ada di kontak",
+  "deadline mepet bikin panik",
+  "link domain janggal (kompetisi-nasional[.]id bukan situs resmi)",
+  "minta data pribadi via chat",
+  "hadiah untuk lomba yang kamu tidak ikuti"
+ ],
+ "safe_response": "abaikan dan laporkan; cek situs resmi lomba langsung, bukan dari link chat",
+ "lesson": "Hadiah/kemenangan dari lomba yang tidak kamu ikuti hampir selalu penipuan. Panitia resmi tidak pernah minta data lengkap via chat dengan deadline panik.",
+ "translations": {
+  "en": {
+   "title": "Digital Competition Committee",
+   "sender": "National Competition Committee",
+   "attacker_character": "scammer posing as competition committee, official-excited tone, rushed",
+   "opener": "Congratulations! 🎉 You've been selected as a TOP-10 FINALIST of the National Digital Competition! Fill the participant confirmation form at national-compet1tion[.]id/register before noon — your slot expires in 3 hours!",
+   "escalation_ladder": [
+    "finalist claim + 3-hour deadline",
+    "pushes to fill a full personal-data form via link",
+    "asks for phone number + mother's maiden name 'for verification'",
+    "threatens slot goes to someone else if not now"
+   ],
+   "red_flags": [
+    "unknown sender, not in contacts",
+    "urgent deadline creating panic",
+    "odd domain (national-compet1tion[.]id, not official)",
+    "asks for personal data via chat",
+    "prize for a contest you never entered"
+   ],
+   "safe_response": "ignore and report; check the contest's official site directly, never via chat links",
+   "lesson": "Prizes for contests you never entered are almost always scams. Real committees never demand full personal data over chat with a panic deadline."
   }
+ }
 }

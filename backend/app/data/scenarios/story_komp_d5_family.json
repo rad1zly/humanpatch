@@ -1,37 +1,53 @@
 {
-  "id": "story_komp_d5_family",
-  "title": "Giliran Keluargamu",
-  "domain": "reporting",
-  "channel": "Family Chat",
-  "sender": "Ibu & Adik",
-  "language": "id",
-  "level": 5,
-  "persona_tags": [
-    "pelajar"
-  ],
-  "story": "student-01",
-  "story_day": 5,
-  "attacker_character": "penipuan yang menyasar keluarga: adik dapat link hadiah game, ortu ditelpon 'petugas bank'",
-  "attacker_goal": "Membujuk korban mengabaikan masalah keluarga ('bukan akunmu yang kena') alih-alih membantu keluarga menghadapi penipuan",
-  "opener": "Ibu: 'Nak, tadi ada telepon bilang dari bank, minta nomor kartu sama kode. Aku udah dikit bingung...' Adik: 'Kak, aku menang hadiah skin game! Cuma perlu isi password IG kakak buat klaim, boleh ya?' 😢",
-  "escalation_ladder": [
-    "Ibu: 'Tapi suaranya meyakinkan kak, bilang akun bermasalah. Katanya kalau gak sekarang kartu diblokir.'",
-    "Adik: 'Ayolah kak, cuma password doang. Hadiahnya cuma hari ini!'",
-    "Ibu: 'Yaudah deh, nanti aku telpon balik orang bank itu dan kasih datanya biar cepat selesai...'"
-  ],
-  "red_flags": [
-    "'Petugas bank' yang minta nomor kartu/kode = penipuan",
-    "Hadiah game yang minta password akun = penipuan",
-    "Mengabaikan karena 'bukan akunku yang kena' — keluarga adalah target paling rentan",
-    "Melarang total keluarga dari digital bukan solusi edukatif"
-  ],
-  "safe_response": "Bantu keluarga: hentikan percakapan dengan 'petugas', jangan bagikan kode/kartu/password, verifikasi lewat kanal resmi bank, ajari adik bahwa hadiah tidak pernah butuh password, laporkan penipuan",
-  "page": {
-    "title": "Grup Keluarga",
-    "hint": "Ibu & Adik butuh bantuanmu sekarang...",
-    "fields": [
-      "[ Bantu Ibu ]",
-      "[ Bantu Adik ]"
-    ]
+ "id": "story_komp_d5_family",
+ "title": "Giliran Keluargamu",
+ "domain": "family_community",
+ "channel": "MessageBox",
+ "sender": "Ibu (rumah)",
+ "language": "id",
+ "level": 5,
+ "persona_tags": [
+  "pelajar"
+ ],
+ "story": "student-01",
+ "story_day": 5,
+ "attacker_character": "bukan penipu langsung — keluarga yang hampir terjebak; kamu adalah garis pertahanan",
+ "attacker_goal": "keluarga nyaris terkecoh (ibu ditelpon 'petugas bank', adik dapat 'hadiah skin game'); tugasmu mencegah",
+ "opener": "Ibu: 'Nak, tadi ada telepon bilang dari bank, minta nomor kartu sama kode. Aku sudah kasih nomor kartunya aja, belum kode. Itu beneran dari bank ya?'",
+ "escalation_ladder": [
+  "ibu nyaris kasih data kartu ke 'petugas bank'",
+  "adik dapat chat 'hadiah skin game' minta password akun",
+  "ibu ragu tapi cenderung percaya karena suara meyakinkan",
+  "kamu harus menjelaskan & membatalkan bahaya"
+ ],
+ "red_flags": [
+  "bank tidak pernah menelepon minta data kartu",
+  "hadiah game minta password akun",
+  "tekanan 'segera' dari penelepon",
+  "orang tersayang lebih rentan karena kurang paham digital"
+ ],
+ "safe_response": "jelaskan ke ibu: batalkan, blokir kartu via aplikasi bank resmi; ganti password akun adik; laporkan nomor penipu",
+ "lesson": "Kamu bisa jadi 'help desk' keluarga. Ajari orang tua & adik aturan sederhana: data kartu, OTP, dan password tidak pernah dibagikan lewat telepon atau chat.",
+ "translations": {
+  "en": {
+   "title": "Your Family's Turn",
+   "sender": "Mom (home)",
+   "attacker_character": "not a direct scammer — family members nearly trapped; YOU are the line of defense",
+   "opener": "Mom: 'Honey, someone from the bank called asking for my card number and a code. I only gave the card number, not the code yet. That was really the bank, right?'",
+   "escalation_ladder": [
+    "mom nearly gave card data to a 'bank officer'",
+    "little brother got a 'free game skin' chat asking for his account password",
+    "mom doubts but leans toward trusting the convincing voice",
+    "you must explain & cancel the danger"
+   ],
+   "red_flags": [
+    "banks never call asking for card data",
+    "game prize asking for an account password",
+    "'immediately' pressure from the caller",
+    "loved ones are more vulnerable with less digital literacy"
+   ],
+   "safe_response": "explain to mom: cancel, block the card via the official banking app; change your brother's password; report the scam number",
+   "lesson": "You can be your family's help desk. Teach parents & siblings one simple rule: card numbers, OTPs and passwords are never shared over phone or chat."
   }
+ }
 }

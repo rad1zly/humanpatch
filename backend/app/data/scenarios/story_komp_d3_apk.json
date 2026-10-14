@@ -1,36 +1,53 @@
 {
-  "id": "story_komp_d3_apk",
-  "title": "Aplikasi Edit Video Grup",
-  "domain": "mobile",
-  "channel": "WhatsApp Grup",
-  "sender": "Link Undangan Grup",
-  "language": "id",
-  "level": 3,
-  "persona_tags": [
-    "pelajar"
-  ],
-  "story": "student-01",
-  "story_day": 3,
-  "attacker_character": "tautan APK edit video di luar toko aplikasi resmi yang dibagikan ke grup sekolah",
-  "attacker_goal": "Membuat korban memasang aplikasi tak terverifikasi yang meminta izin kontak, mikrofon, lokasi, dan foto",
-  "opener": "Bro, ini app edit video buat presentasi kompetisi — KEREN banget hasilnya! Gak ada di Play Store, install lewat link ini aja: VideoProEditor[.]apk — udah pada pake semua di grup!",
-  "escalation_ladder": [
-    "Pasang dong, aplikasinya gratis dan hasil editnya keren. Semua di grup udah pake.",
-    "Izin akses kontak/mikrofon itu buat fitur sticker suara. Normal kok.",
-    "Kok jadi mikir? Masa kamu gak percaya temen sekelas sendiri?"
-  ],
-  "red_flags": [
-    "APK dari luar toko aplikasi resmi — tidak ada verifikasi pengembang",
-    "Izin yang diminta tidak relevan dengan fungsi aplikasi (edit video ≠ butuh kontak/mikrofon/lokasi)",
-    "Tekanan sosial 'semua orang sudah pakai'",
-    "Sumber tautan tidak bisa diverifikasi"
-  ],
-  "safe_response": "Tolak memasang dari sumber tak resmi; cari aplikasi sejenis di toko aplikasi resmi, cek reputasi pengembang dan ulasan",
-  "page": {
-    "title": "VideoProEditor.apk",
-    "hint": "Izinkan akses: Kontak, Mikrofon, Lokasi, Foto?",
-    "fields": [
-      "[ Tombol Izinkan Semua ]"
-    ]
+ "id": "story_komp_d3_apk",
+ "title": "APK Editor Video",
+ "domain": "mobile",
+ "channel": "ChatLoop",
+ "sender": "Teman Grup Lomba",
+ "language": "id",
+ "level": 3,
+ "persona_tags": [
+  "pelajar"
+ ],
+ "story": "student-01",
+ "story_day": 3,
+ "attacker_character": "penyebar APK palsu lewat grup chat, menjual 'aplikasi premium gratis'",
+ "attacker_goal": " membuat korban menginstal APK berisi spyware pencuri data",
+ "opener": "Bro, ini APK editor video PREMIUM gratis — hasil editan keren banget buat presentasi lomba! Tinggal instal dari link drive, tidak perlu Play Store!",
+ "escalation_ladder": [
+  "tawaran APK premium gratis di luar Play Store",
+  "bilang 'Play Store versi lama, ini lebih baru'",
+  "mintain izin akses yang aneh saat instal",
+  "setelah terinstal, data dan kontak mulai terkirim diam-diam"
+ ],
+ "red_flags": [
+  "APK dari link chat, bukan Play Store/App Store resmi",
+  "klaim 'premium gratis' tidak masuk akal",
+  "izin mencurigakan: SMS, kontak, aksesibilitas",
+  "nama file & pengembang tidak jelas"
+ ],
+ "safe_response": "jangan instal; unduh aplikasi hanya dari toko resmi; cek izin & review; jika terlanjur: uninstall + ubah password + pindai perangkat",
+ "lesson": "APK di luar toko resmi bisa berisi spyware. 'Premium gratis' adalah umpan. Perhatikan izin yang diminta aplikasi — editor video tidak butuh akses SMS/kontakmu.",
+ "translations": {
+  "en": {
+   "title": "Video Editor APK",
+   "sender": "Contest Group Friend",
+   "attacker_character": "fake APK spreader in group chats, selling a 'free premium app'",
+   "opener": "Dude, this PREMIUM video editor APK is free — the edits look insane for your contest presentation! Just install from the drive link, no Play Store needed!",
+   "escalation_ladder": [
+    "free premium APK offer outside the Play Store",
+    "claims 'Play Store version is old, this is newer'",
+    "demands weird permissions during install",
+    "once installed, data and contacts quietly exfiltrated"
+   ],
+   "red_flags": [
+    "APK from a chat link, not the official Play/App Store",
+    "'premium for free' makes no sense",
+    "suspicious permissions: SMS, contacts, accessibility",
+    "unclear file name & developer"
+   ],
+   "safe_response": "don't install; only download from official stores; check permissions & reviews; if already installed: uninstall + change passwords + scan the device",
+   "lesson": "APKs outside official stores can carry spyware. 'Free premium' is the bait. Watch the permissions an app asks — a video editor needs no access to your SMS/contacts."
   }
+ }
 }

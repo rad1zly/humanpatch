@@ -902,11 +902,9 @@ function vAppWindow() {
 function openApp(id) {
   state.openApp = id;
   state.openChat = null;
-  {
-    // any app hosting a pending attack opens its PREVIEW (check-first flow)
-    const atk = state.world?.attack;
-    state.atkPreview = !!(atk && atk.app === id && !atk.done);
-  }
+  // land on the normal app view first — the attack item in the list is what
+  // opens the preview (player's choice, not forced)
+  state.atkPreview = false;
   if (id === "chatloop") state.openedChat = true;
   if (id === "security") state.openedSecurity = true;
   if (id === "journal") state.openedJournal = true;
@@ -1393,6 +1391,17 @@ function vDebrief() {
           ${day1Objectives().map(o => `<li><span>${esc(L(o.label))}</span><span class="pill ${o.done ? "ok" : "todo"}">${o.done ? t("pill_ok") : t("pill_todo")}</span></li>`).join("")}
         </ul>
       </div>` : `
+      <div class="deb-card"><h3>🚩 ${t("flags_h")}</h3>
+        <ul class="flag-list">
+          ${(d.red_flags || []).map(f => `<li>🚩 <span>${esc(f)}</span></li>`).join("") || "<li>—</li>"}
+        </ul>
+      </div>
+      <div class="deb-card"><h3>🛡️ ${t("safe_h")}</h3>
+        <p style="margin:0;line-height:1.55">${esc(d.safe_response || "-")}</p>
+      </div>
+      <div class="deb-card"><h3>🎓 ${t("lesson_h")}</h3>
+        <p style="margin:0;line-height:1.55">${esc(d.lesson || "-")}</p>
+      </div>
       <div class="deb-card"><h3>${t("ind_h")}</h3>
         <ul class="ind-list">
           ${inds.map(([k, v]) => `<li><span>${t("ind" + ({verify_source:1,under_pressure:2,protect_data:3,report_threat:4}[k] || 0)) || esc(k)}</span><span class="pill ${(ST[v] || [])[0] || "todo"}">${(ST[v] || [])[1] || esc(v)}</span></li>`).join("") || "<li>—</li>"}
@@ -1413,10 +1422,13 @@ function vDebrief() {
 }
 function nextDay(xpEarn) {
   const p = activeProfile();
+  if (!state.debrief) return; // guard: no debrief open → no day advance (prevents double/skip)
+  const dayJustFinished = state.world ? state.world.day : p.day;
+  if (p.done.includes(dayJustFinished)) return; // already credited — no double-advance
   p.xp += xpEarn;
   if (p.xp >= 100 * p.level) { p.level += 1; toast(t("lvl_up")); }
-  if (!p.done.includes(p.day)) p.done.push(p.day);
-  p.day = Math.min(5, p.day + 1);
+  if (!p.done.includes(dayJustFinished)) p.done.push(dayJustFinished);
+  p.day = Math.min(5, dayJustFinished + 1);
   state.debrief = null;
   state.events = [];
   saveLocal();
