@@ -13,6 +13,8 @@ function t(k) {
 
 const I18N = {
 id: {
+  delete_profile: "Hapus profil",
+  confirm_del_profile: (n) => "Hapus profil X? Semua progres hari 1-5 & XP hilang permanen.".replace("X", n),
   loading_world: "Menyiapkan Dunia…",
   loading_world_sub: "AI sedang menyusun dunia, teman, dan sekolah untuk karaktermu. Mohon tunggu.",
   loading_world_err: "Gagal menyiapkan dunia. Coba lagi.",
@@ -162,6 +164,8 @@ id: {
   atk_generic: "Pesan baru dari nomor tidak dikenal…",
 },
 en: {
+  delete_profile: "Delete profile",
+  confirm_del_profile: (n) => "Delete X? All Day 1-5 progress & XP will be lost permanently.".replace("X", n),
   loading_world: "Preparing Your World…",
   loading_world_sub: "AI is building your world, friends, and school. Please wait.",
   loading_world_err: "Failed to prepare the world. Try again.",
@@ -317,6 +321,8 @@ en: {
   atk_generic: "New message from an unknown number…",
 },
 es: {
+  delete_profile: "Eliminar perfil",
+  confirm_del_profile: (n) => "¿Eliminar a X? Se perderá todo el progreso.".replace("X", n),
   loading_world: "Preparando tu Mundo…",
   loading_world_sub: "La IA está creando tu mundo, amigos y escuela. Espera.",
   loading_world_err: "No se pudo preparar el mundo. Reintentar.",
@@ -416,6 +422,8 @@ es: {
   btn_login: "Entrar", btn_signup: "Crear Cuenta Demo",
 },
 fr: {
+  delete_profile: "Supprimer le profil",
+  confirm_del_profile: (n) => "Supprimer X ? Tout la progression sera perdue.".replace("X", n),
   loading_world: "Préparation de votre monde…",
   loading_world_sub: "L'IA construit votre monde, amis et école. Patience.",
   loading_world_err: "Échec de la préparation. Réessayer.",
@@ -516,6 +524,8 @@ fr: {
 },
 
 it: {
+  delete_profile: "Elimina profilo",
+  confirm_del_profile: (n) => "Eliminare X? Tutti i progressi andranno persi.".replace("X", n),
   loading_world: "Preparazione del mondo…",
   loading_world_sub: "L'IA sta creando il tuo mondo, amici e scuola. Attendi.",
   loading_world_err: "Preparazione fallita. Riprova.",
@@ -616,6 +626,8 @@ it: {
 },
 
 de: {
+  delete_profile: "Profil löschen",
+  confirm_del_profile: (n) => "X löschen? Der gesamte Fortschritt geht verloren.".replace("X", n),
   loading_world: "Welt wird vorbereitet…",
   loading_world_sub: "Die KI baut deine Welt, Freunde und Schule. Bitte warten.",
   loading_world_err: "Vorbereitung fehlgeschlagen. Erneut versuchen.",
@@ -716,6 +728,8 @@ de: {
 },
 
 pt: {
+  delete_profile: "Excluir perfil",
+  confirm_del_profile: (n) => "Excluir X? Todo o progresso será perdido.".replace("X", n),
   loading_world: "Preparando seu Mundo…",
   loading_world_sub: "A IA está criando seu mundo, amigos e escola. Aguarde.",
   loading_world_err: "Falha ao preparar o mundo. Tentar novamente.",
