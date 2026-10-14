@@ -13,6 +13,9 @@ function t(k) {
 
 const I18N = {
 id: {
+  day_obj_h: "Misi Hari Ini",
+  day_obj_hint: "Selesaikan semua misi untuk mengakhiri hari.",
+  end_day_btn: (n) => "Akhiri Hari 99 ▸".replace("99", n),
   wifi_open_net: "Jaringan terbuka — tanpa password",
   wifi_home: "RumahKu_WiFi",
   wifi_saved: "Tersimpan",
@@ -187,6 +190,9 @@ id: {
   atk_generic: "Pesan baru dari nomor tidak dikenal…",
 },
 en: {
+  day_obj_h: "Today's Mission",
+  day_obj_hint: "Complete all missions to end the day.",
+  end_day_btn: (n) => "End Day 99 ▸".replace("99", n),
   wifi_open_net: "Open network — no password",
   wifi_home: "MyHome_WiFi",
   wifi_saved: "Saved",
@@ -367,6 +373,9 @@ en: {
   atk_generic: "New message from an unknown number…",
 },
 es: {
+  day_obj_h: "Misión de Hoy",
+  day_obj_hint: "Completa todas las misiones para terminar el día.",
+  end_day_btn: (n) => "Terminar Día 99 ▸".replace("99", n),
   wifi_open_net: "Red abierta — sin contraseña",
   wifi_home: "MiCasa_WiFi",
   wifi_saved: "Guardada",
@@ -491,6 +500,9 @@ es: {
   btn_login: "Entrar", btn_signup: "Crear Cuenta Demo",
 },
 fr: {
+  day_obj_h: "Mission du Jour",
+  day_obj_hint: "Termine toutes les missions pour finir la journée.",
+  end_day_btn: (n) => "Finir Jour 99 ▸".replace("99", n),
   wifi_open_net: "Réseau ouvert — sans mot de passe",
   wifi_home: "MaMaison_WiFi",
   wifi_saved: "Enregistré",
@@ -616,6 +628,9 @@ fr: {
 },
 
 it: {
+  day_obj_h: "Missione di Oggi",
+  day_obj_hint: "Completa tutte le missioni per terminare la giornata.",
+  end_day_btn: (n) => "Termina Giorno 99 ▸".replace("99", n),
   wifi_open_net: "Rete aperta — senza password",
   wifi_home: "CasaMia_WiFi",
   wifi_saved: "Salvata",
@@ -741,6 +756,9 @@ it: {
 },
 
 de: {
+  day_obj_h: "Mission des Tages",
+  day_obj_hint: "Erledige alle Missionen, um den Tag zu beenden.",
+  end_day_btn: (n) => "Tag 99 beenden ▸".replace("99", n),
   wifi_open_net: "Offenes Netzwerk — ohne Passwort",
   wifi_home: "MeinHaus_WLAN",
   wifi_saved: "Gespeichert",
@@ -866,6 +884,9 @@ de: {
 },
 
 pt: {
+  day_obj_h: "Missão de Hoje",
+  day_obj_hint: "Complete todas as missões para terminar o dia.",
+  end_day_btn: (n) => "Terminar Dia 99 ▸".replace("99", n),
   wifi_open_net: "Rede aberta — sem senha",
   wifi_home: "MinhaCasa_WiFi",
   wifi_saved: "Salva",

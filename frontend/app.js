@@ -840,18 +840,17 @@ function dismissWelcome() {
       <h3>${t("morning")(archName(p.archetype).split(" ")[0])}</h3>
       <p>${w.day === 1 ? t("day1_hint")(unread) : t("day2_hint")(unread)}</p>
     </div>
-    ${w.day === 1 ? `
     <div class="obj-card ${state.objCollapsed ? "collapsed" : ""}">
       <button class="obj-head" onclick="toggleObj()" aria-expanded="${!state.objCollapsed}">
-        <strong>${t("day1_obj_h")}</strong>
-        <span class="obj-count">${day1Objectives().filter(o => o.done).length}/${day1Objectives().length} ${state.objCollapsed ? "▾" : "▴"}</span>
+        <strong>🎯 ${t("day_obj_h")}</strong>
+        <span class="obj-count">${dayObjectives(w.day).filter(o => o.done).length}/${dayObjectives(w.day).length} ${state.objCollapsed ? "▾" : "▴"}</span>
       </button>
       ${state.objCollapsed ? "" : `
       <ul class="obj-list">
-        ${day1Objectives().map(o => `<li class="${o.done ? "done" : ""}">${o.done ? "✔" : "○"} ${esc(L(o.label))}</li>`).join("")}
+        ${dayObjectives(w.day).map(o => `<li class="${o.done ? "done" : ""}">${o.done ? "✔" : "○"} ${o.icon || ""} ${esc(L(o.label))}</li>`).join("")}
       </ul>
-      ${day1Done() ? `<button class="btn btn-primary btn-block" style="min-height:44px" onclick="endDay1()">${t("end_day1")}</button>` : `<p class="obj-hint">${t("day1_obj_hint")}</p>`}`}
-    </div>` : ""}
+      ${day1Done() ? `<button class="btn btn-primary btn-block" style="min-height:44px" onclick="endDay1()">${w.day < 5 ? t("end_day_btn")(w.day) : t("btn_finish_ch")}</button>` : `<p class="obj-hint">${t("day_obj_hint")}</p>`}`}
+    </div>
     <div class="app-grid">
       ${w.apps.map(a => {
         const isAtk = a.id === atkApp && w.attack;
@@ -905,6 +904,8 @@ function openApp(id) {
   // land on the normal app view first — the attack item in the list is what
   // opens the preview (player's choice, not forced)
   state.atkPreview = false;
+  if (id === "settings" && !state.events.some(e => e.includes("📶"))) trackEvent("📶 WiFi settings");
+  if (id === "phone" && !state.events.some(e => e.includes("📞"))) trackEvent("📞 phone log");
   if (id === "chatloop") state.openedChat = true;
   if (id === "security") state.openedSecurity = true;
   if (id === "journal") state.openedJournal = true;
@@ -1206,6 +1207,49 @@ function readSms(id, from, text) {
 }
 
 /* ---------- Day-1 exploration objectives ---------- */
+/* ---------- per-day mission panel (all days, story-aligned) ---------- */
+function dayObjectives(day) {
+  const w = state.world;
+  const atk = w?.attack;
+  const atkOpen = atk && !atk.done;
+  const verified = state.events.some(e => e.includes("🔍"));
+  const readAtk = verified || (atkOpen && state.events.some(e => e.includes(atk.from)));
+  const common = [
+    { id: "obj_notif", icon: "🔔", label: {id:"Cek panel notifikasi", en:"Check the notification panel", es:"Revisa el panel de notificaciones", fr:"Consulte le panneau de notifications", it:"Controlla il pannello notifiche", de:"Prüfe das Benachrichtigungsfeld", pt:"Confira o painel de notificações"},
+      done: state.notifSeen || false },
+    { id: "obj_verify", icon: "🔍", label: {id:"Cek pengirim pesan mencurigakan", en:"Verify the suspicious sender", es:"Verifica el remitente sospechoso", fr:"Vérifiez l'expéditeur suspect", it:"Verifica il mittente sospetto", de:"Prüfe den verdächtigen Absender", pt:"Verifique o remetente suspeito"},
+      done: readAtk || false },
+    { id: "obj_enc", icon: "⚔️", label: {id:"Selesaikan insiden hari ini (serang atau abaikan)", en:"Resolve today's incident (fight or ignore)", es:"Resuelve el incidente de hoy", fr:"Résolvez l'incident du jour", it:"Risolvi l'incidente di oggi", de:"Löse das heutige Ereignis", pt:"Resolva o incidente de hoje"},
+      done: !atkOpen },
+  ];
+  const dayExtras = {
+    1: [
+      { id: "obj_sms", icon: "📬", label: {id:"Baca SMS di MessageBox", en:"Read an SMS in MessageBox", es:"Lee un SMS en MessageBox", fr:"Lisez un SMS dans MessageBox", it:"Leggi un SMS in MessageBox", de:"Lies eine SMS in MessageBox", pt:"Leia um SMS no MessageBox"},
+        done: state.events.some(e => e.startsWith("📬")) },
+      { id: "obj_chat", icon: "💬", label: {id:"Baca chat di ChatLoop", en:"Read a chat in ChatLoop", es:"Lee un chat en ChatLoop", fr:"Lisez un chat dans ChatLoop", it:"Leggi una chat in ChatLoop", de:"Lies einen Chat in ChatLoop", pt:"Leia um chat no ChatLoop"},
+        done: state.openedChat || false },
+      { id: "obj_journal", icon: "📓", label: {id:"Cek Journal harianmu", en:"Check your Journal", es:"Revisa tu Journal", fr:"Consultez votre Journal", it:"Controlla il Journal", de:"Prüfe dein Journal", pt:"Confira seu Journal"},
+        done: state.openedJournal || false },
+    ],
+    2: [
+      { id: "obj_wifi", icon: "📶", label: {id:"Cek daftar WiFi di Settings", en:"Check the WiFi list in Settings", es:"Revisa las redes WiFi en Ajustes", fr:"Vérifiez les WiFi dans Réglages", it:"Controlla i WiFi in Impostazioni", de:"Prüfe die WLAN-Liste in Einstellungen", pt:"Confira os Wi-Fi nos Ajustes"},
+        done: state.events.some(e => e.includes("📶")) || state.openApp === "settings" || false },
+    ],
+    3: [
+      { id: "obj_apk", icon: "📱", label: {id:"Periksa izin aplikasi di Security", en:"Review app permissions in Security", es:"Revisa permisos en Security", fr:"Vérifiez les autorisations dans Security", it:"Controlla i permessi in Security", de:"Prüfe App-Berechtigungen in Security", pt:"Revise permissões no Security"},
+        done: state.openedSecurity || false },
+    ],
+    4: [
+      { id: "obj_call", icon: "📞", label: {id:"Cek riwayat panggilan di Phone", en:"Check the call log in Phone", es:"Revisa el registro de llamadas", fr:"Consultez le journal d'appels", it:"Controlla il registro chiamate", de:"Prüfe die Anrufliste", pt:"Confira o histórico de chamadas"},
+        done: state.events.some(e => e.includes("📞")) || false },
+    ],
+    5: [
+      { id: "obj_family", icon: "👨‍👩‍👧", label: {id:"Baca pesan keluarga di MessageBox", en:"Read family messages in MessageBox", es:"Lee mensajes familiares en MessageBox", fr:"Lisez les messages familiaux", it:"Leggi i messaggi di famiglia", de:"Lies Familiennachrichten", pt:"Leia mensagens da família"},
+        done: state.events.some(e => e.includes("👨‍👩‍👧") || e.includes("📬")) || false },
+    ],
+  };
+  return [...(dayExtras[day] || []), ...common];
+}
 function day1Objectives() {
   return [
     { id: "open_msg",    label: {id:"Buka MessageBox dan baca SMS", en:"Open MessageBox and read an SMS", es:"Abre MessageBox y lee un SMS", pt:"Abra o MessageBox e leia um SMS", hi:"MessageBox खोलें और SMS पढ़ें"}, done: state.events.some(e => e.startsWith("📬")) },
@@ -1215,7 +1259,11 @@ function day1Objectives() {
     { id: "open_journal",label: {id:"Buka Journal dan cek misimu", en:"Open Journal and check your mission", es:"Abre Journal y revisa tu misión", pt:"Abra o Journal e veja sua missão", hi:"Journal खोलें और मिशन देखें"}, done: state.openedJournal || false },
   ];
 }
-function day1Done() { return day1Objectives().every(o => o.done); }
+function day1Done() {
+  // universal gate: today's objectives done AND the incident resolved
+  const w = state.world;
+  return dayObjectives(w?.day || 1).every(o => o.done);
+}
 
 function toggleNotif(open) {
   state.notifOpen = open ?? !state.notifOpen;
@@ -1226,7 +1274,13 @@ function clearNotifs() { state.world.notifs.forEach(n => n.read = true); render(
 function readNotif(id) { const n = state.world.notifs.find(x => x.id === id); if (n) { n.read = true; trackEvent("📄 " + n.from); } render(); }
 function actDismiss(id) {
   const n = state.world.notifs.find(x => x.id === id);
-  if (n) { n.read = true; trackEvent("🙈 " + n.from); }
+  const atk = state.world.attack;
+  // ignoring IS a decision — mark the incident resolved
+  if (atk && !atk.done && atk.from === n?.from) {
+    atk.done = true;
+    trackEvent("🙈 ignored: " + atk.from);
+  } else if (n) { n.read = true; trackEvent("🙈 " + n.from); }
+  state.atkPreview = false;
   render();
   toast(t("ignored_toast"));
 }
@@ -1357,6 +1411,7 @@ function scrollChat() { const el = $("#chat-scroll"); if (el) el.scrollTop = el.
 function showSenderSheet() {
   const atk = state.world?.attack;
   if (!atk) return;
+  if (!state.events.some(e => e.includes("🔍"))) trackEvent("🔍 verified: " + atk.from);
   state.sheet = { type: "sender", name: atk.from, sub: (APP_CATALOG[atk.app] || {}).name || "",
     number: "0813-" + String(1000 + (atk.seed % 8999)) + "-•••", verified: false, saved: false, history: false, color: "#FEE2E2", avatar: "👤" };
   render();
@@ -1573,6 +1628,8 @@ function endDay1() {
   state.screen = "debrief";
   render();
 }
+/* endDay1 handles ALL days now: same debrief shape (exploration view when no
+   encounter debrief data, which is the case when the incident was ignored) */
 
 function enterPhone() { state.screen = "phone"; state.notifOpen = false; render(); }
 function exitPhone() {
