@@ -12,8 +12,7 @@ function t(k) {
 }
 
 const I18N = {
-id: {  trial_note: "Mode trial — main 5 hari, progress tidak tersimpan. Daftar untuk menyimpan perjalananmu.",
-
+id: {
   per_nadia: "Nadia, 19",
   per_xiaoyu: "Xiaoyu, 20",
   per_rizky: "Rizky, 22",
@@ -43,9 +42,9 @@ id: {  trial_note: "Mode trial — main 5 hari, progress tidak tersimpan. Daftar
   finale_score_h: "Skor perjalanan", finale_lv: "Level ", finale_domains_note: "Rekap ini mencakup 10 domain keamanan: sandi, phishing, browsing, privasi, HP, lapor, telepon palsu, pembayaran, psikologi penipuan, keluarga.",
   finale_b_verify: "Verifikasi", finale_b_refuse: "Menolak", finale_b_risky: "Berisiko",
   finale_lessons_h: "5 prinsip yang kamu jalani",
-  finale_next_h: "Bab 2: Dunia yang Lebih Berisik", finale_next_p: "Notifikasi lebih banyak, kerenahlian social engineering lebih halus, dan tekanan waktu lebih rapat. Bocoran: mereka yang mengenalmu akan dipakai untuk mendekatimu.",
+  finale_next_h: "Bab 2: Dunia yang Lebih Berisik", finale_next_p: "Notifikasi lebih banyak, keterampilan social engineering lebih halus, dan tekanan waktu lebih rapat. Bocoran: orang yang kamu kenal bisa jadi pintu masuk mereka.",
   finale_other_world: "Coba Dunia Lain ▸", finale_coach_fallback: "Coach sedang offline — tapi ingat: verifikasi pengirim, tolak permintaan mendesak, dan lapor. Tiga kebiasaan itu yang kamu bawa ke Bab 2.",
-  nav_worlds: "Dunia", worlds_h: "Pilih dunia, jalur belajarmu", worlds_sub: "Tiap dunia = konteks hidup berbeda. Progres tiap profil terpisah dan terukur.",
+  nav_worlds: "Dunia", worlds_h: "Pilih dunia, jalur belajarmu", worlds_sub: "Setiap dunia punya konteks kehidupan yang berbeda. Progres tiap profil terpisah dan terukur.",
   wf_all: "Semua", wf_student: "Pelajar", wf_merchant: "Pedagang", wf_worker: "Pekerja", wf_parent: "Orang Tua",
   wp_days: "5 hari", wp_domains: "10 domain", wp_lv: "Level 1-5",
   wp_days_word: "hari", wp_not_started: "Belum mulai", wp_continue: "Lanjutkan ▸", wp_start: "Mulai Dunia Ini ▸",
@@ -69,14 +68,14 @@ id: {  trial_note: "Mode trial — main 5 hari, progress tidak tersimpan. Daftar
   day1_done_h: "Misi eksplorasi selesai",
   day1_coach: "Bagus — hari ini kamu sudah berkenalan dengan HP-mu: aplikasi, pesan, notifikasi, izin, dan cara cek pengirim. Besok, dunia yang sama akan mulai mengirim hal-hal yang janggal. Biasakan bertanya: 'Ini normal nggak?'",
   brand_sub: "CyberLife Simulator", nav_login: "Masuk", nav_logout: "Keluar",
-  hero_kicker: "SIMULATOR KEHIDUPAN DIGITAL",
-  hero_h1a: "Duniamu online,", hero_h1b: "jadi permainannya.",
-  hero_lead: "Masuki dunia yang terinspirasi dari aktivitas onlinemu sehari-hari. Temukan pesan mencurigakan, lindungi akunmu, dan belajar mengenali ancaman siber lewat simulasi interaktif yang menyesuaikan dengan keputusanmu.",
+  hero_kicker: "SIMULASI KEHIDUPAN SIBER",
+  hero_h1a: "Dunia Online-mu,", hero_h1b: "Jadi Permainan Simulasi.",
+  hero_lead: "Aktivitas online-mu sehari-hari, dijadikan permainan. Deteksi pesan mencurigakan, lindungi akunmu, dan latih refleks keamanan siber lewat simulasi interaktif yang menyesuaikan diri dengan keputusanmu.",
   hero_cta: "Buat Profil Digitalku", hero_cta2: "Lihat Caranya", how_nav: "Cara kerjanya",
   hero_note: "Semua aplikasi, pesan, dan akun di dalamnya fiktif. Tanpa akses data aslimu.",
   how_h2: "Cara kerjanya", how_sub: "Tiga langkah, tanpa kursus, tanpa kuis.",
   how1_t: "1. Bangun Identitas Siber", how1_p: "Pilih konteks hidupmu — pelajar, pedagang, pekerja, orang tua. Dunia fiktifmu dibangun dari situ.",
-  how2_t: "2. Hidupi harimu", how2_p: "Pesan, notifikasi, dan aplikasi datang seperti biasa. Sebagian normal. Sebagian... janggal.",
+  how2_t: "2. Jalani harimu", how2_p: "Pesan, notifikasi, dan aplikasi datang silih berganti. Sebagian wajar. Sebagian... ada yang janggal.",
   how3_t: "3. Belajar dari keputusanmu", how3_p: "Setiap keputusan tercatat. Konsekuensinya muncul di hari berikutnya. Coach AI memandu tanpa menghakimi.",
   learn_h2: "Apa yang kamu pelajari", learn_sub: "10 domain keamanan siber — lewat pengalaman, bukan hafalan.",
   d1_t: "Kata Sandi & Akun", d1_p: "Password unik, 2FA, recovery",
@@ -89,10 +88,10 @@ id: {  trial_note: "Mode trial — main 5 hari, progress tidak tersimpan. Daftar
   tag_student: "Mahasiswa", tag_merchant: "Pedagang Online",
   prog_h2: "Progres yang bermakna", prog_sub: "5 hari cerita, XP, pencapaian, dan dunia yang bereaksi.",
   prog_card: "Selesaikan hari demi hari. Keputusanmu menentukan bagaimana cerita bercabang — akun yang terselamatkan, atau yang harus dipulihkan. Setiap profil punya progres terpisah.",
-  trust_t: "🔒 Privasi by design", trust_p: "HumanPatch sepenuhnya simulasi. Kami tidak meminta akses SMS, WhatsApp, kontak, atau aplikasi bank aslimu. Semua pesan dan transaksi di dalamnya fiktif.",
-  final_h2: "Siap memperbaiki kebiasaan digitalmu?", footer_fine: "HumanPatch — prototype hackathon AMD ACT III. Halaman legal adalah draf.",
+  trust_t: "🔒 Privasi by design", trust_p: "Semua yang ada di dalam game adalah simulasi. Kami tidak pernah meminta akses SMS, WhatsApp, kontak, atau aplikasi bank aslimu. Seluruh pesan dan transaksi di dalamnya fiktif.",
+  final_h2: "Siap melatih refleks digitalmu?", footer_fine: "HumanPatch — prototype hackathon AMD ACT III. Halaman legal adalah draf.",
   auth_login_h: "Selamat datang kembali", auth_signup_h: "Buat akun demo",
-  auth_login_sub: "Masuk untuk melanjutkan dunia digitalmu.", auth_signup_sub: "Prototype ini menyimpan akun secara lokal di browser ini saja.",
+  auth_login_sub: "Masuk untuk melanjutkan permainanmu.", auth_signup_sub: "Prototype ini menyimpan akun secara lokal di browser ini saja.",
   f_name: "Nama tampilan", f_pass: "Kata sandi demo", pass_short: "Kata sandi minimal 6 karakter.",
   btn_login: "Masuk", btn_signup: "Buat Akun Demo", alt_to_signup: "Belum punya akun?", alt_to_login: "Sudah punya akun?",
   demo_note: "⚙️ Mode demo: autentikasi tiruan (mock). Tidak ada keamanan sungguhan — jangan pakai sandi asli.",
@@ -158,8 +157,7 @@ id: {  trial_note: "Mode trial — main 5 hari, progress tidak tersimpan. Daftar
   arch_student_d: "Kampus, kosan, beasiswa, sosmed", arch_merchant_d: "Toko online, pelanggan, QRIS", arch_worker_d: "Kantor, HR, slip gaji, deadline", arch_parent_d: "Keluarga, SPP, grup WA, belanja", arch_general_d: "Keseharian digital pada umumnya",
   atk_generic: "Pesan baru dari nomor tidak dikenal…",
 },
-en: {  trial_note: "Trial mode — play all 5 days, progress won't save. Sign up to keep your journey.",
-
+en: {
   per_nadia: "Nadia, 19",
   per_xiaoyu: "Xiaoyu, 20",
   per_rizky: "Rizky, 22",
@@ -310,8 +308,7 @@ en: {  trial_note: "Trial mode — play all 5 days, progress won't save. Sign up
   arch_student_d: "Campus, dorm, scholarships, social", arch_merchant_d: "Online shop, customers, QRIS", arch_worker_d: "Office, HR, payslips, deadlines", arch_parent_d: "Family, school fees, group chats", arch_general_d: "Everyday digital life",
   atk_generic: "New message from an unknown number…",
 },
-es: {  trial_note: "Modo prueba — juega 5 días, el progreso no se guarda. Regístrate para guardar tu viaje.",
-
+es: {
   per_nadia: "Nadia, 19",
   per_xiaoyu: "Xiaoyu, 20",
   per_rizky: "Rizky, 22",
@@ -406,8 +403,7 @@ es: {  trial_note: "Modo prueba — juega 5 días, el progreso no se guarda. Reg
   auth_login_h: "Bienvenido de nuevo", auth_signup_h: "Crear cuenta demo",
   btn_login: "Entrar", btn_signup: "Crear Cuenta Demo",
 },
-fr: {  trial_note: "Mode essai — jouez 5 jours, la progression ne sera pas sauvegardée. Inscrivez-vous pour garder votre voyage.",
-
+fr: {
   per_nadia: "Nadia, 19 ans",
   per_xiaoyu: "Xiaoyu, 20 ans",
   per_rizky: "Rizky, 22 ans",
@@ -503,8 +499,7 @@ fr: {  trial_note: "Mode essai — jouez 5 jours, la progression ne sera pas sau
   btn_login: "Connexion", btn_signup: "Créer un Compte Démo",
 },
 
-it: {  trial_note: "Modalità prova — gioca 5 giorni, i progressi non saranno salvati. Registrati per conservare il tuo percorso.",
-
+it: {
   per_nadia: "Nadia, 19",
   per_xiaoyu: "Xiaoyu, 20",
   per_rizky: "Rizky, 22",
@@ -600,8 +595,7 @@ it: {  trial_note: "Modalità prova — gioca 5 giorni, i progressi non saranno 
   btn_login: "Accedi", btn_signup: "Crea Account Demo",
 },
 
-de: {  trial_note: "Testmodus — spiele 5 Tage, Fortschritt wird nicht gespeichert. Melde dich an, um deine Reise zu speichern.",
-
+de: {
   per_nadia: "Nadia, 19",
   per_xiaoyu: "Xiaoyu, 20",
   per_rizky: "Rizky, 22",
@@ -697,8 +691,7 @@ de: {  trial_note: "Testmodus — spiele 5 Tage, Fortschritt wird nicht gespeich
   btn_login: "Anmelden", btn_signup: "Demo-Konto Erstellen",
 },
 
-pt: {  trial_note: "Modo teste — jogue 5 dias, o progresso não será salvo. Cadastre-se para guardar sua jornada.",
-
+pt: {
   per_nadia: "Nadia, 19",
   per_xiaoyu: "Xiaoyu, 20",
   per_rizky: "Rizky, 22",
