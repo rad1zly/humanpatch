@@ -199,6 +199,103 @@ def report(mid: str):
     return m.report()
 
 
+class AdaptStoryReq(BaseModel):
+    lang: str = "id"
+    story: dict          # the full storyline template JSON
+    persona: dict        # persona facts: name, age, city, level, context
+
+
+@app.post("/api/adapt-story")
+def adapt_story(req: AdaptStoryReq):
+    """AI adapts a storyline template to the player's persona:
+    same security beats, different words/context/age-level."""
+    persona = req.persona
+    story = req.story
+    lang = req.lang if req.lang in ("id", "en", "es", "fr", "it", "de", "pt") else "id"
+
+    lang_name = {"id": "Indonesian (Bahasa Indonesia)", "en": "English", "es": "Spanish",
+                 "fr": "French", "it": "Italian", "de": "German", "pt": "Portuguese"}[lang]
+
+    # Collect all texts to adapt (event text + choice texts + twists)
+    def collect(s):
+        items = []
+        premise = s.get("premise", {}).get(lang) or s.get("premise", {}).get("en")
+        if premise:
+            items.append({"id": "premise", "text": premise})
+        for di, day in enumerate(s.get("days", [])):
+            for ei, ev in enumerate(day.get("events", [])):
+                txt = ev.get("text", {}).get(lang) or ev.get("text", {}).get("en")
+                if txt:
+                    items.append({"id": f"d{di}e{ei}", "text": txt})
+                tw = (ev.get("twist") or {})
+                if isinstance(tw, dict):
+                    twt = tw.get(lang) or tw.get("en")
+                elif tw:
+                    twt = tw
+                else:
+                    twt = None
+                if twt:
+                    items.append({"id": f"d{di}e{ei}tw", "text": twt})
+                for ci, ch in enumerate(ev.get("choices", [])):
+                    ct = ch.get("t", {}).get(lang) or ch.get("t", {}).get("en")
+                    if ct:
+                        items.append({"id": f"d{di}e{ei}c{ci}", "text": ct})
+        return items
+
+    items = collect(story)
+    if not items:
+        return {"adapted": {}, "adapted_by": "none"}
+
+    # Mock mode: simple placeholder substitution, no LLM
+    if os.environ.get("MOCK_LLM", "") in ("1", "true", "yes"):
+        adapted = {}
+        name = persona.get("name", "Player")
+        city = persona.get("city", "")
+        for it in items:
+            tx = it["text"]
+            tx = tx.replace("kamu", name if lang == "id" else "you")
+            adapted[it["id"]] = tx
+        return {"adapted": adapted, "adapted_by": "mock"}
+
+    # LLM mode: rewrite each text for the persona
+    sys_prompt = (
+        "You are a narrative adapter for a cybersecurity-awareness simulation game. "
+        f"Rewrite each story text so it fits this character:\n"
+        f"- Name: {persona.get('name')}\n"
+        f"- Age: {persona.get('age')}\n"
+        f"- School level: {persona.get('level')}\n"
+        f"- City/country: {persona.get('city')}\n"
+        f"- Context: {persona.get('context','')}\n\n"
+        f"Write in {lang_name}. Rules:\n"
+        "1. Keep the SAME security-teaching point and the same choice structure.\n"
+        "2. Adapt vocabulary to the character's age (a 12-year-old gets simpler words than a 22-year-old).\n"
+        "3. Localize context details (school type, apps, currency, local references) to the character's city/country.\n"
+        "4. Refer to the player in second person as the character's name where natural.\n"
+        "5. Keep each text under 2 sentences unless the original is longer.\n"
+        "6. NEVER use Chinese/Cyrillic/other non-Latin scripts unless the target language uses them.\n"
+        "Return STRICT JSON: {\"items\": [{\"id\": \"<same id>\", \"text\": \"<rewritten>\"}]}"
+    )
+
+    user_payload = json.dumps({"items": items[:20]}, ensure_ascii=False)
+    try:
+        out = get_llm().chat(
+            system=sys_prompt,
+            messages=[{"role": "user", "content": user_payload}],
+            temperature=0.7,
+            max_tokens=1600,
+        )
+        raw = out.strip()
+        if raw.startswith("```"):
+            raw = raw.split("```")[1]
+            if raw.startswith("json"):
+                raw = raw[4:]
+        data = json.loads(raw)
+        adapted = {it["id"]: it["text"] for it in data.get("items", [])}
+        return {"adapted": adapted, "adapted_by": "ai"}
+    except Exception as e:
+        return {"adapted": {}, "adapted_by": f"error:{e}"}
+
+
 class ChapterRecapReq(BaseModel):
     lang: str = "id"
     profile: dict = {}

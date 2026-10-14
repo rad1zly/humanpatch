@@ -143,6 +143,22 @@ const STORYLINES = {
   ],
 };
 
+
+/* Persona facts for AI adaptation — AI rewrites template text to match these. */
+const PERSONA_FACTS = {
+  nadia:   { name: "Nadia",   age: 16, city: "Jakarta",  level: "SMA",    lang_hint: "id", context: "siswi SMA di Jakarta, suka cari beasiswa" },
+  xiaoyu:  { name: "Xiaoyu",  age: 13, city: "Chengdu",  level: "SMP",    lang_hint: "id", context: "siswi SMP di Chengdu" },
+  rizky:   { name: "Rizky",   age: 17, city: "Surabaya", level: "SMA",    lang_hint: "id", context: "siswa SMA di Surabaya, hobi gaming" },
+  chinedu: { name: "Chinedu", age: 17, city: "Lagos",    level: "SMA",    lang_hint: "en", context: "high schooler in Lagos" },
+  ananya:  { name: "Ananya",  age: 14, city: "Bengaluru",level: "SMP",    lang_hint: "en", context: "middle schooler in Bengaluru" },
+  elsa:    { name: "Elsa",    age: 15, city: "Stockholm",level: "SMP",    lang_hint: "en", context: "middle schooler in Stockholm" },
+  maddie:  { name: "Maddie",  age: 18, city: "Austin",   level: "College",lang_hint: "en", context: "college freshman in Austin" },
+  emir:    { name: "Emir",    age: 20, city: "Istanbul", level: "Universitas", lang_hint: "en", context: "university student in Istanbul" },
+  diego:   { name: "Diego",   age: 12, city: "CDMX",     level: "SD",     lang_hint: "es", context: "estudiante de primaria en CDMX" },
+  oliver:  { name: "Oliver",  age: 22, city: "London",   level: "Universitas", lang_hint: "en", context: "final-year university student in London" },
+};
+window.PERSONA_FACTS = PERSONA_FACTS;
+
 /* Pick a random storyline for a profile — only among FULLY AUTHORED ones. */
 function pickStoryline(world) {
   const pool = (STORYLINES[world] || []).filter(s => s.days && s.days.length > 0);
