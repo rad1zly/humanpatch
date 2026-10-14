@@ -499,30 +499,43 @@ function vPrep() {
 }
 async function fetchStoryContext() {
   const p = activeProfile();
-  if (!p || p.cast) return; // already generated for this profile
+  if (!p) return;
+  if (p.cast) return; // already generated
   const facts = (typeof PERSONA_FACTS !== "undefined" && PERSONA_FACTS[p.persona]) || {};
   const story = p.storyId && typeof STORYLINES !== "undefined"
     ? (STORYLINES[p.archetype] || []).find(s => s.id === p.storyId) : null;
-  try {
-    const r = await fetch(API + "/story-context", {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        lang: state.lang, archetype: p.archetype,
-        persona: facts.name ? facts : { name: p.name, level: p.archetype },
-        story: story || {},
-      }),
-    });
-    const d = await r.json();
-    if (d && d.cast && d.cast.npcs) {
-      p.cast = d.cast;
-      saveLocal();
-      // if we're already in the world with a stale (cast-less) build, rebuild it
-      if (state.screen === "phone" || state.screen === "splash") {
-        state.world = buildWorld(p, p.day);
-        if (state.screen === "phone") render();
+  // up to 3 attempts — NEVER fall back to generic names
+  for (let attempt = 0; attempt < 3 && !p.cast; attempt++) {
+    try {
+      const r = await fetch(API + "/story-context", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          lang: state.lang, archetype: p.archetype,
+          persona: facts.name ? facts : { name: p.name, level: p.archetype },
+          story: story || {},
+        }),
+      });
+      const d = await r.json();
+      const ok = d && d.cast && Array.isArray(d.cast.npcs) &&
+                 d.cast.npcs.length >= 4 &&
+                 d.cast.npcs.every(n => n && typeof n.name === "string" && n.name.length > 1) &&
+                 d.cast.school && d.cast.class_group;
+      if (ok) {
+        p.cast = d.cast;
+        saveLocal();
+        // if we're already in the world with a stale (cast-less) build, rebuild it
+        if (state.screen === "phone" || state.screen === "splash") {
+          state.world = buildWorld(p, p.day);
+          if (state.screen === "phone") render();
+        }
+        return;
       }
-    }
-  } catch (e) { /* offline-tolerant: world.js defaults stay */ }
+    } catch (e) { /* retry */ }
+    await new Promise(res => setTimeout(res, 1200 * (attempt + 1)));
+  }
+  // all attempts failed → stay on loading screen with error, user can retry manually
+  state.castFailed = true;
+  render();
 }
 
 function runPrep() {
@@ -603,9 +616,20 @@ function vDashboard() {
     </section>
   </main>`;
 }
+function retryCast() { state.castFailed = false; render(); fetchStoryContext().then(() => { if (activeProfile().cast) { state.world = buildWorld(activeProfile(), activeProfile().day); state.splashReady = true; render(); } }); }
 function startDay() {
   const p = activeProfile();
-  fetchStoryContext(); // old profiles get their AI cast too (async, non-blocking)
+  // blocking gate: world (AI cast) must be ready BEFORE phone opens
+  if (!p.cast) {
+    go("splash");
+    fetchStoryContext().then(() => {
+      state.world = buildWorld(p, p.day);
+      state.splashReady = true;
+      render();
+    });
+    return;
+  }
+  state.splashReady = true;
   state.world = buildWorld(p, p.day);
   go("splash");
 }
@@ -615,13 +639,18 @@ function startDay() {
    ============================================================ */
 function vSplash() {
   const w = state.world;
+  const ready = state.splashReady;
   return `
   <div class="day-splash">
-    <p class="daynum">${t("chap_day_of")(w.day)}</p>
-    <h1>${t("day"+w.day+"_t")}</h1>
-    <p class="dim">${STORY_DAYS[w.day-1].engTitle}</p>
-    <div class="obj">${t("obj_prefix")} ${t("day"+w.day+"_o")}</div>
-    <button class="btn btn-primary" onclick="enterPhone()">${t("btn_power")}</button>
+    <p class="daynum">${t("chap_day_of")(w ? w.day : activeProfile().day)}</p>
+    <h1>${w ? t("day"+w.day+"_t") : t("loading_world")}</h1>
+    ${w ? `<p class="dim">${STORY_DAYS[w.day-1].engTitle}</p>` : ""}
+    ${w ? `<div class="obj">${t("obj_prefix")} ${t("day"+w.day+"_o")}</div>` : ""}
+    ${ready
+      ? `<button class="btn btn-primary" onclick="enterPhone()">${t("btn_power")}</button>`
+      : state.castFailed
+        ? `<p style="color:#F87171;font-size:13px">${t("loading_world_err")}</p><button class="btn btn-primary" style="margin-top:10px" onclick="retryCast()">${t("retry")}</button>`
+        : `<div class="spin" style="margin:22px auto"></div><p class="dim small">${t("loading_world_sub")}</p>`}
     <button class="btn btn-ghost" style="color:#94A3B8;border-color:#334155;margin-top:10px" onclick="requireAuth(go)('dashboard')">${t("back_dash")}</button>
   </div>`;
 }
@@ -822,7 +851,19 @@ const NORM_CHAT_END = {
 
 function vChatThread(cid) {
   const c = state.world.contacts.find(x => x.id === cid) || { name: cid, avatar: "👤", color: "#94A3B8" };
-  const thread = (CONTACT_THREADS[cid] || []).map(m => ({ ...m, text: L(m.text) }));
+  // AI cast: replace legacy hardcoded names inside message bodies with cast names
+  const cast = activeProfile()?.cast;
+  const swapNames = (txt) => {
+    if (!cast || !cast.npcs) return txt;
+    let out = txt;
+    const legacy = [["Bimo", "best_friend"], ["Rani", "best_friend"]];
+    legacy.forEach(([old, role]) => {
+      const npc = cast.npcs.find(n => n.role === role);
+      if (npc && out.includes(old)) out = out.split(old).join(npc.name.split(" ")[0]);
+    });
+    return out;
+  };
+  const thread = (CONTACT_THREADS[cid] || []).map(m => ({ ...m, text: swapNames(L(m.text)) }));
   const mine = (state.normChat || {})[cid] || [];
   const lines = [...thread, ...mine];
   return `

@@ -358,28 +358,30 @@ def story_context(req: StoryContextReq):
         "Return ONLY the JSON object."
     )
     try:
-        out = get_llm().chat(system=sys_prompt,
-                             messages=[{"role": "user", "content": f"Generate the world for {name}."}],
-                             temperature=0.9, max_tokens=700)
-        raw = out.strip()
-        if raw.startswith("```"):
-            raw = raw.split("```")[1]
-            if raw.startswith("json"):
-                raw = raw[4:]
-        cast = json.loads(raw)
+        cast = None
+        for _try in range(2):
+            out = get_llm().chat(system=sys_prompt,
+                                 messages=[{"role": "user", "content": f"Generate the world for {name}."}],
+                                 temperature=0.9, max_tokens=700)
+            raw = out.strip()
+            if raw.startswith("```"):
+                raw = raw.split("```")[1]
+                if raw.startswith("json"):
+                    raw = raw[4:]
+            try:
+                cast = json.loads(raw)
+                break
+            except Exception:
+                continue
+        if cast is None:
+            raise RuntimeError("LLM did not return valid JSON after 2 attempts")
         if "cast" in cast and isinstance(cast["cast"], dict):
             cast = cast["cast"]
         return {"cast": cast, "adapted": {}, "adapted_by": "ai"}
     except Exception as e:
-        # fallback cast so game never breaks
-        return {"cast": {"school": f"School {city}", "class_group": f"Class {level}",
-                         "npcs": [{"role": "best_friend", "name": "Sahabat", "avatar": "😊"},
-                                  {"role": "classmate", "name": "Teman", "avatar": "🙂"},
-                                  {"role": "classmate", "name": "Teman 2", "avatar": "😎"},
-                                  {"role": "homeroom_teacher", "name": "Guru", "avatar": "👩\u200d\U0001F3EB"},
-                                  {"role": "parent", "name": "Ibu", "avatar": "👩"},
-                                  {"role": "sibling", "name": "Adik", "avatar": "\U0001F9D2"}]},
-                "adapted": {}, "adapted_by": f"error:{e}"}
+        # NO generic fallback — client retries; 503 signals failure
+        from fastapi import HTTPException
+        raise HTTPException(status_code=503, detail=f"cast generation failed: {e}")
 
 
 class ChapterRecapReq(BaseModel):
