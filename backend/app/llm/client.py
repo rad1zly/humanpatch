@@ -29,7 +29,7 @@ class LLMClient:
         },
         "minimax": {
             "base_url": "https://api.minimax.io/v1",
-            "model": "MiniMax-M2.1",
+            "model": "MiniMax-M2.7-highspeed",
             "key_env": "MINIMAX_API_KEY",
         },
         "tokenrouter": {
