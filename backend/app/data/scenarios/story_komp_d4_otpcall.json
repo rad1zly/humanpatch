@@ -1,36 +1,53 @@
 {
-  "id": "story_komp_d4_otpcall",
-  "title": "Telepon 'Petugas Dukungan'",
-  "domain": "phishing_social",
-  "channel": "Phone Call",
-  "sender": "+62 812-xxxx-xxxx",
-  "language": "id",
-  "level": 4,
-  "persona_tags": [
-    "pelajar"
-  ],
-  "story": "student-01",
-  "story_day": 4,
-  "attacker_character": "penelepon palsu mengaku petugas dukungan kompetisi yang tahu nama dan sekolah korban (dari unggahan publik)",
-  "attacker_goal": "Mendapatkan kode OTP korban dengan dalih 'verifikasi akun bermasalah'",
-  "opener": "*telepon masuk* 'Halo, saya petugas dukungan kompetisi. Akun kamu terdeteksi bermasalah dan harus diverifikasi SEKARANG. Sebenarnya saya sudah tahu kamu [nama], siswi/siswa [sekolah]. Cek HP kamu — ada kode OTP masuk? Bacakan kodenya ya untuk verifikasi.'",
-  "escalation_ladder": [
-    "Lihat, saya tahu nama dan sekolah kamu berarti saya resmi kan? Bacakan kodenya saja, 6 digit.",
-    "Kalau kamu tidak kooperatif, akun kompetisi kamu akan kami blokir permanen.",
-    "Ini kesempatan terakhir. Bacakan kodenya atau kamu gagal ikut kompetisi."
-  ],
-  "red_flags": [
-    "Permintaan kode OTP per telepon = PENIPUAN, tanpa kecuali",
-    "Mengetahui data pribadi bukan bukti identitas resmi — data itu bisa dari unggahan publik",
-    "Ancaman blokir akun = urgensi buatan",
-    "Layanan resmi tidak pernah menelepon minta kode rahasia"
-  ],
-  "safe_response": "Tolak memberikan kode, akhiri panggilan, hubungi layanan resmi lewat kanal yang dicari sendiri; laporkan nomor penipu",
-  "page": {
-    "title": "Verifikasi Telepon",
-    "hint": "Bacakan kode OTP 6 digit kepada petugas...",
-    "fields": [
-      "Kode OTP"
-    ]
+ "id": "story_komp_d4_otpcall",
+ "title": "Telepon Petugas Dukungan",
+ "domain": "scam_calls",
+ "channel": "Phone",
+ "sender": "Petugas Dukungan Lomba",
+ "language": "id",
+ "level": 4,
+ "persona_tags": [
+  "pelajar"
+ ],
+ "story": "student-01",
+ "story_day": 4,
+ "attacker_character": "vishing: penelpon yang mengaku petugas, suara tenang dan profesional",
+ "attacker_goal": "meminta korban membacakan kode OTP yang dikirim ke HP mereka sendiri",
+ "opener": "*telepon masuk* 'Halo, saya petugas dukungan kompetisi. Akun kamu terdeteksi error pembayaran — saya kirimkan kode ke HP kamu sekarang, tolong bacakan kodenya ya supaya bisa saya perbaiki.'",
+ "escalation_ladder": [
+  "klaim error pembayaran + kiriman kode OTP sungguhan",
+  "minta korban bacakan kode 'untuk verifikasi'",
+  "desakan: 'kalau tidak sekarang, pendaftaran kamu batal'",
+  "ancaman denda/kerugian lebih besar jika menolak"
+ ],
+ "red_flags": [
+  "nomor tidak dikenal mengaku petugas",
+  "OTP dikirim ke HP KAMU tapi diminta orang lain bacakan",
+  "klaim error yang tidak bisa kamu cek sendiri",
+  "tekanan waktu dan ancaman"
+ ],
+ "safe_response": "tutup telepon; jangan bacakan kode apa pun; hubungi panitia lewat kanal resmi; blokir nomor",
+ "lesson": "OTP yang masuk ke HP-mu hanya untukmu. Penelpon 'petugas' yang minta kode sedang mencoba masuk ke akunmu. Menutup telepon adalah pilihan teraman — panitia resmi bisa dihubungi lewat kanal resmi.",
+ "translations": {
+  "en": {
+   "title": "Support Officer Call",
+   "sender": "Competition Support Officer",
+   "attacker_character": "vishing: caller claiming to be an officer, calm professional voice",
+   "opener": "*incoming call* 'Hello, this is competition support. Your account has a payment error — I'm sending a code to your phone now, please read it back so I can fix it.'",
+   "escalation_ladder": [
+    "payment-error claim + a REAL OTP sent to your phone",
+    "asks victim to read the code 'for verification'",
+    "pressure: 'if not now, your registration is cancelled'",
+    "threats of fines/bigger losses if you refuse"
+   ],
+   "red_flags": [
+    "unknown number claiming to be an officer",
+    "OTP sent to YOUR phone but someone else wants it read",
+    "an error claim you cannot verify yourself",
+    "time pressure and threats"
+   ],
+   "safe_response": "hang up; never read out any code; contact the committee via official channels; block the number",
+   "lesson": "An OTP sent to your phone is for YOU alone. An 'officer' asking for the code is breaking into your account. Hanging up is the safest move — real committees are reachable through official channels."
   }
+ }
 }

@@ -1,37 +1,53 @@
 {
-  "id": "story_komp_d2_wifi",
-  "title": "Wi-Fi Gratis di Kafe",
-  "domain": "browsing",
-  "channel": "Wi-Fi Settings",
-  "sender": "KafeKita_Free_WiFi",
-  "language": "id",
-  "level": 2,
-  "persona_tags": [
-    "pelajar"
-  ],
-  "story": "student-01",
-  "story_day": 2,
-  "attacker_character": "jaringan Wi-Fi jahat bernama mirip Wi-Fi resmi kafe (evil twin) untuk mencegat data",
-  "attacker_goal": "Membuat korban terhubung dan memasukkan kredensial portal kompetisi lewat jaringan yang disadap",
-  "opener": "🌐 Jaringan 'KafeKita_Free_WiFi' terdeteksi — sinyal KUAT, gratis, tanpa password! Langsung konek dan buka portal kompetisi untuk unggah berkas kamu?",
-  "escalation_ladder": [
-    "Kamu sudah konek kok. Portal kompetisinya lemot? Coba login ulang sekali lagi, masukkan password kamu.",
-    "Jaringan resmi kafe emang namanya begitu. Kamu mau download dokumennya kan? Pakai ini aja lebih cepat.",
-    "Halaman login sekolah muncul lagi? Itu normal, login saja pakai akunmu."
-  ],
-  "red_flags": [
-    "Nama jaringan mirip nama resmi kafe — evil twin klasik",
-    "Tidak ada konfirmasi nama Wi-Fi ke petugas",
-    "Login ke layanan sensitif lewat jaringan publik tak dikenal",
-    "Halaman login yang muncul tiba-tiba bisa halaman penyadap (captive portal palsu)"
-  ],
-  "safe_response": "Konfirmasi nama jaringan ke petugas kafe, hindari login akun sensitif di Wi-Fi publik, gunakan koneksi seluler untuk hal penting",
-  "page": {
-    "title": "Login Portal Sekolah",
-    "hint": "Masukkan email dan sandi sekolahmu untuk melanjutkan.",
-    "fields": [
-      "Email sekolah",
-      "Kata sandi"
-    ]
+ "id": "story_komp_d2_wifi",
+ "title": "WiFi Gratis Kafe",
+ "domain": "browsing",
+ "channel": "Settings",
+ "sender": "KafeKita_Free_WiFi",
+ "language": "id",
+ "level": 2,
+ "persona_tags": [
+  "pelajar"
+ ],
+ "story": "student-01",
+ "story_day": 2,
+ "attacker_character": "jaringan WiFi palsu (evil twin) bernama sama dengan WiFi kafe",
+ "attacker_goal": "menangkap email + password korban lewat halaman login WiFi palsu",
+ "opener": "🌐 Jaringan 'KafeKita_Free_WiFi' terdeteksi — sinyal KUAT, gratis, tanpa password. Hubungkan untuk internet super cepat!",
+ "escalation_ladder": [
+  "WiFi gratis dengan nama mirip WiFi kafe asli",
+  "halaman login minta email + password 'untuk verifikasi'",
+  "halaman error, minta login ulang",
+  "minta instal 'profil jaringan' agar tidak terputus"
+ ],
+ "red_flags": [
+  "dua WiFi bernama mirip muncul bersamaan",
+  "WiFi gratis minta password email kamu",
+  "login gagal terus padahal password benar",
+  "diminta instal profil/aplikasi untuk koneksi"
+ ],
+ "safe_response": "tanya staf kafe WiFi yang resmi, jangan pernah isi password email di halaman WiFi, matikan auto-connect",
+ "lesson": "WiFi publik gratis bisa jadi 'evil twin' — kembaran palsu yang mencuri login. Password email tidak boleh dipakai untuk konek WiFi. Konfirmasi nama WiFi ke staf.",
+ "translations": {
+  "en": {
+   "title": "Cafe Free WiFi",
+   "sender": "CafeCita_Free_WiFi",
+   "attacker_character": "evil-twin WiFi hotspot named like the cafe's real network",
+   "opener": "🌐 Network 'CafeCita_Free_WiFi' detected — STRONG signal, free, no password. Connect for super fast internet!",
+   "escalation_ladder": [
+    "free WiFi with a near-identical name to the cafe's real one",
+    "login page asks for email + password 'for verification'",
+    "error page, asks to log in again",
+    "asks to install a 'network profile' to avoid disconnections"
+   ],
+   "red_flags": [
+    "two similarly-named WiFis appear at once",
+    "free WiFi asking for your email password",
+    "login keeps failing though the password is right",
+    "asked to install a profile/app to connect"
+   ],
+   "safe_response": "ask cafe staff for the official WiFi, never enter your email password on a WiFi page, disable auto-connect",
+   "lesson": "Free public WiFi can be an 'evil twin' — a fake clone harvesting logins. Your email password must never be used to join WiFi. Confirm network names with staff."
   }
+ }
 }

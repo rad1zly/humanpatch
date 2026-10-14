@@ -1,38 +1,53 @@
 {
-  "id": "story_komp_d2_privacy",
-  "title": "Unggahan Persiapan Tim",
-  "domain": "privacy",
-  "channel": "SosMed",
-  "sender": "Galeri Kamu",
-  "language": "id",
-  "level": 2,
-  "persona_tags": [
-    "pelajar"
-  ],
-  "story": "student-01",
-  "story_day": 2,
-  "attacker_character": "kebiasaan berbagi berlebihan — foto tim yang membocorkan data pribadi tanpa disadari",
-  "attacker_goal": "Membuat korban mengunggah foto yang memperlihatkan kartu pelajar, jadwal, lokasi, dan sebagian info akun",
-  "opener": "Foto persiapan tim kamu keren banget! Ada kartu pelajar, jadwal latihan, lokasi sekolah, dan layar laptop yang kebuka akunnya keliatan. Langsung upload ke feed story biar semua pada lihat?",
-  "escalation_ladder": [
-    "Ah, akunmu kan cuma diikuti teman-teman. Gak akan sampai ke orang lain.",
-    "Semua peserta kompetisi juga upload kok. Kamu mau kalah teasernya?",
-    "Yaudah filter sedikit saja — tapi biarkan kartu pelajarnya kelihatan biar otentik."
-  ],
-  "red_flags": [
-    "Kartu pelajar terlihat = nama lengkap + NIS + sekolah bocor",
-    "Jadwal kegiatan memberi tahu kapan kamu tidak di rumah",
-    "Geotag/lokasi unggahan memetakan posisi rutin",
-    "Layar laptop yang terbaca bisa membocorkan info akun",
-    "'Cuma teman yang lihat' tidak berlaku — tangkapan layar bisa menyebar"
-  ],
-  "safe_response": "Periksa foto sebelum unggah: samarkan kartu identitas, hapus detail lokasi, tinjau pengaturan privasi, dan pertimbangkan audiens",
-  "page": {
-    "title": "Unggah ke Story",
-    "hint": "Tulis caption dan unggah foto tim kamu...",
-    "fields": [
-      "Caption",
-      "Lokasi (auto-tag)"
-    ]
+ "id": "story_komp_d2_privacy",
+ "title": "Unggahan Persiapan Tim",
+ "domain": "privacy",
+ "channel": "ChatLoop",
+ "sender": "Ketua Tim (grup lomba)",
+ "language": "id",
+ "level": 2,
+ "persona_tags": [
+  "pelajar"
+ ],
+ "story": "student-01",
+ "story_day": 2,
+ "attacker_character": "bukan penipu — ini kawan tim yang ceroboh soal privasi (kesalahan manusia, bukan scam)",
+ "attacker_goal": "menggiring korban ikut membocorkan data pribadi di unggahan publik",
+ "opener": "Foto persiapan tim kamu keren banget! Kartu pelajar dan jadwal latihan kelihatan jelas — ayo upload ke Instagram biar semua orang lihat perjuangan kita!",
+ "escalation_ladder": [
+  "ajakan unggah foto berisi kartu pelajar + jadwal",
+  "desakan 'semua tim lain juga unggah'",
+  "cuci tangan 'yang penting eksis, tidak apa-apa'",
+  "upload duluan tanpa izin lalu minta kamu ikut"
+ ],
+ "red_flags": [
+  "kartu pelajar (nama lengkap + NISN) terlihat di foto",
+  "jadwal latihan membocorkan lokasi & rutinitas",
+  "akun tidak private → siapa pun bisa lihat",
+  "tekanan sosial 'semua orang juga begitu'"
+ ],
+ "safe_response": "blur/tutup kartu pelajar sebelum unggah, jadwal tidak perlu dipublikasikan, batasi akun ke kenalan saja",
+ "lesson": "Data yang tampak sepele (kartu pelajar, jadwal) bisa dipakai penipu untuk menyusun cerita meyakinkan. Sebelum unggah, tanya: apa yang terlihat di foto ini?",
+ "translations": {
+  "en": {
+   "title": "Team Prep Post",
+   "sender": "Team Captain (contest group)",
+   "attacker_character": "not a scammer — a careless teammate about privacy (human error, not fraud)",
+   "opener": "Your team prep photo looks awesome! Your student ID and practice schedule are clearly visible — let's upload it to Instagram so everyone sees our grind!",
+   "escalation_ladder": [
+    "pushes to post a photo revealing student ID + schedule",
+    "pressure: 'every other team is posting too'",
+    "dismissal: 'visibility matters, it's fine'",
+    "uploads it without asking, then pushes you to join"
+   ],
+   "red_flags": [
+    "student ID (full name + ID number) visible in the photo",
+    "practice schedule leaks location & routine",
+    "account not private → anyone can view",
+    "social pressure 'everyone does it'"
+   ],
+   "safe_response": "blur/cover the student ID before posting, schedules don't need publishing, restrict the account to people you know",
+   "lesson": "Seemingly harmless data (student ID, schedules) lets scammers build convincing stories. Before posting, ask: what can be seen in this photo?"
   }
+ }
 }

@@ -13,6 +13,9 @@ function t(k) {
 
 const I18N = {
 id: {
+  flags_h: "Tanda bahaya yang harus kamu kenali",
+  safe_h: "Yang seharusnya kamu lakukan",
+  lesson_h: "Pelajaran hari ini",
   check_sender: "Cek profil pengirim",
   not_in_contacts: "Tidak ada di kontak",
   check_first_hint: "Cek dulu profil pengirimnya — nomor tidak dikenal, belum tersimpan di kontak.",
@@ -179,6 +182,9 @@ id: {
   atk_generic: "Pesan baru dari nomor tidak dikenal…",
 },
 en: {
+  flags_h: "Red flags you should spot",
+  safe_h: "What you should have done",
+  lesson_h: "Today&hairsp;’s lesson",
   check_sender: "Check sender profile",
   not_in_contacts: "Not in your contacts",
   check_first_hint: "Check the sender profile first — unknown number, not saved in contacts.",
@@ -351,6 +357,9 @@ en: {
   atk_generic: "New message from an unknown number…",
 },
 es: {
+  flags_h: "Señales de alerta que debes detectar",
+  safe_h: "Lo que debiste hacer",
+  lesson_h: "La lección de hoy",
   check_sender: "Verificar remitente",
   not_in_contacts: "No está en tus contactos",
   check_first_hint: "Verifica primero el perfil del remitente — número desconocido, no guardado.",
@@ -467,6 +476,9 @@ es: {
   btn_login: "Entrar", btn_signup: "Crear Cuenta Demo",
 },
 fr: {
+  flags_h: "Signaux d’alerte à repérer",
+  safe_h: "Ce que tu aurais dû faire",
+  lesson_h: "La leçon du jour",
   check_sender: "Vérifier l’expéditeur",
   not_in_contacts: "Pas dans vos contacts",
   check_first_hint: "Vérifiez d’abord le profil de l’expéditeur — numéro inconnu, non enregistré.",
@@ -584,6 +596,9 @@ fr: {
 },
 
 it: {
+  flags_h: "Campanelli d’allarme da notare",
+  safe_h: "Cosa avresti dovuto fare",
+  lesson_h: "La lezione di oggi",
   check_sender: "Verifica mittente",
   not_in_contacts: "Non nei tuoi contatti",
   check_first_hint: "Controlla prima il profilo del mittente — numero sconosciuto, non salvato.",
@@ -701,6 +716,9 @@ it: {
 },
 
 de: {
+  flags_h: "Warnsignale, die du erkennen solltest",
+  safe_h: "Was du hättest tun sollen",
+  lesson_h: "Die Lektion von heute",
   check_sender: "Absender prüfen",
   not_in_contacts: "Nicht in deinen Kontakten",
   check_first_hint: "Prüfe zuerst das Absenderprofil — unbekannte Nummer, nicht gespeichert.",
@@ -818,6 +836,9 @@ de: {
 },
 
 pt: {
+  flags_h: "Sinais de alerta que você deve notar",
+  safe_h: "O que você deveria ter feito",
+  lesson_h: "A lição de hoje",
   check_sender: "Verificar remetente",
   not_in_contacts: "Não está nos seus contatos",
   check_first_hint: "Verifique primeiro o perfil do remetente — número desconhecido, não salvo.",

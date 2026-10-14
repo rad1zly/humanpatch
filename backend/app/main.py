@@ -124,9 +124,10 @@ def queue(sid: str):
 def story_mission(director):
     """Storyline-bound missions: pick the curated scenario matching the
     profile's storyline + current story day (one encounter per phone-day:
-    first unused event of that day)."""
+    first unused event of that day). Localized per session language."""
     sid = getattr(director, "story_id", "")
     day = int(getattr(director, "story_day", 1) or 1)
+    lang = getattr(director, "lang", "id") or "id"
     if not sid or sid == "student-01":
         pool = [s for s in load_scenarios().values()
                 if s.get("story") == "student-01" and int(s.get("story_day", 0)) == day]
@@ -136,7 +137,15 @@ def story_mission(director):
                 if getattr(m, "story_used_by", None) is director}
         for s in sorted(pool, key=lambda x: x["id"]):
             if s["id"] not in used:
-                mi = Mission(s["id"], director.persona)
+                # localize: overlay the session-language translation
+                spec = dict(s)
+                tr = (s.get("translations") or {}).get(lang)
+                if tr:
+                    spec.update({k: v for k, v in tr.items() if v is not None})
+                    spec["language"] = lang
+                else:
+                    spec["language"] = "id"
+                mi = Mission(spec["id"], director.persona, scenario=spec)
                 mi.story_used_by = director
                 return mi
     return None
@@ -518,7 +527,13 @@ def debrief(mid: str):
                 f"Hasil misi: {summary['outcome']}. Red flag utama: {flags[0] if flags else '-'}. "
                 f"{m.scenario.get('safe_response', '')}"
             )
-    return {"summary": summary, "coach": text}
+    return {
+        "summary": summary,
+        "coach": text,
+        "red_flags": m.scenario.get("red_flags", []),
+        "lesson": m.scenario.get("lesson", ""),
+        "safe_response": m.scenario.get("safe_response", ""),
+    }
 
 
 @app.get("/api/session/{sid}/profile")
