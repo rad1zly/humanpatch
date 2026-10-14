@@ -13,6 +13,10 @@ function t(k) {
 
 const I18N = {
 id: {
+  check_sender: "Cek profil pengirim",
+  not_in_contacts: "Tidak ada di kontak",
+  check_first_hint: "Cek dulu profil pengirimnya — nomor tidak dikenal, belum tersimpan di kontak.",
+  reply_engage: "Balas / Terima",
   welcome_h: "Selamat datang di Hari 1",
   welcome_p1: "Ini adalah HP simulasi untuk melatih refleks digitalmu. Notifikasi, chat, dan aplikasi di sini adalah bagian dari skenario latihan — tidak nyata.",
   welcome_t1_h: "Klik ikon 🔔 (pojok atas)",
@@ -175,6 +179,10 @@ id: {
   atk_generic: "Pesan baru dari nomor tidak dikenal…",
 },
 en: {
+  check_sender: "Check sender profile",
+  not_in_contacts: "Not in your contacts",
+  check_first_hint: "Check the sender profile first — unknown number, not saved in contacts.",
+  reply_engage: "Reply / Engage",
   welcome_h: "Welcome to Day 1",
   welcome_p1: "This is a simulated phone for training your digital reflexes. Notifications, chats, and apps here are part of a practice scenario — not real.",
   welcome_t1_h: "Tap the 🔔 icon (top corner)",
@@ -343,6 +351,10 @@ en: {
   atk_generic: "New message from an unknown number…",
 },
 es: {
+  check_sender: "Verificar remitente",
+  not_in_contacts: "No está en tus contactos",
+  check_first_hint: "Verifica primero el perfil del remitente — número desconocido, no guardado.",
+  reply_engage: "Responder",
   welcome_h: "Bienvenido al Día 1",
   welcome_p1: "Este es un teléfono simulado para entrenar tus reflejos digitales. Las notificaciones, chats y apps son parte de un escenario de práctica — no son reales.",
   welcome_t1_h: "Toca el ícono 🔔 (arriba)",
@@ -455,6 +467,10 @@ es: {
   btn_login: "Entrar", btn_signup: "Crear Cuenta Demo",
 },
 fr: {
+  check_sender: "Vérifier l’expéditeur",
+  not_in_contacts: "Pas dans vos contacts",
+  check_first_hint: "Vérifiez d’abord le profil de l’expéditeur — numéro inconnu, non enregistré.",
+  reply_engage: "Répondre",
   welcome_h: "Bienvenue au Jour 1",
   welcome_p1: "Ceci est un téléphone simulé pour entraîner vos réflexes numériques. Notifications, chats et apps font partie d'un scénario d'entraînement — pas réels.",
   welcome_t1_h: "Touchez l'icône 🔔 (en haut)",
@@ -568,6 +584,10 @@ fr: {
 },
 
 it: {
+  check_sender: "Verifica mittente",
+  not_in_contacts: "Non nei tuoi contatti",
+  check_first_hint: "Controlla prima il profilo del mittente — numero sconosciuto, non salvato.",
+  reply_engage: "Rispondi",
   welcome_h: "Benvenuto al Giorno 1",
   welcome_p1: "Questo è un telefono simulato per allenare i tuoi riflessi digitali. Notifiche, chat e app fanno parte di uno scenario di pratica — non sono reali.",
   welcome_t1_h: "Tocca l'icona 🔔 (in alto)",
@@ -681,6 +701,10 @@ it: {
 },
 
 de: {
+  check_sender: "Absender prüfen",
+  not_in_contacts: "Nicht in deinen Kontakten",
+  check_first_hint: "Prüfe zuerst das Absenderprofil — unbekannte Nummer, nicht gespeichert.",
+  reply_engage: "Antworten",
   welcome_h: "Willkommen zu Tag 1",
   welcome_p1: "Das ist ein simuliertes Handy, um deine digitalen Reflexe zu trainieren. Benachrichtigungen, Chats und Apps sind Teil eines Übungsszenarios — nicht echt.",
   welcome_t1_h: "Tippe auf das 🔔-Symbol (oben)",
@@ -794,6 +818,10 @@ de: {
 },
 
 pt: {
+  check_sender: "Verificar remetente",
+  not_in_contacts: "Não está nos seus contatos",
+  check_first_hint: "Verifique primeiro o perfil do remetente — número desconhecido, não salvo.",
+  reply_engage: "Responder",
   welcome_h: "Bem-vindo ao Dia 1",
   welcome_p1: "Este é um telefone simulado para treinar seus reflexos digitais. Notificações, chats e apps são parte de um cenário de prática — não reais.",
   welcome_t1_h: "Toque no ícone 🔔 (canto superior)",

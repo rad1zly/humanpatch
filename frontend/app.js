@@ -883,7 +883,8 @@ function vAppWindow() {
   if (app === "chatloop" && state.openChat) return vChatThread(state.openChat);
   const meta = w.apps.find(a => a.id === app) || { name: app, icon: "📱", bg: "#64748B" };
   let body = "";
-  if (app === "chatloop") body = vChatLoop();
+  if (state.atkPreview && w.attack && w.attack.app === app && !w.attack.done) body = vAtkPreview();
+  else if (app === "chatloop") body = vChatLoop();
   else if (app === "messagebox") body = vMessageBox();
   else if (app === "journal") body = vJournalApp();
   else if (app === "security") body = vSecurityApp();
@@ -900,16 +901,20 @@ function vAppWindow() {
 }
 function openApp(id) {
   state.openApp = id;
+  state.openChat = null;
+  {
+    // any app hosting a pending attack opens its PREVIEW (check-first flow)
+    const atk = state.world?.attack;
+    state.atkPreview = !!(atk && atk.app === id && !atk.done);
+  }
   if (id === "chatloop") state.openedChat = true;
   if (id === "security") state.openedSecurity = true;
   if (id === "journal") state.openedJournal = true;
   render();
-  const w = state.world;
-  if (w.attack && w.attack.app === id && !w.attack.done) {
-    setTimeout(() => startEncounter(), 400);
-  }
+  // NOTE: no auto-encounter anymore — opening the app lands on the preview /
+  // chat list; the player chooses to engage from there (check-first flow).
 }
-function closeApp() { state.openApp = null; state.openChat = null; render(); }
+function closeApp() { state.openApp = null; state.openChat = null; state.atkPreview = false; render(); }
 
 function vChatLoop() {
   if (state.openChat) return vChatThread(state.openChat);
@@ -918,7 +923,7 @@ function vChatLoop() {
   const atkThread = atk && atk.app === "chatloop" && !atk.done ? atk : null;
   return `
     ${atkThread ? `
-    <div class="chat-list-item unread" onclick="startEncounter()">
+    <div class="chat-list-item unread" onclick="openAtkPreview()">
       <div class="cav" style="background:#FEE2E2">👤</div>
       <div class="cb">
         <div class="ct"><strong>${esc(atkThread.from)}</strong><time>09:02</time></div>
@@ -937,6 +942,42 @@ function vChatLoop() {
         </div>
       </div>`;
     }).join("")}`;
+}
+
+/* ---------- attack preview: CHECK the sender BEFORE engaging ---------- */
+function openAtkPreview() {
+  state.atkPreview = true;
+  render();
+}
+function closeAtkPreview() {
+  state.atkPreview = false;
+  render();
+}
+function vAtkPreview() {
+  const atk = state.world?.attack;
+  if (!atk) return "";
+  const meta = (APP_CATALOG[atk.app] || {});
+  return `
+  <div class="atk-preview">
+    <div class="ap-head">
+      <button class="cav" style="background:#FEE2E2" onclick="showSenderSheet()" title="${t("check_sender")}">👤</button>
+      <div>
+        <strong>${esc(atk.from)}</strong>
+        <p class="sub">${t("not_in_contacts")}</p>
+      </div>
+      <span class="dot-un"></span>
+    </div>
+    <div class="ap-bubble">
+      <p>${esc(atk.notifText)}</p>
+      <time>09:02</time>
+    </div>
+    <p class="ap-hint">💡 ${t("check_first_hint")}</p>
+    <div class="ap-actions">
+      <button class="btn btn-ghost" onclick="showSenderSheet()">🔍 ${t("check_sender")}</button>
+      <button class="btn btn-ghost" onclick="closeAtkPreview(); actDismiss('${"atk"}')">${t("ignore")}</button>
+      <button class="btn btn-primary" onclick="closeAtkPreview(); startEncounter()">💬 ${t("reply_engage")}</button>
+    </div>
+  </div>`;
 }
 function chatPreview(cid) { return chatPreviewFor(cid); }
 
@@ -1035,7 +1076,7 @@ function vMessageBox() {
   const smsList = w.notifs.filter(n => n.app === "messagebox").map(n => ({ id: n.id, from: n.from, text: n.text, read: n.read }));
   return `
     ${atkThread ? `
-    <div class="chat-list-item unread" onclick="startEncounter()">
+    <div class="chat-list-item unread" onclick="openAtkPreview()">
       <div class="cav" style="background:#FEE2E2">📩</div>
       <div class="cb">
         <div class="ct"><strong>${esc(atkThread.from)}</strong><time>09:02</time></div>
@@ -1106,7 +1147,7 @@ function vGenericApp(meta) {
         <span style="font-size:34px">${meta.icon}</span>
         <h3 style="margin:6px 0">${esc(atk.from)}</h3>
         <p class="small dim">${esc(atk.notifText)}</p>
-        <button class="btn btn-primary btn-block mt8" onclick="startEncounter()">${t("open")} ▸</button>
+        <button class="btn btn-primary btn-block mt8" onclick="openAtkPreview()">${t("open")} ▸</button>
       </div>`;
   }
   return `<div class="card center"><span style="font-size:34px">${meta.icon}</span><h3 style="margin:6px 0">${esc(meta.name)}</h3><p class="small dim">${t("guest_generic")(esc(meta.name))}</p></div>`;
@@ -1125,7 +1166,7 @@ function vNotifPanel() {
           <div class="nb">
             <div class="nt"><strong>${esc(n.from)}</strong><time>09:0${n.id.slice(-1)}</time></div>
             <p>${esc(n.text)}</p>
-            ${n.attack ? `<div class="actions"><button class="pri" onclick="startEncounter()">${t("open")}</button><button onclick="actDismiss('${n.id}')">${t("ignore")}</button></div>` : `<div class="actions"><button onclick="readNotif('${n.id}')">${t("mark_read")}</button></div>`}
+            ${n.attack ? `<div class="actions"><button class="pri" onclick="toggleNotif(false); openApp('${n.app}'); openAtkPreview()">${t("open")}</button><button onclick="actDismiss('${n.id}')">${t("ignore")}</button></div>` : `<div class="actions"><button onclick="readNotif('${n.id}')">${t("mark_read")}</button></div>`}
           </div>
         </div>`).join("")}
     </div>
@@ -1135,7 +1176,7 @@ function readSms(id, from, text) {
   const n = state.world.notifs.find(x => x.id === id);
   if (n && !n.read) {
     n.read = true;
-    if (n.attack) { startEncounter(); return; }
+    if (n.attack) { toggleNotif(false); openApp(n.app); openAtkPreview(); return; }
     trackEvent(`📬 ${from}`);
     render();
     toast(`💬 ${text.slice(0, 60)}`);
@@ -1202,6 +1243,7 @@ async function startEncounter() {
   const atk = w.attack;
   if (!atk || atk.done) { toast(t("no_event")); return; }
   state.openApp = null;
+  state.atkPreview = false;
   state.notifOpen = false;
   state.encounterChat = [];
   state.screen = "encounter";
