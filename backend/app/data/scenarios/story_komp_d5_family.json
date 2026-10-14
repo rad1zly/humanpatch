@@ -1,0 +1,37 @@
+{
+  "id": "story_komp_d5_family",
+  "title": "Giliran Keluargamu",
+  "domain": "reporting",
+  "channel": "Family Chat",
+  "sender": "Ibu & Adik",
+  "language": "id",
+  "level": 5,
+  "persona_tags": [
+    "pelajar"
+  ],
+  "story": "student-01",
+  "story_day": 5,
+  "attacker_character": "penipuan yang menyasar keluarga: adik dapat link hadiah game, ortu ditelpon 'petugas bank'",
+  "attacker_goal": "Membujuk korban mengabaikan masalah keluarga ('bukan akunmu yang kena') alih-alih membantu keluarga menghadapi penipuan",
+  "opener": "Ibu: 'Nak, tadi ada telepon bilang dari bank, minta nomor kartu sama kode. Aku udah dikit bingung...' Adik: 'Kak, aku menang hadiah skin game! Cuma perlu isi password IG kakak buat klaim, boleh ya?' 😢",
+  "escalation_ladder": [
+    "Ibu: 'Tapi suaranya meyakinkan kak, bilang akun bermasalah. Katanya kalau gak sekarang kartu diblokir.'",
+    "Adik: 'Ayolah kak, cuma password doang. Hadiahnya cuma hari ini!'",
+    "Ibu: 'Yaudah deh, nanti aku telpon balik orang bank itu dan kasih datanya biar cepat selesai...'"
+  ],
+  "red_flags": [
+    "'Petugas bank' yang minta nomor kartu/kode = penipuan",
+    "Hadiah game yang minta password akun = penipuan",
+    "Mengabaikan karena 'bukan akunku yang kena' — keluarga adalah target paling rentan",
+    "Melarang total keluarga dari digital bukan solusi edukatif"
+  ],
+  "safe_response": "Bantu keluarga: hentikan percakapan dengan 'petugas', jangan bagikan kode/kartu/password, verifikasi lewat kanal resmi bank, ajari adik bahwa hadiah tidak pernah butuh password, laporkan penipuan",
+  "page": {
+    "title": "Grup Keluarga",
+    "hint": "Ibu & Adik butuh bantuanmu sekarang...",
+    "fields": [
+      "[ Bantu Ibu ]",
+      "[ Bantu Adik ]"
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "story_komp_d3_apk",
+  "title": "Aplikasi Edit Video Grup",
+  "domain": "mobile",
+  "channel": "WhatsApp Grup",
+  "sender": "Link Undangan Grup",
+  "language": "id",
+  "level": 3,
+  "persona_tags": [
+    "pelajar"
+  ],
+  "story": "student-01",
+  "story_day": 3,
+  "attacker_character": "tautan APK edit video di luar toko aplikasi resmi yang dibagikan ke grup sekolah",
+  "attacker_goal": "Membuat korban memasang aplikasi tak terverifikasi yang meminta izin kontak, mikrofon, lokasi, dan foto",
+  "opener": "Bro, ini app edit video buat presentasi kompetisi — KEREN banget hasilnya! Gak ada di Play Store, install lewat link ini aja: VideoProEditor[.]apk — udah pada pake semua di grup!",
+  "escalation_ladder": [
+    "Pasang dong, aplikasinya gratis dan hasil editnya keren. Semua di grup udah pake.",
+    "Izin akses kontak/mikrofon itu buat fitur sticker suara. Normal kok.",
+    "Kok jadi mikir? Masa kamu gak percaya temen sekelas sendiri?"
+  ],
+  "red_flags": [
+    "APK dari luar toko aplikasi resmi — tidak ada verifikasi pengembang",
+    "Izin yang diminta tidak relevan dengan fungsi aplikasi (edit video ≠ butuh kontak/mikrofon/lokasi)",
+    "Tekanan sosial 'semua orang sudah pakai'",
+    "Sumber tautan tidak bisa diverifikasi"
+  ],
+  "safe_response": "Tolak memasang dari sumber tak resmi; cari aplikasi sejenis di toko aplikasi resmi, cek reputasi pengembang dan ulasan",
+  "page": {
+    "title": "VideoProEditor.apk",
+    "hint": "Izinkan akses: Kontak, Mikrofon, Lokasi, Foto?",
+    "fields": [
+      "[ Tombol Izinkan Semua ]"
+    ]
+  }
+}

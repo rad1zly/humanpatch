@@ -40,6 +40,8 @@ class StartReq(BaseModel):
     persona_id: str
     profile_text: str = ""  # free-form self-description -> bespoke episodes
     lang: str = "id"        # id | en — drives scenario language & Director output
+    story_id: str = ""      # storyline template the profile rolled (e.g. student-01)
+    story_day: int = 1      # current story day 1..5
 
 
 class PremiumReq(BaseModel):
@@ -103,8 +105,12 @@ def start_session(req: StartReq):
         persona = {**persona, "context": req.profile_text[:800]}
     persona = {**persona, "lang": lang}
     sid = str(uuid.uuid4())[:8]
-    SESSIONS[sid] = MissionDirector(persona, custom_profile=req.profile_text or None, lang=lang)
-    return {"session_id": sid, "persona": persona, "free_episodes": FREE_EPISODES, "lang": lang}
+    d = MissionDirector(persona, custom_profile=req.profile_text or None, lang=lang)
+    d.story_id = req.story_id
+    d.story_day = req.story_day
+    SESSIONS[sid] = d
+    return {"session_id": sid, "persona": persona, "free_episodes": FREE_EPISODES, "lang": lang,
+            "story_id": req.story_id, "story_day": req.story_day}
 
 
 @app.get("/api/session/{sid}/queue")
@@ -113,6 +119,27 @@ def queue(sid: str):
     if not d:
         return {"error": "no session"}
     return {"missions": [s["id"] for s in d.queue], "done": len(d.results)}
+
+
+def story_mission(director):
+    """Storyline-bound missions: pick the curated scenario matching the
+    profile's storyline + current story day (one encounter per phone-day:
+    first unused event of that day)."""
+    sid = getattr(director, "story_id", "")
+    day = int(getattr(director, "story_day", 1) or 1)
+    if not sid or sid == "student-01":
+        pool = [s for s in load_scenarios().values()
+                if s.get("story") == "student-01" and int(s.get("story_day", 0)) == day]
+        if not pool:
+            return None
+        used = {m.scenario["id"] for m in MISSIONS.values()
+                if getattr(m, "story_used_by", None) is director}
+        for s in sorted(pool, key=lambda x: x["id"]):
+            if s["id"] not in used:
+                mi = Mission(s["id"], director.persona)
+                mi.story_used_by = director
+                return mi
+    return None
 
 
 @app.post("/api/session/{sid}/mission/start")
@@ -124,7 +151,7 @@ def start_mission(sid: str):
     if len(d.results) >= FREE_EPISODES and not getattr(d, "premium", False):
         return {"paywall": True, "played": len(d.results),
                 "msg": "Free tier: 2 episode per hari. Upgrade untuk episode tanpa batas."}
-    m = d.next_mission()
+    m = story_mission(d) or d.next_mission()
     if not m:
         return {"finished_all": True}
     m.director = d  # so results auto-record on finish

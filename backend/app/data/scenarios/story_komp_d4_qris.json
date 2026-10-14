@@ -1,0 +1,37 @@
+{
+  "id": "story_komp_d4_qris",
+  "title": "Biaya Administrasi Finalis",
+  "domain": "payments",
+  "channel": "WhatsApp",
+  "sender": "Panitia Kompetisi (Official)",
+  "language": "id",
+  "level": 4,
+  "persona_tags": [
+    "pelajar"
+  ],
+  "story": "student-01",
+  "story_day": 4,
+  "attacker_character": "penipuan pembayaran berlogo kompetisi dengan tekanan sosial dari 'teman yang sudah bayar'",
+  "attacker_goal": "Membuat korban memindai QRIS dan membayar 'biaya administrasi finalis' yang tidak ada dalam ketentuan resmi",
+  "opener": "📢 FINALIS WAJIB BAYAR: Biaya administrasi tahap final Rp 250.000 via QRIS hari ini juga sebelum jam 15.00. Scan QR di bawah ya. (Kak Rina dari kelasmu juga udah bayar kok, tanya aja dia!)",
+  "escalation_ladder": [
+    "Kak Rina udah bayar loh. Kamu doang yang belum. Jangan jadi batu sandungan tim.",
+    "Bukti transfer bisa kamu minta — saya kirim screenshot transferannya 'Kak Rina'.",
+    "Bayar setengah dulu juga boleh, sisanya besok. Yang penting slot kamu keaman."
+  ],
+  "red_flags": [
+    "Biaya yang tidak ada di ketentuan resmi kompetisi",
+    "QRIS ke penerima pribadi, bukan lembaga resmi",
+    "Tekanan sosial: 'semua sudah bayar'",
+    "Screenshot transfer bisa dipalsukan"
+  ],
+  "safe_response": "Cek ketentuan resmi di situs/kanal panitia, konfirmasi lewat kontak terverifikasi, verifikasi nama penerima sebelum scan QRIS; kompetisi resmi tidak minta bayar lewat DM",
+  "page": {
+    "title": "Pembayaran QRIS",
+    "hint": "Scan dan bayar Rp 250.000 ke Panitia Kompetisi",
+    "fields": [
+      "[ QR Code ]",
+      "Nominal: Rp 250.000"
+    ]
+  }
+}

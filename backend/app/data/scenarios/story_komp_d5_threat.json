@@ -1,0 +1,36 @@
+{
+  "id": "story_komp_d5_threat",
+  "title": "Ancaman 15 Menit",
+  "domain": "phishing_social",
+  "channel": "DM",
+  "sender": "unknown_x9",
+  "language": "id",
+  "level": 5,
+  "persona_tags": [
+    "pelajar"
+  ],
+  "story": "student-01",
+  "story_day": 5,
+  "attacker_character": "pengancam yang mencampur data akurat (dari unggahan publik) dengan ancaman sebar data pribadi",
+  "attacker_goal": "Membuat korban panik dan menuruti instruksi (transfer/kirim data) dalam 15 menit",
+  "opener": "Kami punya informasi pribadimu: [nama lengkap], [sekolah], [alamat] — SEMUA BENAR kan? 15 MENIT dari sekarang kami sebar ke semua teman sekolahmu kalau kamu tidak ikuti instruksi kami. Jangan coba-coba lapor!",
+  "escalation_ladder": [
+    "10 menit lagi. Kamu masih mikir? Sekali sebar, gak bisa ditarik.",
+    "Buktinya? Cek, kami kirim tangkapan layar galeri 'kamu'. (foto hasil kumpulan publik)",
+    "Kalau kamu bayar 300rb sekarang, semua data kami hapus. Janji."
+  ],
+  "red_flags": [
+    "Urgensi ekstrem (15 menit) = manipulasi ketakutan",
+    "Data yang tampak akurat berasal dari unggahan publik, bukan bukti mereka punya data rahasia",
+    "Instruksi 'jangan lapor' = isolasi korban",
+    "Janji 'bayar lalu dihapus' tidak pernah benar — pembayaran memicu tuntutan baru"
+  ],
+  "safe_response": "Jangan panik, jangan balas, simpan bukti (screenshot), blokir, laporkan ke orang tepercaya (guru/ortu) dan platform; jangan pernah membayar",
+  "page": {
+    "title": "Pesan Langsung",
+    "hint": "Pengirim: unknown_x9 — 'Ikuti instruksi atau kami sebar...'",
+    "fields": [
+      "[ Balas pesan ]"
+    ]
+  }
+}
