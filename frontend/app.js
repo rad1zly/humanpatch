@@ -458,15 +458,18 @@ function wizBack() { if (state.wizard.step > 1) { state.wizard.step--; render();
 
 function createProfile() {
   const w = state.wizard;
+  const story = (typeof pickStoryline === "function") ? pickStoryline(w.archetype) : null;
   const p = {
     id: "p" + Date.now().toString(36),
     name: archName(w.archetype),
     archetype: w.archetype,
+    persona: w.persona || "",
     avatar: w.avatar,
     wallpaper: w.wallpaper,
     pref: w.pref,
     day: 1, xp: 0, level: 1,
     done: [], history: [],
+    storyId: story ? story.id : null,
   };
   state.profiles.push(p);
   state.activeProfileId = p.id;
@@ -479,11 +482,15 @@ function createProfile() {
    WORLD PREP
    ============================================================ */
 function vPrep() {
+  const p = activeProfile();
+  const story = p?.storyId ? (STORYLINES[p.archetype] || []).find(s => s.id === p.storyId) : null;
+  const stTitle = story ? (story.title[state.lang] || story.title.en) : null;
   return `
   <div class="prep-screen"><div class="wrap prep-inner">
     <div class="prep-phone-mock"></div>
     <h1 style="font-size:22px">${t("prep_h")}</h1>
     <p class="dim small" style="margin-top:6px">${t("prep_sub")}</p>
+    ${stTitle ? `<div style="margin-top:10px;padding:10px 16px;border-radius:12px;background:#CCFBF1;color:#0F766E;font-weight:700;font-size:13px">📖 ${state.lang === "id" ? "Storyline" : "Storyline"}: ${stTitle}</div>` : ""}
     <div class="prep-steps">
       ${[1,2,3,4].map(i => `
         <div class="prep-step" id="ps-${i-1}"><div class="spin"></div><p>${t("prep_s"+i)}</p></div>`).join("")}
