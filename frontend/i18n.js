@@ -305,7 +305,7 @@ en: {
   day4_o: "Your earlier decisions change where today's story goes.",
   day5_o: "Respond to the incident: recover accounts, report to the right channel.",
   obj_prefix: "🎯", btn_power: "Power On Your Phone ▸", back_dash: "Back",
-  exit: "◂ Exit", demo_flag: "DEMO · mock AI",
+  exit: "◂ Exit", demo_flag: (n) => "AI · Lv " + n,
   morning: (n)=>`Good morning, ${n}`,
   day1_hint: (u)=>`Explore your phone. Open messages, check contacts. (${u} notifications)`,
   day2_hint: (u)=>`${u} new notifications. Some might matter.`,
