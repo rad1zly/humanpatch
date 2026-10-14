@@ -764,3 +764,16 @@ body { scroll-snap-type: y proximity; } /* gentle snap, still free-scrolls insid
 .obj-card .obj-count { font-size: 11px; color: #0F766E; font-weight: 700; white-space: nowrap; }
 .obj-card.collapsed { padding-bottom: 10px; }
 .obj-card.collapsed .obj-head strong::after { content: ""; }
+
+/* AI status pill in wizard topbar */
+.wiz-ai-pill {
+  margin-left: auto; padding: 4px 10px; border-radius: 999px;
+  font-size: 11px; font-weight: 600; letter-spacing: .01em;
+  transition: background .3s, color .3s;
+  animation: wiz-pulse 1.8s ease-in-out infinite;
+}
+.wiz-ai-pill:has-text:not(:empty) { font-family: inherit; }
+@keyframes wiz-pulse {
+  0%, 100% { opacity: .9; }
+  50% { opacity: .5; }
+}

@@ -62,6 +62,21 @@ function loadLocal() {
     if (I18N[l]) LANG = l;
   } catch (e) { /* ignore */ }
 }
+let wizAIBadgeTicker = null;
+function startWizBadgeTicker() {
+  stopWizBadgeTicker();
+  wizAIBadgeTicker = setInterval(() => {
+    if (state.screen !== "wizard") return stopWizBadgeTicker();
+    const pill = document.getElementById("wiz-ai-pill");
+    if (!pill) return;
+    const txt = wizAIBadge();
+    const isReady = !!state.prefetchedCast;
+    pill.textContent = txt;
+    pill.style.background = isReady ? "rgba(52,211,153,.15)" : "rgba(148,163,184,.1)";
+    pill.style.color = isReady ? "#34D399" : "#94A3B8";
+  }, 1200);
+}
+function stopWizBadgeTicker() { if (wizAIBadgeTicker) { clearInterval(wizAIBadgeTicker); wizAIBadgeTicker = null; } }
 function setLang(l) { LANG = l; saveLocal(); render(); }
 
 /* ---------------- helpers ---------------- */
@@ -127,7 +142,35 @@ function startWorldPath(arch, personaId) {
   state.wizard.archetype = arch;
   if (personaId) state.wizard.persona = personaId;
   state.wizard.step = 2; // archetype preselected → jump to customization
+  prefetchCast(arch, personaId); // AI starts generating DURING the wizard
   go("wizard");
+}
+
+/* Kick off cast generation before the profile exists — result lands in
+   state.prefetchedCast and createProfile() picks it up instantly. */
+function prefetchCast(arch, personaId) {
+  const facts = (typeof PERSONA_FACTS !== "undefined" && personaId) ? PERSONA_FACTS[personaId] : null;
+  if (!facts) return;
+  state.prefetchedCast = null;
+  state.castPrefetchFailed = false;
+  const story = (typeof STORYLINES !== "undefined")
+    ? (STORYLINES[arch] || []).find(s => s.id === "student-01") : null;
+  (async () => {
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        const r = await fetch(API + "/story-context", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ lang: state.lang, archetype: arch, persona: facts, story: story || {} }),
+        });
+        const d = await r.json();
+        const ok = d && d.cast && Array.isArray(d.cast.npcs) && d.cast.npcs.length >= 4 &&
+                   d.cast.npcs.every(n => n && n.name && n.name.length > 1) && d.cast.school && d.cast.class_group;
+        if (ok) { state.prefetchedCast = d.cast; return; }
+      } catch (e) { /* retry */ }
+      await new Promise(res => setTimeout(res, 1200 * (attempt + 1)));
+    }
+    state.castPrefetchFailed = true;
+  })();
 }
 
 /* landing snap-page nav (dropdown on mobile) */
@@ -430,6 +473,11 @@ function delProfile(id) {
    ============================================================ */
 const AVATARS = ["🙂", "😎", "👩‍🎓", "🧑‍🏫", "👩‍💼", "🧑‍🌾", "👨‍🔧", "👩‍💻", "🧕", "👨‍🦱"];
 const WALLS = [0, 1, 2, 3];
+function wizAIBadge() {
+  if (state.castPrefetchFailed) return "✕ AI pause";
+  if (state.prefetchedCast) return "✓ Dunia siap";
+  return "🪄 Menyiapkan duniamu…";
+}
 function vWizard() {
   const w = state.wizard;
   const step = w.step;
@@ -474,6 +522,7 @@ function vWizard() {
   <header class="topbar"><div class="wrap-wide topbar-inner">
     <button class="brand" onclick="go('profiles')" style="background:none;border:none"><img class="brand-mark" src="HumanPatch_Logo.png?v=3" alt="CyberLife"></button>
     <span class="dim small">${t("step_of")(step)}</span>
+    <span id="wiz-ai-pill" class="wiz-ai-pill" style="${state.prefetchedCast ? 'background:rgba(52,211,153,.15);color:#34D399' : 'background:rgba(148,163,184,.1);color:#94A3B8'}">${wizAIBadge()}</span>
   </div></header>
   <main class="wrap" style="padding-bottom:40px">
     <div class="wizard-progress">${[1,2,3,4].map(i => `<span class="${i < step ? "done" : i === step ? "cur" : ""}"></span>`).join("")}</div>
@@ -504,7 +553,9 @@ function createProfile() {
     day: 1, xp: 0, level: 1,
     done: [], history: [],
     storyId: story ? story.id : null,
+    cast: state.prefetchedCast || null, // from prefetch started at card click
   };
+  state.prefetchedCast = null;
   state.profiles.push(p);
   state.activeProfileId = p.id;
   saveLocal();
@@ -573,7 +624,6 @@ async function fetchStoryContext() {
 }
 
 function runPrep() {
-  fetchStoryContext(); // fire AI generation during the 4-step prep animation
   const steps = [0, 1, 2, 3].map(i => $(`#ps-${i}`));
   let i = 0;
   const tick = () => {
@@ -653,9 +703,12 @@ function vDashboard() {
 function retryCast() { state.castFailed = false; render(); fetchStoryContext().then(() => { if (activeProfile().cast) { state.world = buildWorld(activeProfile(), activeProfile().day); state.splashReady = true; render(); } }); }
 function startDay() {
   const p = activeProfile();
+  // late-arriving prefetch (wizard too fast): snap it in before building
+  if (!p.cast && state.prefetchedCast) { p.cast = state.prefetchedCast; state.prefetchedCast = null; saveLocal(); }
   // blocking gate: world (AI cast) must be ready BEFORE phone opens
   if (!p.cast) {
     go("splash");
+    state.splashReady = false; state.castFailed = false; render();
     fetchStoryContext().then(() => {
       state.world = buildWorld(p, p.day);
       state.splashReady = true;
@@ -1401,6 +1454,7 @@ const WALL_CSS = {
    RENDER
    ============================================================ */
 function render() {
+  if (state.screen === "wizard") startWizBadgeTicker(); else stopWizBadgeTicker();
   const root = $("#root");
   const dr = docRoute();
   if (dr) { root.innerHTML = vDoc(dr); window.scrollTo(0, 0); if (typeof hpStopBg3d === "function") hpStopBg3d(); return; }
