@@ -31,20 +31,33 @@ const state = {
 /* ---------------- persistence ---------------- */
 function saveLocal() {
   try {
-    const ns = state.guestMode || !state.user ? "guest" : state.user.name;
-    localStorage.setItem("hp2_user", JSON.stringify(state.user));
-    localStorage.setItem(userKey(ns, "profiles"), JSON.stringify(state.profiles));
-    localStorage.setItem(userKey(ns, "active"), JSON.stringify(state.activeProfileId));
     localStorage.setItem("hp2_lang", JSON.stringify(LANG));
+    if (!state.user) {
+      /* TRIAL MODE: progress is in-memory only — never persisted.
+         Logging in mid-trial saves the current run under the user account. */
+      return;
+    }
+    localStorage.setItem("hp2_user", JSON.stringify(state.user));
+    localStorage.setItem(userKey(state.user.name, "profiles"), JSON.stringify(state.profiles));
+    localStorage.setItem(userKey(state.user.name, "active"), JSON.stringify(state.activeProfileId));
   } catch (e) { /* private mode */ }
 }
 function loadLocal() {
   try {
     state.user = JSON.parse(localStorage.getItem("hp2_user") || "null");
     state.guestMode = !state.user;
-    const ns = state.user?.name || "guest";
-    state.profiles = JSON.parse(localStorage.getItem(userKey(ns, "profiles")) || "[]");
-    state.activeProfileId = JSON.parse(localStorage.getItem(userKey(ns, "active")) || "null");
+    /* purge legacy guest-persisted progress (trial must be ephemeral) */
+    for (const k of Object.keys(localStorage)) {
+      if (k.startsWith("hp2_u_guest_")) localStorage.removeItem(k);
+    }
+    if (!state.user) {
+      /* TRIAL MODE: start clean every visit */
+      state.profiles = [];
+      state.activeProfileId = null;
+    } else {
+      state.profiles = JSON.parse(localStorage.getItem(userKey(state.user.name, "profiles")) || "[]");
+      state.activeProfileId = JSON.parse(localStorage.getItem(userKey(state.user.name, "active")) || "null");
+    }
     const l = JSON.parse(localStorage.getItem("hp2_lang") || '"id"');
     if (I18N[l]) LANG = l;
   } catch (e) { /* ignore */ }
@@ -336,13 +349,23 @@ function switchUserSpace(name) {
     localStorage.setItem(userKey(state.user.name, "profiles"), JSON.stringify(state.profiles));
     localStorage.setItem(userKey(state.user.name, "active"), JSON.stringify(state.activeProfileId));
   }
-  // user logged in — flush any guest trial data (won't carry over by design)
+  const hadGuestRun = state.guestMode && state.profiles.length > 0;
   if (state.guestMode) {
     localStorage.removeItem(userKey("guest", "profiles"));
     localStorage.removeItem(userKey("guest", "active"));
   }
-  state.profiles = JSON.parse(localStorage.getItem(userKey(name, "profiles")) || "[]");
-  state.activeProfileId = JSON.parse(localStorage.getItem(userKey(name, "active")) || "null");
+  const saved = hadGuestRun
+    ? { profiles: state.profiles, active: state.activeProfileId } // keep the live trial run
+    : { profiles: JSON.parse(localStorage.getItem(userKey(name, "profiles")) || "[]"),
+        active: JSON.parse(localStorage.getItem(userKey(name, "active")) || "null") };
+  if (hadGuestRun && saved.profiles.length) {
+    // merge: saved account profiles + live trial profiles (trial appended)
+    const existing = JSON.parse(localStorage.getItem(userKey(name, "profiles")) || "[]");
+    const ids = new Set(existing.map(p => p.id));
+    saved.profiles = [...existing, ...saved.profiles.filter(p => !ids.has(p.id))];
+  }
+  state.profiles = saved.profiles;
+  state.activeProfileId = saved.active || saved.profiles[0]?.id || null;
   state.guestMode = false;
 }
 
