@@ -497,7 +497,31 @@ function vPrep() {
     </div>
   </div></div>`;
 }
+async function fetchStoryContext() {
+  const p = activeProfile();
+  if (!p || p.cast) return; // already generated for this profile
+  const facts = (typeof PERSONA_FACTS !== "undefined" && PERSONA_FACTS[p.persona]) || {};
+  const story = p.storyId && typeof STORYLINES !== "undefined"
+    ? (STORYLINES[p.archetype] || []).find(s => s.id === p.storyId) : null;
+  try {
+    const r = await fetch(API + "/story-context", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        lang: state.lang, archetype: p.archetype,
+        persona: facts.name ? facts : { name: p.name, level: p.archetype },
+        story: story || {},
+      }),
+    });
+    const d = await r.json();
+    if (d && d.cast && d.cast.npcs) {
+      p.cast = d.cast;
+      saveLocal();
+    }
+  } catch (e) { /* offline-tolerant: world.js defaults stay */ }
+}
+
 function runPrep() {
+  fetchStoryContext(); // fire AI generation during the 4-step prep animation
   const steps = [0, 1, 2, 3].map(i => $(`#ps-${i}`));
   let i = 0;
   const tick = () => {

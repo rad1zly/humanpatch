@@ -296,6 +296,92 @@ def adapt_story(req: AdaptStoryReq):
         return {"adapted": {}, "adapted_by": f"error:{e}"}
 
 
+class StoryContextReq(BaseModel):
+    lang: str = "id"
+    archetype: str = "student"
+    persona: dict = {}
+    story: dict = {}
+
+
+@app.post("/api/story-context")
+def story_context(req: StoryContextReq):
+    """One-shot world personalization: AI adapts storyline + generates NPC cast
+    (classmates, teachers, class group name, school name) for the persona."""
+    persona = req.persona or {}
+    lang = req.lang if req.lang in ("id", "en", "es", "fr", "it", "de", "pt") else "id"
+    lang_name = {"id": "Indonesian", "en": "English", "es": "Spanish", "fr": "French",
+                 "it": "Italian", "de": "German", "pt": "Portuguese"}[lang]
+    name = persona.get("name", "Player")
+    age = persona.get("age", 16)
+    city = persona.get("city", "Jakarta")
+    level = persona.get("level", "SMA")
+    context = persona.get("context", "")
+
+    mock = os.environ.get("MOCK_LLM", "") in ("1", "true", "yes")
+
+    # ---- part 1: NPC cast (always generated, even mock) ----
+    if mock:
+        import random as _r
+        first = ["Ayu", "Bagas", "Citra", "Dimas", "Eka", "Fajar", "Gita", "Hana", "Ivan", "Joko"]
+        last = ["Pratama", "Sari", "Wijaya", "Nugroho", "Saputra"]
+        npcs = [
+            {"role": "best_friend", "name": _r.choice(first) + " " + _r.choice(last), "avatar": "😊"},
+            {"role": "classmate", "name": _r.choice(first) + " " + _r.choice(last), "avatar": "🙂"},
+            {"role": "classmate", "name": _r.choice(first) + " " + _r.choice(last), "avatar": "😎"},
+            {"role": "homeroom_teacher", "name": "Bu " + _r.choice(first), "avatar": "👩‍🏫"},
+            {"role": "parent", "name": "Ibu", "avatar": "👩"},
+            {"role": "sibling", "name": "Adik", "avatar": "🧒"},
+        ]
+        cast = {"school": f"SMA Negeri 2 {city}", "class_group": f"Kelas XI-{_r.randint(1,9)}",
+                "npcs": npcs}
+        return {"cast": cast, "adapted": {}, "adapted_by": "mock"}
+
+    sys_prompt = (
+        "You generate the social world for a cybersecurity simulation game. "
+        f"Character: {name}, {age} years old, {level} student in {city}. {context}\n"
+        f"Write ALL names/texts in {lang_name}.\n\n"
+        "Generate a JSON with:\n"
+        '"cast": {\n'
+        '  "school": "<realistic school name for this city/level>",\n'
+        '  "class_group": "<class group name, local convention>",\n'
+        '  "npcs": [\n'
+        '    {"role": "best_friend", "name": "<local name>", "avatar": "😊"},\n'
+        '    {"role": "classmate", "name": "<local name>", "avatar": "🙂"},\n'
+        '    {"role": "classmate", "name": "<local name>", "avatar": "😎"},\n'
+        '    {"role": "homeroom_teacher", "name": "<local name with title>", "avatar": "👩\u200d\U0001F3EB"},\n'
+        '    {"role": "parent", "name": "<local title>", "avatar": "👩"},\n'
+        '    {"role": "sibling", "name": "<local title>", "avatar": "\U0001F9D2"}\n'
+        "  ]\n"
+        "}\n"
+        "Names must be culturally realistic for the character's city and age group "
+        "(e.g. Indonesian names for Jakarta, Yoruba/Hausa/Igbo for Lagos, Mexican for CDMX). "
+        "Return ONLY the JSON object."
+    )
+    try:
+        out = get_llm().chat(system=sys_prompt,
+                             messages=[{"role": "user", "content": f"Generate the world for {name}."}],
+                             temperature=0.9, max_tokens=700)
+        raw = out.strip()
+        if raw.startswith("```"):
+            raw = raw.split("```")[1]
+            if raw.startswith("json"):
+                raw = raw[4:]
+        cast = json.loads(raw)
+        if "cast" in cast and isinstance(cast["cast"], dict):
+            cast = cast["cast"]
+        return {"cast": cast, "adapted": {}, "adapted_by": "ai"}
+    except Exception as e:
+        # fallback cast so game never breaks
+        return {"cast": {"school": f"School {city}", "class_group": f"Class {level}",
+                         "npcs": [{"role": "best_friend", "name": "Sahabat", "avatar": "😊"},
+                                  {"role": "classmate", "name": "Teman", "avatar": "🙂"},
+                                  {"role": "classmate", "name": "Teman 2", "avatar": "😎"},
+                                  {"role": "homeroom_teacher", "name": "Guru", "avatar": "👩\u200d\U0001F3EB"},
+                                  {"role": "parent", "name": "Ibu", "avatar": "👩"},
+                                  {"role": "sibling", "name": "Adik", "avatar": "\U0001F9D2"}]},
+                "adapted": {}, "adapted_by": f"error:{e}"}
+
+
 class ChapterRecapReq(BaseModel):
     lang: str = "id"
     profile: dict = {}

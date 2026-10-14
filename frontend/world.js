@@ -350,6 +350,39 @@ function buildWorld(profile, day = 1) {
   const tpl = WORLD_TEMPLATES[profile.archetype] || WORLD_TEMPLATES.general;
   const seed = strSeed(profile.id + "|" + profile.archetype + "|" + LANG);
   const contacts = tpl.contacts.map(c => ({ ...c, name: L(c.name), rel: L(c.rel) }));
+
+  /* AI-generated cast override (persona-adaptive NPCs from /api/story-context) */
+  const cast = profile.cast;
+  if (cast && Array.isArray(cast.npcs)) {
+    const byRole = {};
+    cast.npcs.forEach(n => { byRole[n.role] = n; });
+    const cls = byRole.classmate, fr = byRole.best_friend, tch = byRole.homeroom_teacher;
+    // class group contact → AI name + school
+    const kelas = contacts.find(c => c.id === "kelas");
+    if (kelas && cast.class_group) {
+      kelas.name = cast.class_group;
+      contacts.forEach(c => { if (c.id === "kelas") c.name = cast.class_group; });
+    }
+    // friend/teacher/parent/sibling by role mapping (id match if template has it)
+    const mapRole = { "teman": "best_friend", "sahabat": "best_friend", "bimo": "best_friend",
+                      "walikelas": "homeroom_teacher", "ibu": "parent", "adik": "sibling",
+                      "guru": "homeroom_teacher", "ortu": "parent",
+                      "dosen": "homeroom_teacher", "kos": "parent", "supir": "parent" };
+    contacts.forEach(c => {
+      const role = mapRole[c.id];
+      if (role && byRole[role]) {
+        c.name = byRole[role].name;
+        if (byRole[role].avatar) c.avatar = byRole[role].avatar;
+      }
+    });
+    // also fill any generic "Teman"/"Ibu"/"Bimo" named contacts
+    contacts.forEach(c => {
+      if (/^(Bimo|Teman|Ibu kandung|Adik|Bu Guru)/i.test(c.name) === false) return;
+      const role = c.id === "kelas" ? null : (mapRole[c.id] || (c.avatar === "👩" ? "parent" : null));
+      if (role && byRole[role]) c.name = byRole[role].name;
+    });
+  }
+
   const apps = tpl.apps.map(id => ({ ...APP_CATALOG[id] }));
 
   const attack = buildAttack(profile, day, seed);
