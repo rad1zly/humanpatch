@@ -155,7 +155,8 @@ function prefetchCast(arch, personaId) {
   state.castPrefetchFailed = false;
   const story = (typeof STORYLINES !== "undefined")
     ? (STORYLINES[arch] || []).find(s => s.id === "student-01") : null;
-  (async () => {
+  // single-flight: keep the promise so later stages AWAIT it instead of re-calling the API
+  state.castPromise = (async () => {
     for (let attempt = 0; attempt < 3; attempt++) {
       try {
         const r = await fetch(API + "/story-context", {
@@ -165,11 +166,12 @@ function prefetchCast(arch, personaId) {
         const d = await r.json();
         const ok = d && d.cast && Array.isArray(d.cast.npcs) && d.cast.npcs.length >= 4 &&
                    d.cast.npcs.every(n => n && n.name && n.name.length > 1) && d.cast.school && d.cast.class_group;
-        if (ok) { state.prefetchedCast = d.cast; return; }
+        if (ok) { state.prefetchedCast = d.cast; return d.cast; }
       } catch (e) { /* retry */ }
       await new Promise(res => setTimeout(res, 1200 * (attempt + 1)));
     }
     state.castPrefetchFailed = true;
+    return null;
   })();
 }
 
@@ -625,13 +627,28 @@ async function fetchStoryContext() {
 
 function runPrep() {
   const steps = [0, 1, 2, 3].map(i => $(`#ps-${i}`));
+  const p = activeProfile();
+  const castWait = (async () => {
+    // world processing lives HERE (during "preparing your world"), not at start-day
+    if (p?.cast) return true;
+    if (state.castPromise) { const c = await state.castPromise; if (c && !p.cast) { p.cast = c; saveLocal(); } }
+    else if (p) { await fetchStoryContext(); } // rare: no prefetch (e.g. old profile)
+    return !!p?.cast;
+  })();
   let i = 0;
   const tick = () => {
     if (i > 0) steps[i - 1]?.classList.replace("on", "done");
     steps[i]?.classList.add("on");
     i++;
     if (i < steps.length) setTimeout(tick, 700);
-    else setTimeout(() => { steps[3]?.classList.replace("on", "done"); go("dashboard"); }, 650);
+    else {
+      // animation done — but hold on the LAST step until the AI cast is ready
+      castWait.then(ok => {
+        steps[3]?.classList.replace("on", "done");
+        if (!ok) state.castFailed = true;
+        go("dashboard");
+      });
+    }
   };
   setTimeout(tick, 300);
 }
@@ -703,13 +720,20 @@ function vDashboard() {
 function retryCast() { state.castFailed = false; render(); fetchStoryContext().then(() => { if (activeProfile().cast) { state.world = buildWorld(activeProfile(), activeProfile().day); state.splashReady = true; render(); } }); }
 function startDay() {
   const p = activeProfile();
-  // late-arriving prefetch (wizard too fast): snap it in before building
-  if (!p.cast && state.prefetchedCast) { p.cast = state.prefetchedCast; state.prefetchedCast = null; saveLocal(); }
-  // blocking gate: world (AI cast) must be ready BEFORE phone opens
-  if (!p.cast) {
+  // world processing already happened during "preparing your world" (runPrep).
+  // startDay is now ALWAYS instant — but stay safe for stale profiles:
+  // snap in any late-arriving prefetch, else degrade gracefully (world builds
+  // without cast; a background fetch fills contacts when it lands).
+  if (!p.cast && (state.prefetchedCast || state.castPromise)) {
+    const c = state.prefetchedCast; // may still be null if promise pending
+    if (c) { p.cast = c; state.prefetchedCast = null; saveLocal(); }
+  }
+  if (!p.cast && state.castPromise) {
+    // prefetch still in flight (rare fast path) — show splash, resolve when done
     go("splash");
     state.splashReady = false; state.castFailed = false; render();
-    fetchStoryContext().then(() => {
+    state.castPromise.then(c => {
+      if (c && !p.cast) { p.cast = c; saveLocal(); }
       state.world = buildWorld(p, p.day);
       state.splashReady = true;
       render();
@@ -719,6 +743,11 @@ function startDay() {
   state.splashReady = true;
   state.world = buildWorld(p, p.day);
   go("splash");
+  if (!p.cast) {
+    // stale profile (no prefetch ever ran): fill AI names in the background —
+    // world already rendered with defaults, rebuilds itself when the cast lands
+    fetchStoryContext();
+  }
 }
 
 /* ============================================================
