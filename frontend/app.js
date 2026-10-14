@@ -516,6 +516,11 @@ async function fetchStoryContext() {
     if (d && d.cast && d.cast.npcs) {
       p.cast = d.cast;
       saveLocal();
+      // if we're already in the world with a stale (cast-less) build, rebuild it
+      if (state.screen === "phone" || state.screen === "splash") {
+        state.world = buildWorld(p, p.day);
+        if (state.screen === "phone") render();
+      }
     }
   } catch (e) { /* offline-tolerant: world.js defaults stay */ }
 }
@@ -600,6 +605,7 @@ function vDashboard() {
 }
 function startDay() {
   const p = activeProfile();
+  fetchStoryContext(); // old profiles get their AI cast too (async, non-blocking)
   state.world = buildWorld(p, p.day);
   go("splash");
 }

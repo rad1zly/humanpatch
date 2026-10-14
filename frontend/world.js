@@ -360,14 +360,13 @@ function buildWorld(profile, day = 1) {
     // class group contact → AI name + school
     const kelas = contacts.find(c => c.id === "kelas");
     if (kelas && cast.class_group) {
-      kelas.name = cast.class_group;
-      contacts.forEach(c => { if (c.id === "kelas") c.name = cast.class_group; });
+      contacts.forEach(c => { if (c.id === "kelas") { c.name = cast.class_group; c.rel = cast.school || c.rel; } });
     }
     // friend/teacher/parent/sibling by role mapping (id match if template has it)
     const mapRole = { "teman": "best_friend", "sahabat": "best_friend", "bimo": "best_friend",
                       "walikelas": "homeroom_teacher", "ibu": "parent", "adik": "sibling",
                       "guru": "homeroom_teacher", "ortu": "parent",
-                      "dosen": "homeroom_teacher", "kos": "parent", "supir": "parent" };
+                      "dosen": "homeroom_teacher", "supir": "parent" };
     contacts.forEach(c => {
       const role = mapRole[c.id];
       if (role && byRole[role]) {
