@@ -42,6 +42,8 @@ class StartReq(BaseModel):
     lang: str = "id"        # id | en — drives scenario language & Director output
     story_id: str = ""      # storyline template the profile rolled (e.g. student-01)
     story_day: int = 1      # current story day 1..5
+    cast: dict = {}         # AI-generated world cast (school, npcs, wifi_ssid, cafe_name)
+    scenario_hint: str = "" # exact scenario the UI event maps to (attack vs encounter)
 
 
 class PremiumReq(BaseModel):
@@ -108,6 +110,8 @@ def start_session(req: StartReq):
     d = MissionDirector(persona, custom_profile=req.profile_text or None, lang=lang)
     d.story_id = req.story_id
     d.story_day = req.story_day
+    d.cast = req.cast or {}
+    d.scenario_hint = req.scenario_hint or ""
     SESSIONS[sid] = d
     return {"session_id": sid, "persona": persona, "free_episodes": FREE_EPISODES, "lang": lang,
             "story_id": req.story_id, "story_day": req.story_day}
@@ -135,7 +139,11 @@ def story_mission(director):
             return None
         used = {m.scenario["id"] for m in MISSIONS.values()
                 if getattr(m, "story_used_by", None) is director}
-        for s in sorted(pool, key=lambda x: x["id"]):
+        hint = getattr(director, "scenario_hint", "") or ""
+        ordered = sorted(pool, key=lambda x: x["id"])
+        if hint:
+            ordered = [s for s in ordered if s["id"] == hint] + [s for s in ordered if s["id"] != hint]
+        for s in ordered:
             if s["id"] not in used:
                 # localize: overlay the session-language translation
                 spec = dict(s)
@@ -145,6 +153,16 @@ def story_mission(director):
                     spec["language"] = lang
                 else:
                     spec["language"] = "id"
+                # personalize WiFi SSID with the world's generated cafe
+                # (applied AFTER translation overlay so the localized text gets it too)
+                cast = getattr(director, "cast", None) or {}
+                ssid = cast.get("wifi_ssid") or (
+                    f"{cast.get('cafe_name') or 'KafeKita'}_Free_WiFi".replace(" ", "_"))
+                if spec["id"] == "story_komp_d2_wifi":
+                    for pat in ("KafeKita_Free_WiFi", "CafeCita_Free_WiFi"):
+                        spec["opener"] = (spec.get("opener") or "").replace(pat, ssid)
+                        spec["attacker_character"] = (spec.get("attacker_character") or "").replace(pat, ssid)
+                        spec["sender"] = (spec.get("sender") or "").replace(pat, ssid)
                 mi = Mission(spec["id"], director.persona, scenario=spec)
                 mi.story_used_by = director
                 return mi
@@ -380,6 +398,8 @@ def story_context(req: StoryContextReq):
         '"cast": {\n'
         '  "school": "<realistic school name for this city/level>",\n'
         '  "class_group": "<class group name, local convention>",\n'
+        '  "cafe_name": "<realistic cafe name near the school, local language>",\n'
+        '  "wifi_ssid": "<that cafe free-wifi network name, e.g. CafeName_Free_WiFi>",\n'
         '  "npcs": [\n'
         '    {"role": "best_friend", "name": "<local name>", "avatar": "😊"},\n'
         '    {"role": "classmate", "name": "<local name>", "avatar": "🙂"},\n'

@@ -1116,8 +1116,32 @@ function vSecurityApp() {
 }
 
 function vSettingsApp() {
+  const w = state.world;
   const rows = INAPP.settings.map(s => [s.icon, L(s.label), L(s.value)]);
+  const wifiAtk = w.attack && w.attack.app === "settings" && !w.attack.done ? w.attack : null;
   return `
+    <div class="card" style="padding:4px 12px">
+      <p class="small dim" style="margin:8px 0 4px">WLAN / Wi-Fi</p>
+      ${wifiAtk ? `
+      <div class="wifinet" onclick="openAtkPreview()" style="display:flex;gap:10px;align-items:center;padding:10px 0;border-top:1px solid rgba(148,163,184,.15)">
+        <span style="font-size:18px">📶</span>
+        <div style="flex:1">
+          <strong class="small">${esc(wifiAtk.from)}</strong>
+          <p class="small dim" style="margin:0">${t("wifi_open_net")}</p>
+        </div>
+        <span class="dot-un"></span>
+      </div>` : ""}
+      <div style="display:flex;gap:10px;align-items:center;padding:10px 0;border-top:1px solid rgba(148,163,184,.15)">
+        <span style="font-size:18px">📶</span>
+        <div style="flex:1"><strong class="small">${t("wifi_home")}</strong><p class="small dim" style="margin:0">${t("wifi_saved")}</p></div>
+        <span class="dim small">✓</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;padding:10px 0;border-top:1px solid rgba(148,163,184,.15)">
+        <span style="font-size:18px">📶</span>
+        <div style="flex:1"><strong class="small">${t("wifi_mobile")}</strong><p class="small dim" style="margin:0">${t("wifi_data")}</p></div>
+        <span class="dim small">4G</span>
+      </div>
+    </div>
     ${rows.map(r => `
     <div class="card" style="padding:12px;display:flex;gap:10px;align-items:center" onclick="toast('⚙')">
       <span style="font-size:18px">${r[0]}</span>
@@ -1251,7 +1275,7 @@ async function startEncounter() {
     const p = activeProfile();
     const s = await fetch(`${API}/session`, { method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ persona_id: personaMap[w.profile.archetype] || "umum", lang: ["id","en","es","hi","pt"].includes(LANG) ? LANG : "id",
-        story_id: p?.storyId || "", story_day: p?.day || 1 }) }).then(r => r.json());
+        story_id: p?.storyId || "", story_day: p?.day || 1, cast: p?.cast || {}, scenario_hint: atk?.scenario || "" }) }).then(r => r.json());
     state.session = s;
     const m = await fetch(`${API}/session/${s.session_id}/mission/start`, { method: "POST" }).then(r => r.json());
     if (m.paywall) { toast(m.msg); state.screen = "phone"; render(); return; }

@@ -13,6 +13,11 @@ function t(k) {
 
 const I18N = {
 id: {
+  wifi_open_net: "Jaringan terbuka — tanpa password",
+  wifi_home: "RumahKu_WiFi",
+  wifi_saved: "Tersimpan",
+  wifi_mobile: "Data Seluler",
+  wifi_data: "Koneksi 4G aktif",
   flags_h: "Tanda bahaya yang harus kamu kenali",
   safe_h: "Yang seharusnya kamu lakukan",
   lesson_h: "Pelajaran hari ini",
@@ -182,6 +187,11 @@ id: {
   atk_generic: "Pesan baru dari nomor tidak dikenal…",
 },
 en: {
+  wifi_open_net: "Open network — no password",
+  wifi_home: "MyHome_WiFi",
+  wifi_saved: "Saved",
+  wifi_mobile: "Mobile Data",
+  wifi_data: "4G connected",
   flags_h: "Red flags you should spot",
   safe_h: "What you should have done",
   lesson_h: "Today&hairsp;’s lesson",
@@ -357,6 +367,11 @@ en: {
   atk_generic: "New message from an unknown number…",
 },
 es: {
+  wifi_open_net: "Red abierta — sin contraseña",
+  wifi_home: "MiCasa_WiFi",
+  wifi_saved: "Guardada",
+  wifi_mobile: "Datos móviles",
+  wifi_data: "4G conectado",
   flags_h: "Señales de alerta que debes detectar",
   safe_h: "Lo que debiste hacer",
   lesson_h: "La lección de hoy",
@@ -476,6 +491,11 @@ es: {
   btn_login: "Entrar", btn_signup: "Crear Cuenta Demo",
 },
 fr: {
+  wifi_open_net: "Réseau ouvert — sans mot de passe",
+  wifi_home: "MaMaison_WiFi",
+  wifi_saved: "Enregistré",
+  wifi_mobile: "Données mobiles",
+  wifi_data: "4G connecté",
   flags_h: "Signaux d’alerte à repérer",
   safe_h: "Ce que tu aurais dû faire",
   lesson_h: "La leçon du jour",
@@ -596,6 +616,11 @@ fr: {
 },
 
 it: {
+  wifi_open_net: "Rete aperta — senza password",
+  wifi_home: "CasaMia_WiFi",
+  wifi_saved: "Salvata",
+  wifi_mobile: "Dati mobili",
+  wifi_data: "4G attivo",
   flags_h: "Campanelli d’allarme da notare",
   safe_h: "Cosa avresti dovuto fare",
   lesson_h: "La lezione di oggi",
@@ -716,6 +741,11 @@ it: {
 },
 
 de: {
+  wifi_open_net: "Offenes Netzwerk — ohne Passwort",
+  wifi_home: "MeinHaus_WLAN",
+  wifi_saved: "Gespeichert",
+  wifi_mobile: "Mobilfunk",
+  wifi_data: "4G aktiv",
   flags_h: "Warnsignale, die du erkennen solltest",
   safe_h: "Was du hättest tun sollen",
   lesson_h: "Die Lektion von heute",
@@ -836,6 +866,11 @@ de: {
 },
 
 pt: {
+  wifi_open_net: "Rede aberta — sem senha",
+  wifi_home: "MinhaCasa_WiFi",
+  wifi_saved: "Salva",
+  wifi_mobile: "Dados móveis",
+  wifi_data: "4G conectado",
   flags_h: "Sinais de alerta que você deve notar",
   safe_h: "O que você deveria ter feito",
   lesson_h: "A lição de hoje",

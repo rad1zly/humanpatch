@@ -264,8 +264,8 @@ function chatPreviewFor(cid) { return L(CHAT_PREVIEWS[cid] || "👍"); }
 function buildAttack(profile, day, seed) {
   const A = {
     student: {
-      phishing: { app: "chatloop", scenario: "story_komp_d2_wifi",
-        from: {id:"KafeKita_Free_WiFi", en:"KafeKita_Free_WiFi", es:"KafeKita_Free_WiFi", pt:"KafeKita_Free_WiFi", hi:"KafeKita_Free_WiFi"},
+      phishing: { app: "settings", scenario: "story_komp_d2_wifi",
+        from: {id:"Wi-Fi", en:"Wi-Fi", es:"Wi-Fi", pt:"Wi-Fi", hi:"Wi-Fi"},
         notifText: {id:"Jaringan Wi-Fi gratis terdeteksi — sinyal kuat, tanpa password. Konek sekarang?", en:"Free Wi-Fi detected — strong signal, no password. Connect now?", es:"Wi-Fi gratis detectado — señal fuerte, sin contraseña. ¿Conectar?", pt:"Wi-Fi grátis detectado — sinal forte, sem senha. Conectar?", hi:"मुफ़्त Wi-Fi मिला — मज़बूत सिग्नल, बिना पासवर्ड। कनेक्ट करें?"} },
       account: { app: "chatloop", scenario: "story_komp_d3_takeover",
         from: {id:"Tim Dukungan Akun", en:"Account Support Team", es:"Equipo de Soporte", pt:"Equipe de Suporte", hi:"खाता सहायता टीम"},
@@ -344,6 +344,13 @@ function buildAttack(profile, day, seed) {
   else if (day === 4) ev = t.consequences;
   else if (day === 5) ev = t.recovery;
   if (!ev) return null;
+  // WiFi attack: show the AI-generated SSID from the world cast, not a hardcoded one
+  if (ev.scenario === "story_komp_d2_wifi") {
+    const cast = profile.cast || {};
+    const ssid = cast.wifi_ssid || `${cast.cafe_name || "KafeKita"}_Free_WiFi`.replace(/\s+/g, "_");
+    return { id: "atk" + day, seed, app: ev.app, scenario: ev.scenario,
+             from: ssid, notifText: L(ev.notifText), _fromRaw: ev.from, _notifRaw: ev.notifText };
+  }
   return { id: "atk" + day, seed, app: ev.app, scenario: ev.scenario,
            from: L(ev.from), notifText: L(ev.notifText), _fromRaw: ev.from, _notifRaw: ev.notifText };
 }
