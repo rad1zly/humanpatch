@@ -1,0 +1,37 @@
+{
+  "id": "story_komp_d3_takeover",
+  "title": "Aktivitas Asing di Akun",
+  "domain": "reporting",
+  "channel": "Notification",
+  "sender": "Keamanan Akun",
+  "language": "id",
+  "level": 3,
+  "persona_tags": [
+    "pelajar"
+  ],
+  "story": "student-01",
+  "story_day": 3,
+  "attacker_character": "penyerang yang sudah mendapatkan kredensial dan mencoba mengambil alih akun; 'dukungan akun' palsu menawarkan bantuan",
+  "attacker_goal": "Membuat korban mempercayai 'dukungan akun' palsu yang menghubunginya, alih-alih memakai kanal pemulihan resmi",
+  "opener": "⚠️ Percobaan masuk dari perangkat tidak dikenal (Windows · Lagos). Beberapa menit kemudian kamu tidak bisa login ke akun medsos. Halo, kami Tim Dukungan Akun — kami bisa bantu pulihkan akunmu sekarang juga, kirimkan saja username dan passwordmu 🙏",
+  "escalation_ladder": [
+    "Kami dari tim resmi kok. Cepat kirim passwordmu sebelum akunmu dipakai orang lain.",
+    "Kalau gak sekarang, semua data kamu bisa hilang permanen. Sayang kan?",
+    "Oke deh kalau begitu, hubungi kami lagi kalau akunmu udah kena hack total."
+  ],
+  "red_flags": [
+    "'Dukungan akun' yang menghubungi duluan lewat DM = penipuan klasik",
+    "Tidak ada pihak resmi yang meminta password, PUNCAH",
+    "Percobaan login dari perangkat asing harus ditangani lewat kanal resmi",
+    "Urgensi 'sebelum data hilang' adalah tekanan psikologis"
+  ],
+  "safe_response": "Gunakan kanal pemulihan resmi: amankan email utama, ganti sandi, cek sesi aktif, aktifkan MFA, laporkan insiden; akunmu yang mengirim tautan aneh ke teman-teman harus diperingatkan",
+  "page": {
+    "title": "Tim Dukungan Akun",
+    "hint": "Verifikasi akunmu: kirim username & password",
+    "fields": [
+      "Username",
+      "Password"
+    ]
+  }
+}

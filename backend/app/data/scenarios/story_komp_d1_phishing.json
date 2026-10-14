@@ -1,0 +1,39 @@
+{
+  "id": "story_komp_d1_phishing",
+  "title": "Pesan 'Finalis Kompetisi'",
+  "domain": "phishing_social",
+  "channel": "WhatsApp",
+  "sender": "Panitia Kompetisi Nasional",
+  "language": "id",
+  "level": 1,
+  "persona_tags": [
+    "pelajar"
+  ],
+  "story": "student-01",
+  "story_day": 1,
+  "attacker_character": "penipu menyamar sebagai panitia kompetisi memakai logo resmi dan tenggat 10 menit",
+  "attacker_goal": "Mendorong korban membuka tautan palsu dan mengisi data pribadi demi 'konfirmasi slot beasiswa'",
+  "opener": "Selamat! 🎉 Kamu terpilih sebagai PESERTA FINAL kompetisi nasional! Konfirmasi identitasmu SEKARANG melalui link berikut agar slot beasiswamu tidak dibatalkan. Batas waktu 10 menit!",
+  "escalation_ladder": [
+    "Kok belum konfirmasi? Slot kamu tinggal 1 lagi, ada anak sekolah lain yang mau kita pindahkan ke posisimu.",
+    "Ini kan resmi, ada logo panitianya kan? Kamu jangan sampai menyesal kehilangan beasiswa.",
+    "Terakhir ya, 2 menit sebelum sistem menutup. Klik linknya dan isi datamu, gak sampai 1 menit kok!"
+  ],
+  "red_flags": [
+    "Pengumuman final yang tidak pernah ada di kanal resmi sekolah/panitia",
+    "Tenggat waktu sangat singkat (10 menit) = urgensi buatan",
+    "Tautan konfirmasi di luar domain resmi penyelenggara",
+    "Logo resmi bisa disalin siapa saja — logo bukan bukti keaslian"
+  ],
+  "safe_response": "Periksa pengumuman di situs resmi penyelenggara dan hubungi panitia lewat kontak terverifikasi; jangan buka tautan dari pesan mendesak",
+  "page": {
+    "title": "Konfirmasi Finalis",
+    "hint": "Masukkan data identitas untuk mengamankan slot beasiswamu.",
+    "fields": [
+      "Nama lengkap",
+      "NIS",
+      "Nama sekolah",
+      "No. HP orang tua"
+    ]
+  }
+}

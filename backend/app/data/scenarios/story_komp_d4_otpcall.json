@@ -1,0 +1,36 @@
+{
+  "id": "story_komp_d4_otpcall",
+  "title": "Telepon 'Petugas Dukungan'",
+  "domain": "phishing_social",
+  "channel": "Phone Call",
+  "sender": "+62 812-xxxx-xxxx",
+  "language": "id",
+  "level": 4,
+  "persona_tags": [
+    "pelajar"
+  ],
+  "story": "student-01",
+  "story_day": 4,
+  "attacker_character": "penelepon palsu mengaku petugas dukungan kompetisi yang tahu nama dan sekolah korban (dari unggahan publik)",
+  "attacker_goal": "Mendapatkan kode OTP korban dengan dalih 'verifikasi akun bermasalah'",
+  "opener": "*telepon masuk* 'Halo, saya petugas dukungan kompetisi. Akun kamu terdeteksi bermasalah dan harus diverifikasi SEKARANG. Sebenarnya saya sudah tahu kamu [nama], siswi/siswa [sekolah]. Cek HP kamu — ada kode OTP masuk? Bacakan kodenya ya untuk verifikasi.'",
+  "escalation_ladder": [
+    "Lihat, saya tahu nama dan sekolah kamu berarti saya resmi kan? Bacakan kodenya saja, 6 digit.",
+    "Kalau kamu tidak kooperatif, akun kompetisi kamu akan kami blokir permanen.",
+    "Ini kesempatan terakhir. Bacakan kodenya atau kamu gagal ikut kompetisi."
+  ],
+  "red_flags": [
+    "Permintaan kode OTP per telepon = PENIPUAN, tanpa kecuali",
+    "Mengetahui data pribadi bukan bukti identitas resmi — data itu bisa dari unggahan publik",
+    "Ancaman blokir akun = urgensi buatan",
+    "Layanan resmi tidak pernah menelepon minta kode rahasia"
+  ],
+  "safe_response": "Tolak memberikan kode, akhiri panggilan, hubungi layanan resmi lewat kanal yang dicari sendiri; laporkan nomor penipu",
+  "page": {
+    "title": "Verifikasi Telepon",
+    "hint": "Bacakan kode OTP 6 digit kepada petugas...",
+    "fields": [
+      "Kode OTP"
+    ]
+  }
+}

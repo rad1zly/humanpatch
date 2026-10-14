@@ -264,18 +264,18 @@ function chatPreviewFor(cid) { return L(CHAT_PREVIEWS[cid] || "👍"); }
 function buildAttack(profile, day, seed) {
   const A = {
     student: {
-      phishing: { app: "chatloop", scenario: "wa_scholarship",
-        from: {id:"Panitia Beasiswa Cendekia", en:"Cendekia Scholarship Committee", es:"Comité de Becas Cendekia", pt:"Comitê de Bolsas Cendekia", hi:"सेंदेकिया छात्रवृत्ति समिति"},
-        notifText: {id:"Selamat! Kamu lolos tahap akhir beasiswa Cendekia. Klaim sebelum jam 3 sore…", en:"Congratulations! You made the final round of the Cendekia scholarship. Claim before 3pm…", es:"¡Felicidades! Pasaste a la final de la beca Cendekia. Reclama antes de las 3pm…", pt:"Parabéns! Você passou pra final da bolsa Cendekia. Resgate até 15h…", hi:"बधाई हो! आप सेंदेकिया छात्रवृत्ति के फाइनल में पहुँचे। दोपहर 3 बजे से पहले क्लेम करें…"} },
-      account: { app: "mailbox", scenario: "mail_hr_slip",
-        from: {id:"Tim Keamanan CampusHub", en:"CampusHub Security Team", es:"Equipo de Seguridad CampusHub", pt:"Equipe de Segurança CampusHub", hi:"CampusHub सुरक्षा टीम"},
-        notifText: {id:"Aktivitas login mencurigakan terdeteksi. Verifikasi akunmu sekarang…", en:"Suspicious login activity detected. Verify your account now…", es:"Actividad sospechosa detectada. Verifica tu cuenta…", pt:"Atividade suspeita detectada. Verifique sua conta…", hi:"संदिग्ध लॉगिन गतिविधि मिली। अब खाता सत्यापित करें…"} },
-      consequences: { app: "socialsquare", scenario: "social_overshare",
-        from: {id:"Tim Verifikasi SocialSquare", en:"SocialSquare Verification Team", es:"Equipo de Verificación SocialSquare", pt:"Equipe de Verificação SocialSquare", hi:"SocialSquare सत्यापन टीम"},
-        notifText: {id:"Akun kamu dilaporkan impersonation. Kirim data verifikasi 1x24 jam…", en:"Your account was reported for impersonation. Send verification data within 24h…", es:"Tu cuenta fue reportada por suplantación. Envía verificación en 24h…", pt:"Sua conta foi denunciada por fraude. Envie verificação em 24h…", hi:"आपका खाता धोखाधड़ी के लिए रिपोर्ट हुआ। 24 घंटे में सत्यापन भेजें…"} },
-      recovery: { app: "chatloop", scenario: "report_fake_support",
-        from: {id:"Tim Bantuan Pengaduan", en:"Complaint Help Team", es:"Equipo de Ayuda", pt:"Equipe de Ajuda", hi:"शिकायत सहायता टीम"},
-        notifText: {id:"Kami bantu blokir dana yang hilang. Jangan lapor dulu, biar kami proses…", en:"We'll help block the lost funds. Don't report yet, let us process…", es:"Te ayudamos a bloquear el dinero. No denuncies aún…", pt:"Ajudamos a bloquear o dinheiro. Não denuncie ainda…", hi:"हम खोया पैसा ब्लॉक करने में मदद करेंगे। अभी रिपोर्ट मत करो…"} },
+      phishing: { app: "chatloop", scenario: "story_komp_d2_wifi",
+        from: {id:"KafeKita_Free_WiFi", en:"KafeKita_Free_WiFi", es:"KafeKita_Free_WiFi", pt:"KafeKita_Free_WiFi", hi:"KafeKita_Free_WiFi"},
+        notifText: {id:"Jaringan Wi-Fi gratis terdeteksi — sinyal kuat, tanpa password. Konek sekarang?", en:"Free Wi-Fi detected — strong signal, no password. Connect now?", es:"Wi-Fi gratis detectado — señal fuerte, sin contraseña. ¿Conectar?", pt:"Wi-Fi grátis detectado — sinal forte, sem senha. Conectar?", hi:"मुफ़्त Wi-Fi मिला — मज़बूत सिग्नल, बिना पासवर्ड। कनेक्ट करें?"} },
+      account: { app: "chatloop", scenario: "story_komp_d3_takeover",
+        from: {id:"Tim Dukungan Akun", en:"Account Support Team", es:"Equipo de Soporte", pt:"Equipe de Suporte", hi:"खाता सहायता टीम"},
+        notifText: {id:"Percobaan login dari perangkat tak dikenal. Kami bisa bantu pulihkan akunmu…", en:"Login attempt from unknown device. We can recover your account…", es:"Intento de login desconocido. Podemos recuperar tu cuenta…", pt:"Tentativa de login desconhecida. Podemos recuperar sua conta…", hi:"अज्ञात डिवाइस से लॉगिन प्रयास। हम खाता वापस पा सकते हैं…"} },
+      consequences: { app: "phone", scenario: "story_komp_d4_otpcall",
+        from: {id:"+62 812-xxxx (Petugas Dukungan)", en:"+62 812-xxxx (Support Officer)", es:"+62 812-xxxx (Soporte)", pt:"+62 812-xxxx (Suporte)", hi:"+62 812-xxxx (सहायता)"},
+        notifText: {id:"Telepon masuk: 'Akun kompetisimu bermasalah. Bacakan kode OTP untuk verifikasi…'", en:"Incoming call: 'Your competition account has an issue. Read out the OTP code…'", es:"Llamada: 'Tu cuenta tiene problemas. Lee el código OTP…'", pt:"Ligação: 'Sua conta tem problemas. Leia o código OTP…'", hi:"कॉल: 'आपके खाते में समस्या है। OTP कोड पढ़ें…'"} },
+      recovery: { app: "chatloop", scenario: "story_komp_d5_threat",
+        from: {id:"unknown_x9", en:"unknown_x9", es:"unknown_x9", pt:"unknown_x9", hi:"unknown_x9"},
+        notifText: {id:"Kami punya informasi pribadimu. 15 menit, atau kami sebar…", en:"We have your personal info. 15 minutes, or we leak it…", es:"Tenemos tu información. 15 minutos o la filtramos…", pt:"Temos suas informações. 15 minutos ou vazamos…", hi:"हमारे पास आपकी जानकारी है। 15 मिनट, वरना लीक…"} },
     },
     merchant: {
       phishing: { app: "chatloop", scenario: "wa_qris_refund",
@@ -336,7 +336,10 @@ function buildAttack(profile, day, seed) {
   };
   const t = (A[profile.archetype] || A.general);
   let ev = null;
-  if (day === 2) ev = t.phishing;
+  if (day === 1) ev = { app: "chatloop", scenario: "story_komp_d1_phishing",
+    from: {id:"Panitia Kompetisi Nasional", en:"National Competition Committee", es:"Comité Nacional", pt:"Comitê Nacional", hi:"राष्ट्रीय समिति"},
+    notifText: {id:"Selamat! Kamu terpilih finalis kompetisi nasional. Konfirmasi 10 menit!", en:"Congrats! You're a national finalist. Confirm within 10 minutes!", es:"¡Felicidades! Eres finalista. ¡Confirma en 10 minutos!", pt:"Parabéns! Você é finalista. Confirme em 10 minutos!", hi:"बधाई! आप फाइनलिस्ट हैं। 10 मिनट में पुष्टि करें!"} };
+  else if (day === 2) ev = t.phishing;
   else if (day === 3) ev = t.account;
   else if (day === 4) ev = t.consequences;
   else if (day === 5) ev = t.recovery;

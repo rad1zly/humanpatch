@@ -1066,8 +1066,10 @@ async function startEncounter() {
   render();
   try {
     const personaMap = { student: "mahasiswa", merchant: "umkm", worker: "karyawan", parent: "orangtua", general: "umum" };
+    const p = activeProfile();
     const s = await fetch(`${API}/session`, { method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ persona_id: personaMap[w.profile.archetype] || "umum", lang: ["id","en","es","hi","pt"].includes(LANG) ? LANG : "id" }) }).then(r => r.json());
+      body: JSON.stringify({ persona_id: personaMap[w.profile.archetype] || "umum", lang: ["id","en","es","hi","pt"].includes(LANG) ? LANG : "id",
+        story_id: p?.storyId || "", story_day: p?.day || 1 }) }).then(r => r.json());
     state.session = s;
     const m = await fetch(`${API}/session/${s.session_id}/mission/start`, { method: "POST" }).then(r => r.json());
     if (m.paywall) { toast(m.msg); state.screen = "phone"; render(); return; }

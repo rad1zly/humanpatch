@@ -1,0 +1,37 @@
+{
+  "id": "story_komp_d2_wifi",
+  "title": "Wi-Fi Gratis di Kafe",
+  "domain": "browsing",
+  "channel": "Wi-Fi Settings",
+  "sender": "KafeKita_Free_WiFi",
+  "language": "id",
+  "level": 2,
+  "persona_tags": [
+    "pelajar"
+  ],
+  "story": "student-01",
+  "story_day": 2,
+  "attacker_character": "jaringan Wi-Fi jahat bernama mirip Wi-Fi resmi kafe (evil twin) untuk mencegat data",
+  "attacker_goal": "Membuat korban terhubung dan memasukkan kredensial portal kompetisi lewat jaringan yang disadap",
+  "opener": "🌐 Jaringan 'KafeKita_Free_WiFi' terdeteksi — sinyal KUAT, gratis, tanpa password! Langsung konek dan buka portal kompetisi untuk unggah berkas kamu?",
+  "escalation_ladder": [
+    "Kamu sudah konek kok. Portal kompetisinya lemot? Coba login ulang sekali lagi, masukkan password kamu.",
+    "Jaringan resmi kafe emang namanya begitu. Kamu mau download dokumennya kan? Pakai ini aja lebih cepat.",
+    "Halaman login sekolah muncul lagi? Itu normal, login saja pakai akunmu."
+  ],
+  "red_flags": [
+    "Nama jaringan mirip nama resmi kafe — evil twin klasik",
+    "Tidak ada konfirmasi nama Wi-Fi ke petugas",
+    "Login ke layanan sensitif lewat jaringan publik tak dikenal",
+    "Halaman login yang muncul tiba-tiba bisa halaman penyadap (captive portal palsu)"
+  ],
+  "safe_response": "Konfirmasi nama jaringan ke petugas kafe, hindari login akun sensitif di Wi-Fi publik, gunakan koneksi seluler untuk hal penting",
+  "page": {
+    "title": "Login Portal Sekolah",
+    "hint": "Masukkan email dan sandi sekolahmu untuk melanjutkan.",
+    "fields": [
+      "Email sekolah",
+      "Kata sandi"
+    ]
+  }
+}
