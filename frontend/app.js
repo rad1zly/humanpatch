@@ -750,12 +750,14 @@ function unreadTotal() { return state.world ? state.world.notifs.filter(n => !n.
 function vPhone() {
   const w = state.world;
   const story = STORY_DAYS[w.day - 1];
+  const p = activeProfile();
+  const showWelcome = w.day === 1 && !p?.seenWelcome;
   return `
   <div class="phone-stage">
     <div class="phone-topbar">
       <button class="exit" onclick="exitPhone()">${t("exit")}</button>
       <span>${t("day_word")} ${w.day} · ${t("day"+w.day+"_t")}</span>
-      <span class="demo-flag">${t("demo_flag")}</span>
+      <span class="demo-flag">${t("demo_flag")(state.mission?.level || (state.world?.day || 1))}</span>
     </div>
     <div class="phone-frame">
       <button class="statusbar" onclick="toggleNotif(true)" aria-label="${t("notif_h")(unreadTotal())}">
@@ -766,13 +768,37 @@ function vPhone() {
       ${state.notifOpen ? vNotifPanel() : ""}
       ${state.sheet ? vSheet() : ""}
     </div>
+    ${showWelcome ? vWelcomeOverlay() : ""}
     ${state.toast ? `<div class="toast">${esc(typeof state.toast === "function" ? state.toast() : state.toast)}</div>` : ""}
   </div>`;
 }
 
 function unreadFor(appId) { return state.world.notifs.filter(n => n.app === appId && !n.read).length; }
 
-function vHomeScreen() {
+
+
+function vWelcomeOverlay() {
+  return `
+  <div class="welcome-backdrop" onclick="dismissWelcome()">
+    <div class="welcome-card" onclick="event.stopPropagation()">
+      <div class="welcome-icon">📱</div>
+      <h2>${t("welcome_h")}</h2>
+      <p>${t("welcome_p1")}</p>
+      <ul class="welcome-tips">
+        <li><span>🔔</span><div><strong>${t("welcome_t1_h")}</strong><br>${t("welcome_t1_p")}</div></li>
+        <li><span>💬</span><div><strong>${t("welcome_t2_h")}</strong><br>${t("welcome_t2_p")}</div></li>
+        <li><span>📓</span><div><strong>${t("welcome_t3_h")}</strong><br>${t("welcome_t3_p")}</div></li>
+      </ul>
+      <p class="welcome-warn">${t("welcome_warn")}</p>
+      <button class="btn btn-primary btn-block" onclick="dismissWelcome()">${t("welcome_cta")}</button>
+    </div>
+  </div>`;
+}
+function dismissWelcome() {
+  const p = activeProfile();
+  if (p) { p.seenWelcome = true; saveLocal(); }
+  render();
+}function vHomeScreen() {
   const w = state.world;
   const p = activeProfile();
   const wall = WALL_CSS[p.wallpaper] || w.wallpaper;
@@ -1265,7 +1291,12 @@ async function finishEncounter(outcome) {
   state.screen = "debrief";
   render();
 }
-function exitEncounter() { state.screen = "phone"; render(); }
+function exitEncounter() {
+  if (state.mission && !state.mission.finished) {
+    if (!confirm(t("exit_enc_confirm"))) return;
+  }
+  state.screen = "phone"; render();
+}
 
 /* ============================================================
    DEBRIEF

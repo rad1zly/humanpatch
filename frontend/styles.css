@@ -777,3 +777,31 @@ body { scroll-snap-type: y proximity; } /* gentle snap, still free-scrolls insid
   0%, 100% { opacity: .9; }
   50% { opacity: .5; }
 }
+
+/* Day-1 welcome tutorial overlay */
+.welcome-backdrop {
+  position: fixed; inset: 0; z-index: 9000;
+  background: rgba(2, 6, 23, .72);
+  backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; animation: wiz-pulse 2s ease-out;
+}
+.welcome-card {
+  background: linear-gradient(160deg, #0F172A, #1E293B);
+  color: #F1F5F9; border: 1px solid #334155;
+  border-radius: 18px; padding: 26px 22px; max-width: 360px; width: 100%;
+  box-shadow: 0 24px 64px rgba(0,0,0,.5);
+  animation: wiz-fadeup .4s ease-out;
+}
+@keyframes wiz-fadeup { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.welcome-icon { font-size: 40px; text-align: center; margin-bottom: 8px; }
+.welcome-card h2 { margin: 0 0 8px; font-size: 20px; text-align: center; }
+.welcome-card p { margin: 0 0 14px; line-height: 1.5; font-size: 13.5px; color: #CBD5E1; }
+.welcome-tips { list-style: none; padding: 0; margin: 0 0 14px; }
+.welcome-tips li { display: flex; gap: 10px; padding: 9px 0; border-top: 1px solid rgba(148,163,184,.12); font-size: 12.5px; line-height: 1.45; }
+.welcome-tips li:first-child { border-top: 0; }
+.welcome-tips li > span { font-size: 22px; line-height: 1; flex-shrink: 0; }
+.welcome-tips strong { color: #E2E8F0; }
+.welcome-warn { background: rgba(52,211,153,.08); border-left: 3px solid #34D399; padding: 8px 10px; border-radius: 6px; font-size: 12px; color: #A7F3D0; }
+.welcome-card .btn-primary { background: #34D399; color: #0F172A; font-weight: 700; margin-top: 6px; min-height: 44px; }
+.welcome-card .btn-primary:hover { background: #6EE7B7; }
