@@ -13,6 +13,10 @@ function t(k) {
 
 const I18N = {
 id: {
+  loading_world: "Menyiapkan Dunia…",
+  loading_world_sub: "AI sedang menyusun dunia, teman, dan sekolah untuk karaktermu. Mohon tunggu.",
+  loading_world_err: "Gagal menyiapkan dunia. Coba lagi.",
+  retry: "Coba Lagi",
   per_nadia: "Nadia, 16",
   per_xiaoyu: "Xiaoyu, 13",
   per_rizky: "Rizky, 17",
@@ -158,6 +162,10 @@ id: {
   atk_generic: "Pesan baru dari nomor tidak dikenal…",
 },
 en: {
+  loading_world: "Preparing Your World…",
+  loading_world_sub: "AI is building your world, friends, and school. Please wait.",
+  loading_world_err: "Failed to prepare the world. Try again.",
+  retry: "Retry",
   per_nadia: "Nadia, 16",
   per_xiaoyu: "Xiaoyu, 13",
   per_rizky: "Rizky, 17",
@@ -309,6 +317,10 @@ en: {
   atk_generic: "New message from an unknown number…",
 },
 es: {
+  loading_world: "Preparando tu Mundo…",
+  loading_world_sub: "La IA está creando tu mundo, amigos y escuela. Espera.",
+  loading_world_err: "No se pudo preparar el mundo. Reintentar.",
+  retry: "Reintentar",
   per_nadia: "Nadia, 16",
   per_xiaoyu: "Xiaoyu, 13",
   per_rizky: "Rizky, 17",
@@ -404,6 +416,10 @@ es: {
   btn_login: "Entrar", btn_signup: "Crear Cuenta Demo",
 },
 fr: {
+  loading_world: "Préparation de votre monde…",
+  loading_world_sub: "L'IA construit votre monde, amis et école. Patience.",
+  loading_world_err: "Échec de la préparation. Réessayer.",
+  retry: "Réessayer",
   per_nadia: "Nadia, 16 ans",
   per_xiaoyu: "Xiaoyu, 13 ans",
   per_rizky: "Rizky, 17 ans",
@@ -500,6 +516,10 @@ fr: {
 },
 
 it: {
+  loading_world: "Preparazione del mondo…",
+  loading_world_sub: "L'IA sta creando il tuo mondo, amici e scuola. Attendi.",
+  loading_world_err: "Preparazione fallita. Riprova.",
+  retry: "Riprova",
   per_nadia: "Nadia, 16",
   per_xiaoyu: "Xiaoyu, 13",
   per_rizky: "Rizky, 17",
@@ -596,6 +616,10 @@ it: {
 },
 
 de: {
+  loading_world: "Welt wird vorbereitet…",
+  loading_world_sub: "Die KI baut deine Welt, Freunde und Schule. Bitte warten.",
+  loading_world_err: "Vorbereitung fehlgeschlagen. Erneut versuchen.",
+  retry: "Erneut versuchen",
   per_nadia: "Nadia, 16",
   per_xiaoyu: "Xiaoyu, 13",
   per_rizky: "Rizky, 17",
@@ -692,6 +716,10 @@ de: {
 },
 
 pt: {
+  loading_world: "Preparando seu Mundo…",
+  loading_world_sub: "A IA está criando seu mundo, amigos e escola. Aguarde.",
+  loading_world_err: "Falha ao preparar o mundo. Tentar novamente.",
+  retry: "Tentar novamente",
   per_nadia: "Nadia, 16",
   per_xiaoyu: "Xiaoyu, 13",
   per_rizky: "Rizky, 17",
