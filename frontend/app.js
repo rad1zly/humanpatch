@@ -90,36 +90,29 @@ document.addEventListener("click", (e) => { if (state.langDD && !e.target.closes
 
 /* world paths — TryHackMe-style learning path cards */
 const WORLD_PATHS = [
-  { arch: "student",  emoji: "🎓", color: "#FEF3C7",
+  { arch: "student", emoji: "🎓", color: "#FEF3C7",
     personas: [
-      { id: "nadia",  flag: "🇮🇩", name: t("per_nadia"),  blurb: t("per_nadia_d"),  face: "assets/faces/nadia.png"  },
-      { id: "xiaoyu", flag: "🇨🇳", name: t("per_xiaoyu"), blurb: t("per_xiaoyu_d"), face: "assets/faces/xiaoyu.png" },
-    ], default: "nadia" },
-  { arch: "merchant", emoji: "🛒", color: "#FFE4E6",
-    personas: [
-      { id: "maddie", flag: "🇺🇸", name: t("per_maddie"), blurb: t("per_maddie_d"), face: "assets/faces/maddie.png" },
-      { id: "ananya", flag: "🇮🇳", name: t("per_ananya"), blurb: t("per_ananya_d"), face: "assets/faces/ananya.png" },
-    ], default: "maddie" },
-  { arch: "worker",   emoji: "💼", color: "#DBEAFE",
-    personas: [
-      { id: "rizky",  flag: "🇮🇩", name: t("per_rizky"),  blurb: t("per_rizky_d"),  face: "assets/faces/rizky.png"  },
-      { id: "oliver", flag: "🇬🇧", name: t("per_oliver"), blurb: t("per_oliver_d"), face: "assets/faces/oliver.png" },
-    ], default: "rizky" },
-  { arch: "parent",   emoji: "🏡", color: "#DCFCE7",
-    personas: [
-      { id: "elsa",   flag: "🇸🇪", name: t("per_elsa"),   blurb: t("per_elsa_d"),   face: "assets/faces/elsa.png"   },
-      { id: "emir",   flag: "🇹🇷", name: t("per_emir"),   blurb: t("per_emir_d"),   face: "assets/faces/emir.png"   },
-    ], default: "elsa" },
-  { arch: "general",  emoji: "🌐", color: "#E0E7FF",
-    personas: [
+      { id: "nadia",   flag: "🇮🇩", name: t("per_nadia"),   blurb: t("per_nadia_d"),   face: "assets/faces/nadia.png" },
+      { id: "xiaoyu",  flag: "🇨🇳", name: t("per_xiaoyu"),  blurb: t("per_xiaoyu_d"),  face: "assets/faces/xiaoyu.png" },
+      { id: "rizky",   flag: "🇮🇩", name: t("per_rizky"),   blurb: t("per_rizky_d"),   face: "assets/faces/rizky.png" },
       { id: "chinedu", flag: "🇳🇬", name: t("per_chinedu"), blurb: t("per_chinedu_d"), face: "assets/faces/chinedu.png" },
-      { id: "diego",   flag: "🇲🇽", name: t("per_diego"),   blurb: t("per_diego_d"),   face: "assets/faces/diego.png"   },
-    ], default: "chinedu" },
+      { id: "ananya",  flag: "🇮🇳", name: t("per_ananya"),  blurb: t("per_ananya_d"),  face: "assets/faces/ananya.png" },
+      { id: "elsa",    flag: "🇸🇪", name: t("per_elsa"),    blurb: t("per_elsa_d"),    face: "assets/faces/elsa.png" },
+      { id: "maddie",  flag: "🇺🇸", name: t("per_maddie"),  blurb: t("per_maddie_d"),  face: "assets/faces/maddie.png" },
+      { id: "emir",    flag: "🇹🇷", name: t("per_emir"),    blurb: t("per_emir_d"),    face: "assets/faces/emir.png" },
+      { id: "diego",   flag: "🇲🇽", name: t("per_diego"),   blurb: t("per_diego_d"),   face: "assets/faces/diego.png" },
+      { id: "oliver",  flag: "🇬🇧", name: t("per_oliver"),  blurb: t("per_oliver_d"),  face: "assets/faces/oliver.png" },
+    ], default: "nadia" },
+  { arch: "merchant", emoji: "🛒", color: "#FFE4E6", personas: [], default: "" },
+  { arch: "worker",   emoji: "💼", color: "#DBEAFE", personas: [], default: "" },
+  { arch: "parent",   emoji: "🏡", color: "#DCFCE7", personas: [], default: "" },
+  { arch: "general",  emoji: "🌐", color: "#E0E7FF", personas: [], default: "" },
 ];
 const ALL_PERSONAS = WORLD_PATHS.flatMap(w => w.personas);
 function setWorldFilter(f) { state.worldFilter = f; render(); }
-function startWorldPath(arch) {
+function startWorldPath(arch, personaId) {
   state.wizard.archetype = arch;
+  if (personaId) state.wizard.persona = personaId;
   state.wizard.step = 2; // archetype preselected → jump to customization
   go("wizard");
 }
@@ -222,18 +215,20 @@ function vLanding() {
           `<button class="wtab ${(state.worldFilter||"all")===f?"on":""}" onclick="setWorldFilter('${f}')">${t("wf_"+f)}</button>`).join("")}
       </div>
       <div class="path-grid">
-        ${WORLD_PATHS.filter(p => (state.worldFilter||"all")==="all" || p.arch===state.worldFilter).map(p => {
-          const prof = (state.profiles||[]).find(x => x.archetype === p.arch);
+        ${WORLD_PATHS.filter(p => p.personas.length > 0).filter(p => (state.worldFilter||"all")==="all" || p.arch===state.worldFilter).flatMap(p =>
+          p.personas.map(per => ({ arch: p.arch, color: p.color, emoji: p.emoji, persona: per }))
+        ).map(p => {
+          const prof = (state.profiles||[]).find(x => x.archetype === p.arch && x.persona === p.persona.id);
           const days = prof ? (prof.day - 1) : 0;
           const pct = Math.round(days / 5 * 100);
           return `
           <article class="path-card ${prof ? "started" : ""}">
             <div class="pc-head">
-              <div class="pc-icon" style="background:${p.color}"><img src="${p.personas[0].face}" alt="${p.personas[0].id}" loading="lazy"></div>
+              <div class="pc-icon" style="background:${p.color}"><img src="${p.persona.face}" alt="${p.persona.id}" loading="lazy"></div>
               <div class="pc-title">
-                <span class="pc-tag">${t("arch_" + p.arch)}</span>
-                <h3>${p.personas[0].name}</h3>
-                <p>${t("arch_" + p.arch + "_d")}</p>
+                <span class="pc-tag">${p.persona.flag} ${t("arch_" + p.arch)}</span>
+                <h3>${p.persona.name}</h3>
+                <p>${p.persona.blurb}</p>
               </div>
             </div>
             <div class="pc-chips">
@@ -245,7 +240,7 @@ function vLanding() {
               <div class="pc-bar"><span style="width:${Math.max(pct, prof ? 8 : 0)}%"></span></div>
               <span class="pc-pct">${prof ? `${days}/5 ${t("wp_days_word")}` : t("wp_not_started")}</span>
             </div>
-            <button class="btn ${prof ? "btn-primary" : "btn-ghost"} pc-cta" onclick="${prof ? `requireAuth(playProfile)('${prof.id}')` : `requireAuth(startWorldPath)('${p.arch}')`}">
+            <button class="btn ${prof ? "btn-primary" : "btn-ghost"} pc-cta" onclick="${prof ? `requireAuth(playProfile)('${prof.id}')` : `requireAuth(startWorldPath)('${p.arch}','${p.persona.id}')`}">
               ${prof ? t("wp_continue") : t("wp_start")}
             </button>
           </article>`;
