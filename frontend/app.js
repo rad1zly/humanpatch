@@ -380,9 +380,10 @@ function vProfiles() {
           <div class="avatar-xl" style="width:46px;height:46px;font-size:22px">${p.avatar}</div>
           <div style="flex:1">
             <strong style="font-size:15px">${archName(p.archetype)}</strong>
-            <p style="margin:0">${t("day_word")} ${p.day} · Lv ${p.level}</p>
+            <p style="margin:0">${t("day_word")} ${p.day} · Lv ${p.level}${p.persona ? " · " + (PERSONA_FACTS[p.persona]?.name || p.persona) : ""}</p>
           </div>
           <button class="btn btn-primary" style="min-height:40px;padding:0 16px;font-size:13px" onclick="requireAuth(playProfile)('${p.id}')">${t("btn_play")}</button>
+          <button class="btn btn-ghost" style="min-height:40px;padding:0 12px;font-size:13px;color:#F87171;border-color:#4C1D24" title="${t("delete_profile")}" onclick="delProfile('${p.id}')">🗑</button>
         </div>`).join("")}
       ${ps.length === 0 ? `<div class="card center"><p>${t("profiles_empty")}</p></div>` : ""}
     </div>
@@ -390,6 +391,16 @@ function vProfiles() {
   </main>` + siteFooter();
 }
 function playProfile(id) { state.activeProfileId = id; saveLocal(); go("dashboard"); }
+function delProfile(id) {
+  const p = state.profiles.find(x => x.id === id);
+  const nm = p ? (p.persona ? (PERSONA_FACTS[p.persona]?.name || p.persona) : archName(p.archetype)) : "?";
+  if (!confirm(t("confirm_del_profile")(nm))) return;
+  state.profiles = state.profiles.filter(x => x.id !== id);
+  if (state.activeProfileId === id) { state.activeProfileId = state.profiles[0]?.id || null; state.world = null; }
+  saveLocal();
+  toast("🗑 " + nm);
+  render();
+}
 
 /* ============================================================
    WIZARD
