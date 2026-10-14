@@ -633,15 +633,16 @@ function vHomeScreen() {
       <p>${w.day === 1 ? t("day1_hint")(unread) : t("day2_hint")(unread)}</p>
     </div>
     ${w.day === 1 ? `
-    <div class="obj-card">
-      <div class="obj-head">
+    <div class="obj-card ${state.objCollapsed ? "collapsed" : ""}">
+      <button class="obj-head" onclick="toggleObj()" aria-expanded="${!state.objCollapsed}">
         <strong>${t("day1_obj_h")}</strong>
-        <span class="obj-count">${day1Objectives().filter(o => o.done).length}/${day1Objectives().length}</span>
-      </div>
+        <span class="obj-count">${day1Objectives().filter(o => o.done).length}/${day1Objectives().length} ${state.objCollapsed ? "▾" : "▴"}</span>
+      </button>
+      ${state.objCollapsed ? "" : `
       <ul class="obj-list">
         ${day1Objectives().map(o => `<li class="${o.done ? "done" : ""}">${o.done ? "✔" : "○"} ${esc(L(o.label))}</li>`).join("")}
       </ul>
-      ${day1Done() ? `<button class="btn btn-primary btn-block" style="min-height:44px" onclick="endDay1()">${t("end_day1")}</button>` : `<p class="obj-hint">${t("day1_obj_hint")}</p>`}
+      ${day1Done() ? `<button class="btn btn-primary btn-block" style="min-height:44px" onclick="endDay1()">${t("end_day1")}</button>` : `<p class="obj-hint">${t("day1_obj_hint")}</p>`}`}
     </div>` : ""}
     <div class="app-grid">
       ${w.apps.map(a => {
@@ -1254,6 +1255,7 @@ function vFinale() {
 /* ============================================================
    PHONE top
    ============================================================ */
+function toggleObj() { state.objCollapsed = !state.objCollapsed; render(); }
 function endDay1() {
   const p = activeProfile();
   const xp = 100 + state.events.length * 5;
