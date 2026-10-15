@@ -777,7 +777,14 @@ function vSplash() {
 function unreadTotal() { return state.world ? state.world.notifs.filter(n => !n.read).length : 0; }
 
 function vPhone() {
-  const w = state.world;
+  let w = state.world;
+  if (!w) {
+    // defensive: phone screen without a world (stale navigation) — rebuild it
+    const p = activeProfile();
+    if (p) { state.world = buildWorld(p, p.day || 1); }
+    else { return `<div class="phone-stage center"><div class="card center"><p>${t("loading_world")}</p></div></div>`; }
+  }
+  w = state.world; // re-point after possible rebuild above
   const story = STORY_DAYS[w.day - 1];
   const p = activeProfile();
   const showWelcome = w.day === 1 && !p?.seenWelcome;
@@ -1024,9 +1031,9 @@ function scrollNorm() { const el = $("#chat-scroll"); if (el) el.scrollTop = el.
 /* end-of-conversation templates — contacts are people, not chatbots */
 const NORM_CHAT_END = {
   items: [
-    {id:"Oke ya, aku ada urusan dulu. Chat lagi nanti 👋", en:"Okay, I've got things to do. Talk later 👋", es:"Ok, tengo cosas que hacer. Hablamos luego 👋", pt:"Ok, tenho coisas a fazer. Falamos depois 👋", hi:"ठीक है, मुझे काम है। बाद में बात करते हैं 👋"},
-    {id:"Sip dicatat! Aku offline dulu ya", en:"Noted! Going offline for now", es:"¡Anotado! Me desconecto un rato", pt:"Anotado! Vou desconectar um pouco", hi:"नोट किया! अभी ऑफलाइन हो रहा हूँ"},
-    {id:"Hehe oke deh. Nanti dilanjut ya!", en:"Haha okay. We'll continue later!", es:"Jaja ok. ¡Seguimos luego!", pt:"Haha ok. Continuamos depois!", hi:"हहा ठीक। बाद में जारी रखेंगे!"},
+    {id:"Oke ya, aku ada urusan dulu. Chat lagi nanti 👋", en:"Okay, I've got things to do. Talk later 👋", es:"Ok, tengo cosas que hacer. Hablamos luego 👋", pt:"Ok, tenho coisas a fazer. Falamos depois 👋", hi:"ठीक है, मुझे काम है। बाद में बात करते हैं 👋", fr:"Ok, j'ai des choses à faire. À plus 👋", it:"Ok, ho cose da fare. A dopo 👋", de:"Okay, ich habe zu tun. Bis später 👋"},
+    {id:"Sip dicatat! Aku offline dulu ya", en:"Noted! Going offline for now", es:"¡Anotado! Me desconecto un rato", pt:"Anotado! Vou desconectar um pouco", hi:"नोट किया! अभी ऑफलाइन हो रहा हूँ", fr:"Noté ! Je me déconnecte pour l'instant", it:"Capito! Vado offline per ora", de:"Notiert! Ich bin jetzt offline"},
+    {id:"Hehe oke deh. Nanti dilanjut ya!", en:"Haha okay. We'll continue later!", es:"Jaja ok. ¡Seguimos luego!", pt:"Haha ok. Continuamos depois!", hi:"हहा ठीक। बाद में जारी रखेंगे!", fr:"Haha d'accord. On continue plus tard !", it:"Haha ok. Continuiamo dopo!", de:"Haha okay. Wir machen später weiter!"},
   ],
   pick() { return this.items[Math.floor(Math.random() * this.items.length)]; },
 };
@@ -1213,7 +1220,11 @@ function dayObjectives(day) {
   const atk = w?.attack;
   const atkOpen = atk && !atk.done;
   const verified = state.events.some(e => e.includes("🔍"));
-  const readAtk = verified || (atkOpen && state.events.some(e => e.includes(atk.from)));
+  // verify counts if: player opened the sender sheet, OR the incident is already
+  // resolved (ignore/engage decision made from the visible notif/preview) — never
+  // let a resolved day leave this objective permanently unchecked (mission/action
+  // alignment: "ignore" must always be a valid way to complete the day).
+  const readAtk = verified || !atk || atk.done;
   const common = [
     { id: "obj_notif", icon: "🔔", label: {id:"Cek panel notifikasi", en:"Check the notification panel", es:"Revisa el panel de notificaciones", fr:"Consulte le panneau de notifications", it:"Controlla il pannello notifiche", de:"Prüfe das Benachrichtigungsfeld", pt:"Confira o painel de notificações"},
       done: state.notifSeen || false },
@@ -1252,11 +1263,11 @@ function dayObjectives(day) {
 }
 function day1Objectives() {
   return [
-    { id: "open_msg",    label: {id:"Buka MessageBox dan baca SMS", en:"Open MessageBox and read an SMS", es:"Abre MessageBox y lee un SMS", pt:"Abra o MessageBox e leia um SMS", hi:"MessageBox खोलें और SMS पढ़ें"}, done: state.events.some(e => e.startsWith("📬")) },
-    { id: "open_chat",   label: {id:"Buka ChatLoop dan baca chat", en:"Open ChatLoop and read a chat", es:"Abre ChatLoop y lee un chat", pt:"Abra o ChatLoop e leia um chat", hi:"ChatLoop खोलें और चैट पढ़ें"}, done: state.openedChat || false },
-    { id: "check_notif", label: {id:"Buka panel notifikasi (ketuk jam)", en:"Open the notification panel (tap the clock)", es:"Abre el panel de notificaciones (toca el reloj)", pt:"Abra o painel de notificações (toque no relógio)", hi:"सूचना पैनल खोलें (घड़ी टैप करें)"}, done: state.notifSeen || false },
-    { id: "check_perm",  label: {id:"Cek izin aplikasi di Security", en:"Check app permissions in Security", es:"Revisa permisos en Security", pt:"Verifique permissões no Security", hi:"Security में ऐप अनुमतियाँ देखें"}, done: state.events.some(e => e.startsWith("🛡")) || state.openedSecurity || false },
-    { id: "open_journal",label: {id:"Buka Journal dan cek misimu", en:"Open Journal and check your mission", es:"Abre Journal y revisa tu misión", pt:"Abra o Journal e veja sua missão", hi:"Journal खोलें और मिशन देखें"}, done: state.openedJournal || false },
+    { id: "open_msg",    label: {id:"Buka MessageBox dan baca SMS", en:"Open MessageBox and read an SMS", es:"Abre MessageBox y lee un SMS", pt:"Abra o MessageBox e leia um SMS", hi:"MessageBox खोलें और SMS पढ़ें", fr:"Ouvre MessageBox et lis un SMS", it:"Apri MessageBox e leggi un SMS", de:"Öffne MessageBox und lies eine SMS"}, done: state.events.some(e => e.startsWith("📬")) },
+    { id: "open_chat",   label: {id:"Buka ChatLoop dan baca chat", en:"Open ChatLoop and read a chat", es:"Abre ChatLoop y lee un chat", pt:"Abra o ChatLoop e leia um chat", hi:"ChatLoop खोलें और चैट पढ़ें", fr:"Ouvre ChatLoop et lis un chat", it:"Apri ChatLoop e leggi una chat", de:"Öffne ChatLoop und lies einen Chat"}, done: state.openedChat || false },
+    { id: "check_notif", label: {id:"Buka panel notifikasi (ketuk jam)", en:"Open the notification panel (tap the clock)", es:"Abre el panel de notificaciones (toca el reloj)", pt:"Abra o painel de notificações (toque no relógio)", hi:"सूचना पैनल खोलें (घड़ी टैप करें)", fr:"Ouvre le panneau de notifications (touche l'horloge)", it:"Apri il pannello notifiche (tocca l'orologio)", de:"Öffne das Benachrichtigungsfeld (Tippe auf die Uhr)"}, done: state.notifSeen || false },
+    { id: "check_perm",  label: {id:"Cek izin aplikasi di Security", en:"Check app permissions in Security", es:"Revisa permisos en Security", pt:"Verifique permissões no Security", hi:"Security में ऐप अनुमतियाँ देखें", fr:"Vérifie les permissions dans Security", it:"Controlla i permessi in Security", de:"Prüfe Berechtigungen in Security"}, done: state.events.some(e => e.startsWith("🛡")) || state.openedSecurity || false },
+    { id: "open_journal",label: {id:"Buka Journal dan cek misimu", en:"Open Journal and check your mission", es:"Abre Journal y revisa tu misión", pt:"Abra o Journal e veja sua missão", hi:"Journal खोलें और मिशन देखें", fr:"Ouvre Journal et vérifie ta mission", it:"Apri Journal e controlla la missione", de:"Öffne Journal und prüfe deine Mission"}, done: state.openedJournal || false },
   ];
 }
 function day1Done() {
@@ -1275,9 +1286,12 @@ function readNotif(id) { const n = state.world.notifs.find(x => x.id === id); if
 function actDismiss(id) {
   const n = state.world.notifs.find(x => x.id === id);
   const atk = state.world.attack;
-  // ignoring IS a decision — mark the incident resolved
-  if (atk && !atk.done && atk.from === n?.from) {
+  // ignoring IS a decision — mark the incident resolved.
+  // id === "atk" comes from the preview screen (no notif row); a real notif id
+  // comes from the notification panel.
+  if (atk && !atk.done && (id === "atk" || (n && atk.from === n.from))) {
     atk.done = true;
+    if (n) n.read = true;
     trackEvent("🙈 ignored: " + atk.from);
   } else if (n) { n.read = true; trackEvent("🙈 " + n.from); }
   state.atkPreview = false;
