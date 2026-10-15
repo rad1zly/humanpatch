@@ -131,13 +131,19 @@ const WORLD_PATHS = [
       { id: "diego",   flag: "🇲🇽", nk: "per_diego",   bk: "per_diego_d",   face: "assets/faces/diego.png" },
       { id: "oliver",  flag: "🇬🇧", nk: "per_oliver",  bk: "per_oliver_d",  face: "assets/faces/oliver.png" },
     ], default: "nadia" },
-  { arch: "merchant", emoji: "🛒", color: "#FFE4E6", personas: [], default: "" },
-  { arch: "worker",   emoji: "💼", color: "#DBEAFE", personas: [], default: "" },
-  { arch: "parent",   emoji: "🏡", color: "#DCFCE7", personas: [], default: "" },
-  { arch: "general",  emoji: "🌐", color: "#E0E7FF", personas: [], default: "" },
+  // DEMO-ONLY worlds for the hackathon build: visible on the landing grid,
+  // but clicking routes to a "coming soon" toast instead of the wizard.
+  { arch: "merchant", emoji: "🛒", color: "#FFE4E6", personas: [], default: "", demo: true, demoPersona: { id: "merchant", flag: "🏪", nk: "arch_merchant", bk: "arch_merchant_d", face: "" } },
+  { arch: "worker",   emoji: "💼", color: "#DBEAFE", personas: [], default: "", demo: true, demoPersona: { id: "worker", flag: "🏢", nk: "arch_worker", bk: "arch_worker_d", face: "" } },
+  { arch: "parent",   emoji: "🏡", color: "#DCFCE7", personas: [], default: "", demo: true, demoPersona: { id: "parent", flag: "👨‍👩‍👧", nk: "arch_parent", bk: "arch_parent_d", face: "" } },
+  { arch: "general",  emoji: "🌐", color: "#E0E7FF", personas: [], default: "", demo: true, demoPersona: { id: "general", flag: "🌍", nk: "arch_general", bk: "arch_general_d", face: "" } },
 ];
 const ALL_PERSONAS = WORLD_PATHS.flatMap(w => w.personas);
 function setWorldFilter(f) { state.worldFilter = f; render(); }
+function demoSoon(arch) {
+  // demo-gated world: full experience ships post-hackathon
+  toast(t("demo_world_toast"));
+}
 function startWorldPath(arch, personaId) {
   state.wizard.archetype = arch;
   if (personaId) state.wizard.persona = personaId;
@@ -273,14 +279,14 @@ function vLanding() {
           `<button class="wtab ${(state.worldFilter||"all")===f?"on":""}" onclick="setWorldFilter('${f}')">${t("wf_"+f)}</button>`).join("")}
       </div>
       <div class="path-grid">
-        ${WORLD_PATHS.filter(p => p.personas.length > 0).filter(p => (state.worldFilter||"all")==="all" || p.arch===state.worldFilter).flatMap(p =>
-          p.personas.map(per => ({ arch: p.arch, color: p.color, emoji: p.emoji, persona: { ...per, name: t(per.nk), blurb: t(per.bk) } }))
+        ${WORLD_PATHS.filter(p => (state.worldFilter||"all")==="all" || p.arch===state.worldFilter).flatMap(p =>
+          (p.personas.length ? p.personas : (p.demo ? [p.demoPersona] : [])).map(per => ({ arch: p.arch, color: p.color, emoji: p.emoji, persona: { ...per, name: t(per.nk), blurb: t(per.bk) }, demo: p.demo || false }))
         ).map(p => {
           const prof = (state.profiles||[]).find(x => x.archetype === p.arch && x.persona === p.persona.id);
           const days = prof ? (prof.day - 1) : 0;
           const pct = Math.round(days / 5 * 100);
           return `
-          <article class="path-card ${prof ? "started" : ""}">
+          <article class="path-card ${prof ? "started" : ""} ${p.demo ? "demo-card" : ""}">
             <div class="pc-head">
               <div class="pc-icon" style="background:${p.color}"><img src="${p.persona.face}" alt="${p.persona.id}" loading="lazy"></div>
               <div class="pc-title">
@@ -298,8 +304,8 @@ function vLanding() {
               <div class="pc-bar"><span style="width:${Math.max(pct, prof ? 8 : 0)}%"></span></div>
               <span class="pc-pct">${prof ? `${days}/5 ${t("wp_days_word")}` : t("wp_not_started")}</span>
             </div>
-            <button class="btn ${prof ? "btn-primary" : "btn-ghost"} pc-cta" onclick="${prof ? `requireAuth(playProfile)('${prof.id}')` : `requireAuth(startWorldPath)('${p.arch}','${p.persona.id}')`}">
-              ${prof ? t("wp_continue") : t("wp_start")}
+            <button class="btn ${prof ? "btn-primary" : "btn-ghost"} pc-cta" onclick="${prof ? `requireAuth(playProfile)('${prof.id}')` : (p.demo ? `demoSoon('${p.arch}')` : `requireAuth(startWorldPath)('${p.arch}','${p.persona.id}')`)}">
+              ${prof ? t("wp_continue") : (p.demo ? t("demo_world_btn") : t("wp_start"))}
             </button>
           </article>`;
         }).join("")}
@@ -1521,6 +1527,8 @@ function nextDay(xpEarn) {
   p.xp += xpEarn;
   if (p.xp >= 100 * p.level) { p.level += 1; toast(t("lvl_up")); }
   if (!p.done.includes(dayJustFinished)) p.done.push(dayJustFinished);
+  // archive today's action log BEFORE resetting — the finale aggregates from p.log
+  p.log = (p.log || []).concat(state.events.map(e => `[d${dayJustFinished}] ${e}`)).slice(-60);
   p.day = Math.min(5, dayJustFinished + 1);
   state.debrief = null;
   state.events = [];
@@ -1535,9 +1543,10 @@ async function finishChapter() {
   // aggregate behavior across the run for the finale
   const dom = { risky: 0, verify: 0, refuse: 0 };
   (p.log || []).forEach(e => {
-    if (/risky|klik|kirim|OTP|data/i.test(e)) dom.risky++;
-    if (/cek|verif|detail|lapor/i.test(e)) dom.verify++;
-    if (/tolak|abaik|batal|block/i.test(e)) dom.refuse++;
+    // events are tracked with emoji prefixes: 🙈 ignore, 🔍 verify, 🔎, 🚨 report, 📲/💬 engagement
+    if (/risky|klik|kirim|OTP|data|📋|📤/i.test(e)) dom.risky++;
+    if (/cek|verif|detail|lapor|🔍|🔎|🚨/i.test(e)) dom.verify++;
+    if (/tolak|abaik|batal|block|ignore|🙈|reported/i.test(e)) dom.refuse++;
   });
   state.finale = {
     xp: p.xp,
@@ -1674,6 +1683,13 @@ function render() {
   };
   const v = views[state.screen] || vLanding;
   root.innerHTML = v();
+  // toast is global — visible on every screen (demo worlds, auth, etc.)
+  if (state.toast && !root.querySelector(".toast")) {
+    const el = document.createElement("div");
+    el.className = "toast";
+    el.textContent = typeof state.toast === "function" ? state.toast() : state.toast;
+    root.appendChild(el);
+  }
 }
 
 
