@@ -698,7 +698,7 @@ function vDashboard() {
           const done = p.done.includes(d.day);
           const cur = d.day === p.day;
           return `<div class="jday ${done ? "done" : ""} ${cur ? "cur" : ""}">
-            <div class="jdot">${done ? "✓" : d.day}</div><span>${t("day"+d.day+"_t").split(" ")[0]}</span>
+            <div class="jdot">${done ? "✓" : d.day}</div><span>${t("jday_label")(d.day)}</span>
           </div>`;
         }).join("")}
       </div>
