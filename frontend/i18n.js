@@ -13,6 +13,7 @@ function t(k) {
 
 const I18N = {
 id: {
+  jday_label: (n) => "Hari " + n,
   day_obj_h: "Misi Hari Ini",
   day_obj_hint: "Selesaikan semua misi untuk mengakhiri hari.",
   end_day_btn: (n) => "Akhiri Hari 99 ▸".replace("99", n),
@@ -190,6 +191,7 @@ id: {
   atk_generic: "Pesan baru dari nomor tidak dikenal…",
 },
 en: {
+  jday_label: (n) => "Day " + n,
   day_obj_h: "Today's Mission",
   day_obj_hint: "Complete all missions to end the day.",
   end_day_btn: (n) => "End Day 99 ▸".replace("99", n),
@@ -373,6 +375,7 @@ en: {
   atk_generic: "New message from an unknown number…",
 },
 es: {
+  jday_label: (n) => "Día " + n,
   day_obj_h: "Misión de Hoy",
   day_obj_hint: "Completa todas las misiones para terminar el día.",
   end_day_btn: (n) => "Terminar Día 99 ▸".replace("99", n),
@@ -500,6 +503,7 @@ es: {
   btn_login: "Entrar", btn_signup: "Crear Cuenta Demo",
 },
 fr: {
+  jday_label: (n) => "Jour " + n,
   day_obj_h: "Mission du Jour",
   day_obj_hint: "Termine toutes les missions pour finir la journée.",
   end_day_btn: (n) => "Finir Jour 99 ▸".replace("99", n),
@@ -628,6 +632,7 @@ fr: {
 },
 
 it: {
+  jday_label: (n) => "Giorno " + n,
   day_obj_h: "Missione di Oggi",
   day_obj_hint: "Completa tutte le missioni per terminare la giornata.",
   end_day_btn: (n) => "Termina Giorno 99 ▸".replace("99", n),
@@ -756,6 +761,7 @@ it: {
 },
 
 de: {
+  jday_label: (n) => "Tag " + n,
   day_obj_h: "Mission des Tages",
   day_obj_hint: "Erledige alle Missionen, um den Tag zu beenden.",
   end_day_btn: (n) => "Tag 99 beenden ▸".replace("99", n),
@@ -884,6 +890,7 @@ de: {
 },
 
 pt: {
+  jday_label: (n) => "Dia " + n,
   day_obj_h: "Missão de Hoje",
   day_obj_hint: "Complete todas as missões para terminar o dia.",
   end_day_btn: (n) => "Terminar Dia 99 ▸".replace("99", n),
