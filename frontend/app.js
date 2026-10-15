@@ -668,7 +668,7 @@ function vDashboard() {
     <div class="brand"><img class="brand-mark" src="HumanPatch_Logo.png?v=3" alt="CyberLife"></div>
     <div style="display:flex;gap:10px;align-items:center">
       ${langDropdown()}
-      <button class="btn btn-ghost nav-btn" onclick="go('profiles')">${t("profiles_h1").split(" ")[0]}</button>
+      <button class="btn btn-ghost nav-btn" onclick="go('profiles')">${t("nav_profiles")}</button>
     </div>
   </div></header>
   <main class="wrap" style="padding-bottom:44px">
