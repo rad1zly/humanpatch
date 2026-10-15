@@ -1,194 +1,208 @@
-# Storyline Blueprint — 5 Hari × 10 Domain × App Choreography
+# Storyline Blueprint — 10 DOMAIN UTAMA (isi + hari + app per hari)
 
-> Referensi wajib sebelum generate storyline baru (archetype mana pun).
-> Satu hari = 2 attack (utama + kedua) + 2-3 app utilitas. Total 10 slot = 10 domain.
+> Fokus: apa yang HARUS ada di tiap domain, muncul hari ke berapa, dan aplikasi apa yang dibuka.
+> 10 domain ÷ 5 hari = **2 domain per hari**. Urutan domain = urutan D1→D10.
 
-## Arc 5 Hari (progression biar nyambung)
+## Peta Besar
 
-| Hari | Tema | Skill | Prinsip |
-|---|---|---|---|
-| 1 | Sesuatu Masuk | **RECOGNIZE** | Kenali attack yang paling umum (chat + link) |
-| 2 | Konek & Share | **VERIFY** | Cek lingkungan: jaringan & apa yang kamu bagikan |
-| 3 | Device & Akun | **DEFEND** | Proteksi aset: HP & akun (APK, izin, OTP) |
-| 4 | Suara & Uang | **RESIST** | Tahan tekanan real-time (telepon + pembayaran) |
-| 5 | Giliran Orang Lain | **PROTECT** | Jadi garis pertahanan keluarga + pulih diri |
-
-Rules of thumb:
-- Kesulitan naik: day 1-2 attack kentara banget → day 4-5 attack halus/emosional.
-- Tiap attack SELALU masuk lewat **notif bar dulu**, baru dibuka di app-nya (check-first).
-- Attack kedua tiap hari biasanya **punya benang merah** dengan attack pertama di hari sebelumnya (contoh: data bocor day 2 dipakai blackmail day 5).
+| Hari | Domain yang dibawakan | App utama dibuka |
+|---|---|---|
+| 1 | **D1 Kata Sandi & Akun** + **D2 Phishing & Pesan** | notif → ChatLoop → SafeBrowse → MessageBox → Journal |
+| 2 | **D3 Browsing Aman** + **D4 Privasi Sosmed** | notif → Settings (WLAN) → ChatLoop (grup) → Journal |
+| 3 | **D5 Keamanan HP** + **D6 Lapor & Pulihkan** | notif → ChatLoop → Security → MessageBox → Journal |
+| 4 | **D7 Telepon & CS Palsu** + **D8 Pembayaran Digital** | notif → Phone → ChatLoop (+popup QR) |
+| 5 | **D9 Psikologi Penipuan** + **D10 Keluarga & Komunitas** | notif → MessageBox → ChatLoop → Phone → Journal |
 
 ---
 
-## Matriks Domain × Hari × App
+## D1 · KATA SANDI & AKUN
+**Substansi:** password unik per akun, 2FA, email pemulihan, manager password, tanda akun dibajak.
+**Hari 1** (attack ke-2, siang) — **bisa balik di Hari 3 sebagai kejadian**
 
-| # | Domain | Hari | Attack | App Attack | App Pendukung |
-|---|---|---|---|---|---|
-| 1 | `phishing_social` | 1 | Panitia lomba palsu | ChatLoop | SafeBrowse, Journal |
-| 2 | `credentials` | 1 | Portal login tiruan | SafeBrowse | MessageBox |
-| 3 | `browsing` | 2 | Evil-twin WiFi | **Settings** (WLAN) | notif bar |
-| 4 | `privacy` | 2 | Upload foto berisi kartu pelajar | ChatLoop (grup) | — |
-| 5 | `mobile` | 3 | APK premium gratis | ChatLoop → Settings/Security | Security |
-| 6 | `incident_response`* | 3 | OTP account takeover | MessageBox | Settings (aktif perangkat) |
-| 7 | `scam_calls` | 4 | Vishing minta dibacakan OTP | **Phone** (incoming call) | — |
-| 8 | `digital_payments` | 4 | Biaya admin via QRIS | ChatLoop (+popup QR) | — |
-| 9 | `family_community` | 5 | Ibu hampir kena, adik dapat "hadiah skin" | MessageBox | Phone |
-| 10 | `scam_psychology` | 5 | Blackmail pakai data bocor (day 2!) | ChatLoop | Journal |
+**Attack: Portal login tiruan**
+- App dibuka: **SafeBrowse** (dari link di ChatLoop attack D2 — nyambung 1 cerita)
+- Bentuk: halaman login MIRIP portal asli, URL beda dikit (`l0mba-nasional.id`, huruf dobel)
+- Ladder: minta login → error password palsu → minta kode verifikasi "pemulihan"
+- Red flags: URL beda, sesi tiba-tiba "kedaluwarsa", error terus padahal yakin benar, minta kode via chat
+- Safe: tutup tab → buka dari bookmark → ganti password → aktifkan 2FA
+- Konten edukasi debrief: kenapa password unik penting, apa itu 2FA, cek perangkat aktif
 
-*) `incident_response` nempel di domain credentials day 3 — kalau mau jadi domain sendiri, pisahkan jadi "langkah pemulihan" di debrief.
+**App pendukung:** MessageBox (SMS kode verifikasi asli masuk — pemain belajar bedain kode resmi vs diminta orang), Settings (cek akun terhubung)
 
 ---
 
-## Breakdown Per Hari
+## D2 · PHISHING & PESAN
+**Substansi:** kenali pesan janggal, cek pengirim, tautan palsu, impersonasi institusi, umpan hadiah/urgensi.
 
-### HARI 1 — RECOGNIZE (phishing_social + credentials)
-**Apps dibuka (urutan):** notif panel → ChatLoop (attack 1) → SafeBrowse (attack 2) → MessageBox (tutorial SMS) → Journal (intro misi)
+**Hari 1** (attack pertama, pagi — pintu masuk cerita)
 
-**Attack 1 — ChatLoop · phishing_social**
-- Pengirim: panitia/school-admin/aplikasi resmi PALSU
-- Opener: hadiah/finalis/undangan + deadline pendek
-- Ladder: klaim → link konfirmasi → minta data pribadi → ancam slot hangus
-- Red flags: pengirim asing, deadline panik, domain janggal, hadiah dari lomba yang gak pernah diikuti
-- Safe: abaikan + lapor; cek situs resmi langsung, bukan dari link
+**Attack: Panitia lomba palsu**
+- App dibuka: **ChatLoop** (chat masuk dari nomor asing)
+- Bentuk: "kamu finalis!" + link konfirmasi + deadline 3 jam
+- Ladder: klaim finalis → minta isi formulir data → minta nama ibu kandung "verifikasi" → ancam slot hangus
+- Red flags: tidak ada di kontak, deadline panik, domain janggal, lomba yang gak pernah diikuti
+- Safe: abaikan + lapor; cek situs resmi langsung
+- **Link attack ini yang buka attack D1 di SafeBrowse** (satu rantai cerita)
 
-**Attack 2 — SafeBrowse · credentials**
-- Bentuk: halaman login MIRIP portal asli (URL beda dikit: huruf dobel, tanda hubung)
-- Ladder: minta login → error password palsu → minta kode verifikasi
-- Red flags: URL beda, minta login ulang padahal barusan dipakai, error terus
-- Safe: tutup tab, buka dari bookmark, ganti password kalau kelanjut, aktifkan 2FA
-- Koneksi ke hari berikutnya: email+password yang bocor di sini dipakai attack day 3
-
-**Panel misi:** 📬 baca SMS · 💬 baca chat · 📓 buka Journal · 🔔 notif · 🔍 cek pengirim · ⚔️ selesaikan insiden
+**App pendukung:** sheet cek pengirim (nomor, verified ✗, saved ✗), Journal
 
 ---
 
-### HARI 2 — VERIFY (browsing + privacy)
-**Apps dibuka:** notif panel → **Settings/WLAN** (attack 1) → ChatLoop grup (attack 2) → Journal
+## D3 · BROWSING AMAN
+**Substansi:** HTTPS, domain palsu, WiFi umum/evil twin, auto-connect, captive portal.
 
-**Attack 1 — Settings · browsing (evil twin)**
-- Bentuk: SSID kembaran WiFi tempat umum (kafe/sekolah/kantor), sinyal kuat tanpa password
-- Ladder: konek → captive portal minta email+password → error → minta instal "profil jaringan"
-- Red flags: dua SSID mirip, WiFi minta password email, login gagal terus
+**Hari 2** (attack pertama, pagi — di lokasi baru: kafe)
+
+**Attack: Evil-twin WiFi**
+- App dibuka: **Settings** (bagian WLAN) — JANGAN chat
+- Notif: "Jaringan Wi-Fi gratis terdeteksi — sinyal kuat, tanpa password"
+- SSID **wajib generate AI** dari `cast.cafe_name` / `cast.wifi_ssid`
+- Bentuk: dua SSID mirip muncul bersamaan (asli vs kembaran palsu)
+- Ladder: konek gratis → captive portal minta email+password → error minta ulang → suruh instal "profil jaringan"
+- Red flags: dua SSID mirip, WiFi minta password email, login gagal terus, diminta instal profil
 - Safe: konfirmasi SSID ke staf, jangan pernah isi password email di portal WiFi, matikan auto-connect
-- **SSID wajib di-generate AI** dari `cast.cafe_name`/`wifi_ssid`
 
-**Attack 2 — ChatLoop grup · privacy**
-- Bentuk: BUKAN scammer — teman/kolaga ceroboh ajak upload foto berisi data (kartu pelajar/KTP/jadwal/struk)
-- Ladder: ajakan unggah → tekanan "semua juga upload" → upload duluan tanpa izin
-- Red flags: identitas terlihat jelas, jadwal bocorkan rutinitas, akun publik
-- Safe: blur data sebelum upload, jadwal gak perlu publik, private account
-- Benang merah: data yang bocor di sini jadi amunisi blackmail di **day 5**
-
-**Panel misi:** 📶 cek daftar WiFi di Settings · 🔔 notif · 🔍 cek pengirim · ⚔️ selesaikan insiden
+**App pendukung:** SafeBrowse (buka halaman setelah konek — HTTP tanpa gembok), notif bar
 
 ---
 
-### HARI 3 — DEFEND (mobile + incident_response)
-**Apps dibuka:** notif → ChatLoop (attack 1: link APK) → **Security** (audit izin — mission wajib) → MessageBox (attack 2) → Settings
+## D4 · PRIVASI SOSMED
+**Substansi:** apa yang aman dibagikan, metadata foto, lokasi, akun private vs publik, oversharing rutinitas.
 
-**Attack 1 — ChatLoop · mobile**
-- Bentuk: teman grup bagikan APK "premium gratis" (editor/game/tools) via link drive
+**Hari 2** (attack ke-2, siang — BUKAN scammer, ini human error)
+
+**Attack: Tekanan upload foto berisi data**
+- App dibuka: **ChatLoop** (grup tim/komunitas)
+- Bentuk: teman ajak upload foto persiapan — kartu pelajar/KTP/struk terlihat jelas + jadwal rutinitas
+- Ladder: ajakan unggah → "semua tim juga upload" → upload duluan tanpa izin → minta ikut
+- Red flags: identitas terlihat jelas di foto, jadwal bocorin rutinitas, akun publik, tekanan sosial
+- Safe: blur/tutup data sebelum upload, jadwal gak perlu publik, private account
+- **Data yang bocor di sini jadi amunisi D9 (Hari 5)** — benang merah cerita
+
+**App pendukung:** Journal (refleksi), preview galeri (opsional)
+
+---
+
+## D5 · KEAMANAN HP
+**Substansi:** izin aplikasi berlebihan, APK di luar toko resmi, spyware, update sistem, app pengunci.
+
+**Hari 3** (attack pertama, pagi)
+
+**Attack: APK premium gratis**
+- App dibuka: **ChatLoop** (link APK) → **Security** (audit izin — jadi misi hari itu)
+- Bentuk: teman grup bagi link APK editor/kasir/game "premium gratis"
 - Ladder: tawaran → "versi Play Store udah lama" → izin aneh (SMS, kontak, aksesibilitas) → data terkirim diam-diam
-- Red flags: di luar toko resmi, premium gratis gak masuk akal, izin gak nyambung dengan fungsi app
-- Safe: tolak, unduh hanya dari Play Store/App Store, cek izin & developer
+- Red flags: luar toko resmi, premium gratis, izin gak nyambung fungsi, developer gak jelas
+- Safe: jangan instal, toko resmi doang, cek izin & review, kalau keinstal: uninstall + ganti password + scan
 
-**Attack 2 — MessageBox · incident_response / credentials**
-- Bentuk: "Tim Dukungan Akun" — ada percobaan login ASLI dari perangkat lain (karena password bocor day 1)
-- Ladder: peringatan login + kode OTP → minta dibacakan "untuk pembatalan" → deadline 5 menit → ganti email pemulihan
-- Red flags: minta OTP (resmi TIDAK PERNAH), deadline panik, kanal gak resmi
-- Safe: jangan bagikan kode, cek perangkat aktif dari app langsung, ubah password, 2FA, logout semua device
-- Ini momen **pemulihan insiden**: kalau day 1 kecolongan, di sini ditutup
-
-**Panel misi:** 📱 audit izin di Security · 🔔 notif · 🔍 cek pengirim · ⚔️ selesaikan insiden
+**App pendukung:** Security (daftar izin app — misi explorasi wajib hari itu)
 
 ---
 
-### HARI 4 — RESIST (scam_calls + digital_payments)
-**Apps dibuka:** notif → **Phone/incoming call** (attack 1) → ChatLoop (attack 2 + popup QR)
+## D6 · LAPOR & PULIHKAN
+**Substansi:** ke mana melapor (platform, kanal resmi, aduankonten.id), langkah pemulihan akun, ganti password, logout perangkat, cek aktivitas.
 
-**Attack 1 — Phone · scam_calls (vishing)**
-- Bentuk: telepon masuk, suara tenang & profesional, klaim error pembayaran/verifikasi
+**Hari 3** (attack ke-2, sore — klimaks pertama cerita)
+
+**Attack: OTP account takeover**
+- App dibuka: **MessageBox** (peringatan "percobaan login") → Settings (perangkat aktif)
+- Konteks: ada login ASLI dari perangkat lain — **karena korban kecolongan password di Hari 1** (runtutan cerita)
+- Bentuk: "Tim Dukungan Akun" kirim kode, minta dibacakan "untuk pembatalan"
+- Ladder: peringatan login + OTP → minta dibaca "batalin" → "akun dikunci 5 menit lagi" → ganti email pemulihan
+- Red flags: minta OTP (resmi TIDAK PERNAH), deadline mepet, kanal gak resmi
+- Safe: jangan kasih kode → cek perangkat aktif dari app langsung → ganti password → 2FA → logout semua → **LAPOR**
+- Ini domain tempat **aksi melapor** diperkenalkan & dinilai (tombol lapor pertama kali meaningful)
+
+**App pendukung:** Phone (hubungi CS resmi — verifikasi balik), Journal
+
+---
+
+## D7 · TELEPON & CS PALSU
+**Substansi:** vishing, verifikasi balik (callback), suara meyakinkan ≠ resmi, nomor resmi vs nomor pribadi.
+
+**Hari 4** (attack pertama, pagi)
+
+**Attack: Telepon petugas dukungan**
+- App dibuka: **Phone** (incoming call UI — layar telepon masuk, bukan chat)
+- Bentuk: penelpon tenang-profesional, klaim error pembayaran pendaftaran
 - Ladder: klaim error → OTP dikirim ke HP korban → minta dibacakan → ancam batal/denda
-- Red flags: OTP masuk ke HP-mu tapi diminta orang lain bacakan, klaim yang gak bisa diverifikasi, tekanan waktu
-- Safe: tutup telepon, jangan bacakan kode apa pun, hubungi panitia/bank via kanal resmi, blokir
+- Red flags: OTP masuk ke HP-mu tapi diminta orang lain bacakan, klaim gak bisa diverifikasi, tekanan waktu
+- Safe: tutup telepon, jangan bacakan kode, hubungi institusi via kanal resmi (verifikasi balik), blokir
 
-**Attack 2 — ChatLoop · digital_payments**
-- Bentuk: tagihan fiktif untuk klaim hadiah/pengiriman/pajak — "bayar biaya admin via QRIS hari ini"
-- Ladder: klaim wajib bayar → QR buru-buru → bonus fiktif setelah bayar → rekening atas nama pribadi
-- Red flags: bayar untuk MENERIMA uang = scam, QR ke nama pribadi bukan lembaga, deadline tanpa dokumen
+**App pendukung:** contact list (nomor resmi tersimpan vs nomor asing), Phone log (misi explorasi)
+
+---
+
+## D8 · PEMBAYARAN DIGITAL
+**Substansi:** OTP pembayaran, QRIS dinamis vs statis, e-wallet, biaya fiktif, cek nama penerima.
+
+**Hari 4** (attack ke-2, siang)
+
+**Attack: Biaya administrasi fiktif via QRIS**
+- App dibuka: **ChatLoop** (+ **popup QR scanner tiruan**)
+- Bentuk: "finalis wajib bayar biaya admin Rp 250rb — hadiah Rp 5 juta langsung cair"
+- Ladder: klaim wajib bayar → QR buru-buru "hari ini" → bonus fiktif setelah bayar → QR atas nama pribadi
+- Red flags: bayar untuk MENERIMA uang = scam, QR nama pribadi bukan lembaga, deadline tanpa dokumen
 - Safe: jangan bayar, cek pengumuman resmi, lapor ke panitia asli & platform
 
-**Panel misi:** 📞 cek riwayat panggilan · 🔔 notif · 🔍 cek pengirim · ⚔️ selesaikan insiden
+**App pendukung:** MessageBox (SMS bank — pemain belajar bedain notif bank asli vs chat), Journal
 
 ---
 
-### HARI 5 — PROTECT (family_community + scam_psychology)
-**Apps dibuka:** notif → MessageBox (attack 1: keluarga) → ChatLoop (attack 2: blackmail) → Phone (hubungi keluarga) → Journal (closing)
+## D9 · PSIKOLOGI PENIPUAN
+**Substansi:** tekanan waktu, umpan greed, ketakutan/ancaman, authority bias, FOMO, kenali emosi sendiri saat dimanipulasi.
 
-**Attack 1 — MessageBox · family_community**
-- Bentuk: BUKAN korban = kamu. Keluarga yang kena: ibu ditelpon "petugas bank" minta no kartu, adik dapat "hadiah skin game" minta password
-- Ladder: ibu ragu-ragu cerita → adik panik mau kasih password → kamu harus jelasin & putusin
+**Hari 5** (attack ke-2, siang — klimaks psikologis)
+
+**Attack: Blackmail data bocor**
+- App dibuka: **ChatLoop** (chat anonim)
+- Konteks: penjahat pakai data ASLI korban (nama, sekolah, alamat — **bocoran dari D4 Hari 2**)
+- Ladder: data asli sebagai pembuka → ancam sebar 15 menit → "orang tuamu akan tahu" → hilang setelah dilaporkan
+- Red flags: data akurat bikin nyata, deadline 15 menit, ancaman sosial, transfer cepat ke pribadi
+- Safe: JANGAN bayar, jangan balas, screenshot bukti, blokir, lapor (platform + sekolah/orang tua + aduankonten.id)
+- Debrief wajib: "ini bukan salahmu" — destigmatization biar berani lapor
+- Review semua taktik hari 1-4 di debrief (tekanan waktu, umpan, authority, fear) — domain ini = meta-lesson
+
+**App pendukung:** Journal (refleksi emosi — "apa yang kamu rasakan saat baca ancaman itu?")
+
+---
+
+## D10 · KELUARGA & KOMUNITAS
+**Substansi:** transfer of learning — pemain jadi guru untuk orang tersayang, orang tua/adik lebih rentan, cara menjelaskan aturan sederhana.
+
+**Hari 5** (attack pertama, pagi — penutup emosional)
+
+**Attack: Keluarga hampir kena**
+- App dibuka: **MessageBox** (chat ibu) → **Phone** (telepon keluarga)
+- Bentuk: BUKAN korban = kamu. Ibu ditelpon "petugas bank" (D7), adik dapat "hadiah skin game" minta password (D2)
+- Ladder: ibu ragu cerita (sudah kasih no kartu, belum kode) → adik panik mau kasih password → kamu jelaskan & putusin
 - Red flags: bank gak pernah telepon minta data, hadiah game minta password
-- Safe: blokir kartu via app bank resmi, ganti password adik, ajarkan satu aturan: OTP/kartu/password gak pernah dibagikan
-- Ini penilaian TRANSFER OF LEARNING: player jadi guru
+- Safe: blokir kartu via app bank resmi, ganti password adik, lapor nomor penipu
+- Inti: aturan sederhana yang diajarkan ulang ke keluarga — "OTP, kartu, password gak pernah dibagikan"
+- Ini assessment sejati: pemain harus PAKAI pengetahuan D1-D9 buat nyelametin orang lain
 
-**Attack 2 — ChatLoop · scam_psychology (blackmail)**
-- Bentuk: penguntit anonim yang tahu data ASLI kamu (nama, sekolah, alamat — dari bocoran day 2)
-- Ladder: data asli sebagai pembuka → ancam sebar 15 menit → naikkan "orang tuamu akan tahu" → hilang setelah dilaporkan
-- Red flags: data akurat bikin terasa nyata, deadline 15 menit, ancaman sosial
-- Safe: JANGAAN bayar, jangan balas, screenshot bukti, blokir, lapor (platform + sekolah/orang tua + aduankonten.id)
-- Closing: "ini bukan salahmu" — de-stigmatization biar berani lapor
-
-**Panel misi:** 👨‍👩‍👧 baca pesan keluarga · 🔔 notif · 🔍 cek pengirim · ⚔️ selesaikan insiden
+**App pendukung:** Phone (callback keluarga), Journal (closing ceremony)
 
 ---
 
-## Aturan App Choreography (wajib patuh)
+## Rangkuman App Choreography per Hari
 
-1. **Attack gak pernah langsung kebuka.** Alur: notif bar → buka app → lihat list/daftar normal → item attack (unread) → preview (cek pengirim) → 3 pilihan (Cek profil / Abaikan / Balas).
-2. **App attack harus match kanal attack-nya:**
-   - Chat/messaging scam → ChatLoop (kontak) atau MessageBox (SMS)
-   - Login page / web phishing → SafeBrowse
-   - WiFi/network → **Settings (WLAN)** + notif — JANGAN ChatLoop
-   - APK/izin → ChatLoop (vector) + Security (audit)
-   - Telepon → **Phone**
-   - Pembayaran → ChatLoop + popup QR/e-wallet
-3. **Tiap hari max 2 attack.** App utilitas (Journal, Security) jadi misi explorasi, bukan attack.
-4. **Semua nama (kafe, SSID, sekolah, NPC) dari AI cast** — gak ada nama hardcoded kecuali fallback.
+| Hari | Urutan app dibuka | Attack | Eksplorasi (misi) |
+|---|---|---|---|
+| 1 | notif → ChatLoop → SafeBrowse → MessageBox → Journal | D2 chat phishing → D1 portal login | 📬 SMS · 💬 chat · 📓 Journal |
+| 2 | notif → Settings(WLAN) → ChatLoop grup → Journal | D3 evil twin → D4 upload privacy | 📶 WiFi list |
+| 3 | notif → ChatLoop → Security → MessageBox → Settings | D5 APK → D6 OTP takeover | 📱 audit izin |
+| 4 | notif → Phone → ChatLoop + popup QR | D7 vishing → D8 QRIS fiktif | 📞 call log |
+| 5 | notif → MessageBox → ChatLoop → Phone → Journal | D10 keluarga → D9 blackmail | 👨‍👩‍👧 pesan keluarga |
 
----
+**Aturan keras:**
+1. Attack SELALU masuk via notif dulu → app → list normal → item attack → preview cek pengirim → 3 pilihan.
+2. Kanal = app: WiFi→Settings, telepon→Phone, login→SafeBrowse, chat→ChatLoop/MessageBox, bayar→ChatLoop+QR.
+3. Max 2 attack per hari. App utilitas = misi eksplorasi.
+4. Semua nama (kafe, SSID, sekolah, NPC) dari AI cast.
 
-## Formula Reskin per Archetype (arc & domain TETAP, konteks ganti)
-
-| Hari | Pelajar (jadi) | Pedagang | Pekerja | Orang Tua | Umum |
-|---|---|---|---|---|---|
-| 1 phishing | panitia lomba | "supplier murah" via WA | "HRD" email gaji | "BPJS/kemenkes" SMS | hadiah undian |
-| 1 credentials | portal lomba | dashboard toko online | portal HRIS | login e-banking palsu | login media sosial |
-| 2 WiFi | kafe dekat sekolah | WiFi pasar/mall | WiFi coworking | WiFi posyandu/komunitas | WiFi terminal |
-| 2 privacy | kartu pelajar | foto etalaga + harga | badge & layar kerja | foto KTP di grup RT | lokasi real-time |
-| 3 APK | editor video | app kasir "gratis" | "tools produktivitas" | app "kesehatan gratis" | app penghasil uang |
-| 3 takeover | akun email | akun toko marketplace | akun kantor | akun media sosial | akun game |
-| 4 vishing | petugas lomba | "pembeli besar" telepon | "CEO/bos" telepon urgent | "petugas bank/dinkes" | "kurir/paket" |
-| 4 pembayaran | biaya admin hadiah | "bayar bea masuk barang" | "loan gaji" fee | "pajak/iniatan" | ongkir paket mahal |
-| 5 keluarga | ibu + adik | anak yang bantu toko | pasangan | SESAMA teman sepuh | tetangga |
-| 5 psychology | ancam sebar ke sekolah | ancam sebar ke pelanggan | ancam sebar ke kantor | ancam fitnah | ancam sebar kontak |
-
----
-
-## Checklist Generate Scenario (field wajib per attack)
-
-```
-id: story_<arc>_d<hari>_<nama>       # story_day: 1-5, story: <storyline-id>
-domain, channel (ChatLoop/MessageBox/SafeBrowse/Settings/Phone), sender
-language: "id", level: <1-5>          # naik per hari: 1,2,3,4,5
-attacker_character: 1 kalimat siapa & gaya dia
-attacker_goal: 1 kalimat tujuan dia
-opener: pesan pembuka (maks 2-3 kalimat, gaya chat asli)
-escalation_ladder: [4 langkah]        # tiap langkah 1 baris
-red_flags: [4-5 tanda]                # ini yang muncul di debrief 🚩
-safe_response: 1-2 kalimat            # muncul di debrief 🛡️
-lesson: 1-2 kalimat                   # muncul di debrief 🎓 (prinsip, bukan langkah)
-translations.en: { semua field atas, EN }  # WAJIB — EN session pakai ini
-```
-
-**Uji logika attack (sebelum submit):** bisakah orang awam jelaskan kenapa korban MUNGKIN percaya? Kalau gak (contoh: link butuh login padahal konten publik), buang.
+**Benang merah cerita (wajib dijaga):**
+- D2 (H1) link → buka D1 (H1) portal → password bocor → dipakai D6 (H3) takeover
+- D4 (H2) data bocor → dipakai D9 (H5) blackmail
+- D7 (H4) vishing → berulang ke ibu di D10 (H5)
+- Makin hari, attack makin halus & personal (level 1→5)
