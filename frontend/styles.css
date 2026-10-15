@@ -822,3 +822,9 @@ body { scroll-snap-type: y proximity; } /* gentle snap, still free-scrolls insid
 .flag-list { list-style:none; padding:0; margin:0; }
 .flag-list li { display:flex; gap:8px; padding:7px 0; border-top:1px solid rgba(148,163,184,.12); font-size:13px; line-height:1.5; }
 .flag-list li:first-child { border-top:0; }
+
+/* demo-gated worlds */
+.path-card.demo-card .pc-icon img { display: none; }
+.path-card.demo-card .pc-icon::after { font-size: 34px; content: "🚧"; }
+.path-card.demo-card { opacity: .82; }
+.path-card.demo-card:hover { opacity: 1; }
