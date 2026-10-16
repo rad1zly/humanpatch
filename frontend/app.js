@@ -901,6 +901,7 @@ function vAppWindow() {
   else if (app === "journal") body = vJournalApp();
   else if (app === "security") body = vSecurityApp();
   else if (app === "settings") body = vSettingsApp();
+  else if (app === "phone") body = vPhoneApp();
   else body = vGenericApp(meta);
   return `
   <div class="appwin">
@@ -927,6 +928,48 @@ function openApp(id) {
   // chat list; the player chooses to engage from there (check-first flow).
 }
 function closeApp() { state.openApp = null; state.openChat = null; state.atkPreview = false; render(); }
+
+/* ---------- Phone app: incoming-call attack + call log ---------- */
+function vPhoneApp() {
+  const w = state.world;
+  const atk = w.attack;
+  const live = atk && atk.app === "phone" && !atk.done;
+  if (live) {
+    // incoming call screen — the day-4 incident
+    const vt = verifyTargetFor(atk) || {};
+    return `
+    <div class="card center call-live">
+      <span style="font-size:44px" class="pulse">📞</span>
+      <h3 style="margin:8px 0 2px">${esc(atk.from)}</h3>
+      <p class="small dim">${L({id:"Panggilan masuk…", en:"Incoming call…", es:"Llamada entrante…", fr:"Appel entrant…", it:"Chiamata in arrivo…", de:"Eingehender Anruf…", pt:"Chamada recebida…"})}</p>
+      <p class="small" style="margin:10px 0;opacity:.85">${esc(atk.notifText)}</p>
+      <div class="call-actions">
+        <button class="btn btn-ghost" onclick="actDismiss('atk')">${L({id:"📵 Tolak", en:"📵 Decline", es:"📵 Rechazar", fr:"📵 Refuser", it:"📵 Rifiuta", de:"📵 Ablehnen", pt:"📵 Recusar"})}</button>
+        <button class="btn btn-primary" onclick="openAtkPreview()">${L({id:"🔍 Cek dulu", en:"🔍 Check first", es:"🔍 Revisar", fr:"🔍 Vérifier", it:"🔍 Verifica", de:"🔍 Erst prüfen", pt:"🔍 Verificar"})}</button>
+      </div>
+    </div>`;
+  }
+  // call log (day-4 exploration mission + history)
+  const cast = activeProfile()?.cast || {};
+  const log = [
+    { icon: "📵", name: atk ? atk.from : "—", when: "09:02", tag: {id:"Ditolak · mencurigakan", en:"Declined · suspicious", es:"Rechazada · sospechosa", fr:"Refusé · suspect", it:"Rifiutata · sospetta", de:"Abgelehnt · verdächtig", pt:"Recusada · suspeita"} },
+    { icon: "📞", name: (cast.npcs || []).find(n => n.role === "parent")?.name || L({id:"Ibu", en:"Mom", es:"Mamá", fr:"Maman", it:"Mamma", de:"Mama", pt:"Mãe"}), when: "08:14", tag: {id:"Kontak tersimpan", en:"Saved contact", es:"Contacto guardado", fr:"Contact enregistré", it:"Contatto salvato", de:"Gespeicherter Kontakt", pt:"Contato salvo"} },
+    { icon: "📞", name: (cast.npcs || []).find(n => n.role === "best_friend")?.name || L({id:"Sahabat", en:"Best friend", es:"Mejor amigo", fr:"Meilleur ami", it:"Migliore amico", de:"Bester Freund", pt:"Melhor amigo"}), when: "Kemarin", tag: {id:"Kontak tersimpan", en:"Saved contact", es:"Contacto guardado", fr:"Contact enregistré", it:"Contatto salvato", de:"Gespeicherter Kontakt", pt:"Contato salvo"} },
+  ];
+  return `
+    <h4 class="app-h">${L({id:"Riwayat Panggilan", en:"Call Log", es:"Registro de llamadas", fr:"Journal d'appels", it:"Registro chiamate", de:"Anrufliste", pt:"Histórico de chamadas"})}</h4>
+    <div class="notif-list">
+      ${log.map(c => `
+        <div class="notif-item">
+          <div class="cav" style="background:#E2E8F0">${c.icon}</div>
+          <div class="cb">
+            <div class="ct"><strong>${esc(c.name)}</strong> <span class="dim small">${c.when}</span></div>
+            <p class="small dim">${L(c.tag)}</p>
+          </div>
+        </div>`).join("")}
+    </div>
+    <p class="note">${L({id:"💡 Nomor asing yang mengaku petugas? Google nomornya, atau tutup dan hubungi kanal resmi.", en:"💡 Unknown number claiming to be staff? Search the number, or hang up and call the official line.", es:"💡 ¿Número desconocido de 'personal'? Búscalo o cuelga y llama al canal oficial.", fr:"💡 Numéro inconnu qui se dit « personnel » ? Cherchez le numéro, ou raccrochez et appelez le canal officiel.", it:"💡 Numero sconosciuto che dice di essere 'staff'? Cerca il numero o riaggancia e chiama il canale ufficiale.", de:"💡 Unbekannte Nummer als 'Mitarbeiter'? Nummer suchen oder auflegen und offiziellen Kanal anrufen.", pt:"💡 Número desconhecido dizendo ser 'equipe'? Pesquise o número ou desligue e chame o canal oficial."})}</p>`;
+}
 
 function vChatLoop() {
   if (state.openChat) return vChatThread(state.openChat);
@@ -969,13 +1012,20 @@ function vAtkPreview() {
   const atk = state.world?.attack;
   if (!atk) return "";
   const meta = (APP_CATALOG[atk.app] || {});
+  const vt = verifyTargetFor(atk) || {};
+  const isWifi = vt.kind === "wifi", isCall = vt.kind === "call";
+  const headerIcon = isWifi ? "📶" : (isCall ? "📞" : "👤");
+  const checkBtn = vt.previewBtn ? L(vt.previewBtn) : `🔍 ${t("check_sender")}`;
+  const subLine = isWifi ? L({id:"Jaringan terbuka terdeteksi", en:"Open network detected", es:"Red abierta detectada", fr:"Réseau ouvert détecté", it:"Rete aperta rilevata", de:"Offenes Netzwerk erkannt", pt:"Rede aberta detectada"})
+    : (isCall ? L({id:"Nomor tidak dikenal", en:"Unknown number", es:"Número desconocido", fr:"Numéro inconnu", it:"Numero sconosciuto", de:"Unbekannte Nummer", pt:"Número desconhecido"})
+    : t("not_in_contacts"));
   return `
   <div class="atk-preview">
     <div class="ap-head">
-      <button class="cav" style="background:#FEE2E2" onclick="showSenderSheet()" title="${t("check_sender")}">👤</button>
+      <button class="cav" style="background:${isWifi ? "#FEF3C7" : "#FEE2E2"}" onclick="showSenderSheet()" title="${t("check_sender")}">${headerIcon}</button>
       <div>
         <strong>${esc(atk.from)}</strong>
-        <p class="sub">${t("not_in_contacts")}</p>
+        <p class="sub">${subLine}</p>
       </div>
       <span class="dot-un"></span>
     </div>
@@ -985,9 +1035,9 @@ function vAtkPreview() {
     </div>
     <p class="ap-hint">💡 ${t("check_first_hint")}</p>
     <div class="ap-actions">
-      <button class="btn btn-ghost" onclick="showSenderSheet()">🔍 ${t("check_sender")}</button>
+      <button class="btn btn-ghost" onclick="showSenderSheet()">${checkBtn}</button>
       <button class="btn btn-ghost" onclick="closeAtkPreview(); actDismiss('${"atk"}')">${t("ignore")}</button>
-      <button class="btn btn-primary" onclick="closeAtkPreview(); startEncounter()">💬 ${t("reply_engage")}</button>
+      <button class="btn btn-primary" onclick="closeAtkPreview(); startEncounter()">${isCall ? "📞 " : "💬 "}${isCall ? L({id:"Angkat", en:"Answer", es:"Responder", fr:"Répondre", it:"Rispondi", de:"Annehmen", pt:"Atender"}) : t("reply_engage")}</button>
     </div>
   </div>`;
 }
@@ -1133,11 +1183,12 @@ function vSettingsApp() {
   const w = state.world;
   const rows = INAPP.settings.map(s => [s.icon, L(s.label), L(s.value)]);
   const wifiAtk = w.attack && w.attack.app === "settings" && !w.attack.done ? w.attack : null;
+  const isD2 = wifiAtk && /wifi/i.test(wifiAtk.scenario || "");
   return `
     <div class="card" style="padding:4px 12px">
       <p class="small dim" style="margin:8px 0 4px">WLAN / Wi-Fi</p>
       ${wifiAtk ? `
-      <div class="wifinet" onclick="openAtkPreview()" style="display:flex;gap:10px;align-items:center;padding:10px 0;border-top:1px solid rgba(148,163,184,.15)">
+      <div class="wifinet" onclick="wifiConnectFlow()" style="display:flex;gap:10px;align-items:center;padding:10px 0;border-top:1px solid rgba(148,163,184,.15)">
         <span style="font-size:18px">📶</span>
         <div style="flex:1">
           <strong class="small">${esc(wifiAtk.from)}</strong>
@@ -1152,7 +1203,7 @@ function vSettingsApp() {
       </div>
       <div style="display:flex;gap:10px;align-items:center;padding:10px 0;border-top:1px solid rgba(148,163,184,.15)">
         <span style="font-size:18px">📶</span>
-        <div style="flex:1"><strong class="small">${t("wifi_mobile")}</strong><p class="small dim" style="margin:0">${t("wifi_data")}</p></div>
+        <div style="flex:1"><strong class="small">${t("wifi_mobile")}</strong><p class="small dim" style="margin:0">${isD2 ? L({id:"Kuota tersisa 120 MB — tipis untuk tugas hari ini", en:"120 MB left — tight for today's task", es:"Quedan 120 MB — justo para la tarea de hoy", fr:"120 Mo restants — juste pour la tâche du jour", it:"Restano 120 MB — appena per il compito di oggi", de:"120 MB übrig — knapp für die heutige Aufgabe", pt:"Faltam 120 MB — apertado para a tarefa de hoje"}) : t("wifi_data")}</p></div>
         <span class="dim small">4G</span>
       </div>
     </div>
@@ -1167,6 +1218,18 @@ function vSettingsApp() {
       <div style="flex:1"><strong class="small">${t("perm_link")}</strong><p class="small dim" style="margin:0">${t("perm_link_sub")}</p></div>
       <span class="dim">›</span>
     </div>`;
+}
+/* WiFi intent flow: connect → (no login needed? safe) → login gate = the actual trap */
+let _wifiConn = null;
+function wifiConnectFlow() {
+  // simulate the connect + captive-portal gate; a network that never asks for
+  // credentials can't phish — the login form IS the attack surface
+  _wifiConn = true;
+  toast(L({id:"Menghubungkan…", en:"Connecting…", es:"Conectando…", fr:"Connexion…", it:"Connessione…", de:"Verbinden…", pt:"Conectando…"}));
+  setTimeout(() => {
+    if (state.openApp === "settings" && _wifiConn) { openAtkPreview(); }
+    _wifiConn = null;
+  }, 900);
 }
 function openPerms() {
   trackEvent("🛡️ permissions");
@@ -1234,7 +1297,7 @@ function dayObjectives(day) {
   const common = [
     { id: "obj_notif", icon: "🔔", label: {id:"Cek panel notifikasi", en:"Check the notification panel", es:"Revisa el panel de notificaciones", fr:"Consulte le panneau de notifications", it:"Controlla il pannello notifiche", de:"Prüfe das Benachrichtigungsfeld", pt:"Confira o painel de notificações"},
       done: state.notifSeen || false },
-    { id: "obj_verify", icon: "🔍", label: {id:"Cek pengirim pesan mencurigakan", en:"Verify the suspicious sender", es:"Verifica el remitente sospechoso", fr:"Vérifiez l'expéditeur suspect", it:"Verifica il mittente sospetto", de:"Prüfe den verdächtigen Absender", pt:"Verifique o remetente suspeito"},
+    { id: "obj_verify", icon: "🔍", label: (verifyLabelFor(atk) || {id:"Cek pengirim pesan mencurigakan", en:"Verify the suspicious sender"}),
       done: readAtk || false },
     { id: "obj_enc", icon: "⚔️", label: {id:"Selesaikan insiden hari ini (serang atau abaikan)", en:"Resolve today's incident (fight or ignore)", es:"Resuelve el incidente de hoy", fr:"Résolvez l'incident du jour", it:"Risolvi l'incidente di oggi", de:"Löse das heutige Ereignis", pt:"Resolva o incidente de hoje"},
       done: !atkOpen },
@@ -1314,7 +1377,7 @@ function vSheet() {
     <div class="sheet">
       <div style="display:flex;gap:12px;align-items:center;margin-bottom:10px">
         <div style="width:48px;height:48px;border-radius:50%;background:${s.color || "#E2E8F0"};display:grid;place-items:center;font-size:22px">${s.avatar || "👤"}</div>
-        <div><h3>${esc(s.name)}</h3><p class="sub">${esc(s.sub || "")}</p></div>
+        <div><h3>${esc(s.name)}</h3><p class="sub">${esc(typeof s.sub === "object" ? L(s.sub) : (s.sub || ""))}</p></div>
       </div>
       <div class="row"><b>${t("sheet_number")}</b><span>${esc(s.number)}</span></div>
       <div class="row"><b>${t("sheet_verified")}</b><span>${s.verified ? t("v_yes") : t("v_no")}</span></div>
@@ -1324,6 +1387,26 @@ function vSheet() {
         <button class="btn btn-ghost btn-block" onclick="senderChecked('${esc(s.name)}')">${t("done_checking")}</button>
       </div>
       <p class="note">${t("sheet_note")}</p>
+    </div>`;
+  }
+  if (s.type === "wifi" || s.type === "caller") {
+    const vt = s.vt || {};
+    return `
+    <div class="sheet-backdrop" onclick="closeSheet()"></div>
+    <div class="sheet">
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:10px">
+        <div style="width:48px;height:48px;border-radius:50%;background:${s.color || "#FEF3C7"};display:grid;place-items:center;font-size:22px">${s.avatar || "📶"}</div>
+        <div><h3>${esc(s.name)}</h3><p class="sub">${esc(typeof s.sub === "object" ? L(s.sub) : (s.sub || ""))}</p></div>
+      </div>
+      ${(vt.rows || []).map(([key, val]) => {
+        const label = key.startsWith("sheet_") ? t(key) : key;
+        const display = val == null ? t("v_no") : (typeof val === "object" ? L(val) : val);
+        return `<div class="row"><b>${esc(label)}</b><span>${esc(display)}</span></div>`;
+      }).join("")}
+      <div class="actions">
+        <button class="btn btn-ghost btn-block" onclick="senderChecked('${esc(s.name)}')">${t("done_checking")}</button>
+      </div>
+      ${vt.hint ? `<p class="note">${esc(L(vt.hint))}</p>` : `<p class="note">${t("sheet_note")}</p>`}
     </div>`;
   }
   return "";
@@ -1428,12 +1511,63 @@ async function sendChat() {
 }
 function scrollChat() { const el = $("#chat-scroll"); if (el) el.scrollTop = el.scrollHeight; }
 
+/* ---------- channel-aware verification (chat sender / wifi SSID / caller number) ---------- */
+/* Each day's incident arrives through a DIFFERENT channel — the "verify" action
+   must match it: chat → check the sender's number, wifi → inspect the network
+   details (open vs locked, twin SSID), call → look up the number. */
+function verifyTargetFor(atk) {
+  if (!atk) return null;
+  if (atk.app === "settings" || /wifi/i.test(atk.scenario || "")) {
+    return {
+      kind: "wifi",
+      label: {id:"Periksa detail jaringan mencurigakan", en:"Inspect the suspicious network", es:"Inspecciona la red sospechosa", fr:"Inspectez le réseau suspect", it:"Ispeziona la rete sospetta", de:"Prüfe das verdächtige Netzwerk", pt:"Inspecione a rede suspeita"},
+      previewBtn: {id:"🔍 Detail jaringan", en:"🔍 Network details", es:"🔍 Detalles de red", fr:"🔍 Détails du réseau", it:"🔍 Dettagli rete", de:"🔍 Netzwerkdetails", pt:"🔍 Detalhes da rede"},
+      sheetTitle: atk.from,
+      sheetSub: {id:"Jaringan Wi-Fi terdeteksi", en:"Detected Wi-Fi network", es:"Red Wi-Fi detectada", fr:"Réseau Wi-Fi détecté", it:"Rete Wi-Fi rilevata", de:"Erkanntes WLAN", pt:"Rede Wi-Fi detectada"},
+      rows: [
+        ["sheet_security", {id:"Open (tanpa password) ⚠️", en:"Open (no password) ⚠️", es:"Abierta (sin contraseña) ⚠️", fr:"Ouvert (sans mot de passe) ⚠️", it:"Aperta (senza password) ⚠️", de:"Offen (ohne Passwort) ⚠️", pt:"Aberta (sem senha) ⚠️"}],
+        ["sheet_twin", {id:"Ada SSID kembar terdaftar ⚠️", en:"Twin SSID also visible ⚠️", es:"SSID gemelo también visible ⚠️", fr:"SSID jumeau également visible ⚠️", it:"SSID gemello visibile ⚠️", de:"Zwillings-SSID sichtbar ⚠️", pt:"SSID gêmeo visível ⚠️"}],
+        ["sheet_owner", {id:"Pemilik tidak diketahui", en:"Owner unknown", es:"Propietario desconocido", fr:"Propriétaire inconnu", it:"Proprietario sconosciuto", de:"Besitzer unbekannt", pt:"Proprietário desconhecido"}],
+      ],
+      hint: {id:"💡 Jaringan publik open + SSID kembar = taktik evil-twin. Selalu konfirmasi ke staf.", en:"💡 Open network + twin SSID = evil-twin tactic. Always confirm with staff.", es:"💡 Red abierta + SSID gemelo = evil-twin. Confirma con el personal.", fr:"💡 Réseau ouvert + SSID jumeau = evil-twin. Confirmez avec le personnel.", it:"💡 Rete aperta + SSID gemello = evil-twin. Conferma col personale.", de:"💡 Offenes Netz + Zwillings-SSID = Evil-Twin. Frag das Personal.", pt:"💡 Rede aberta + SSID gêmeo = evil-twin. Confirme com a equipe."},
+    };
+  }
+  if (atk.app === "phone") {
+    return {
+      kind: "call",
+      label: {id:"Periksa nomor penelepon mencurigakan", en:"Look up the suspicious caller", es:"Investiga la llamada sospechosa", fr:"Vérifiez l'appelant suspect", it:"Verifica il chiamante sospetto", de:"Prüfe den verdächtigen Anrufer", pt:"Verifique a chamada suspeita"},
+      previewBtn: {id:"🔍 Cek nomor", en:"🔍 Check the number", es:"🔍 Verifica el número", fr:"🔍 Vérifiez le numéro", it:"🔍 Verifica il numero", de:"🔍 Nummer prüfen", pt:"🔍 Verifique o número"},
+      sheetTitle: atk.from,
+      sheetSub: {id:"Panggilan masuk", en:"Incoming call", es:"Llamada entrante", fr:"Appel entrant", it:"Chiamata in arrivo", de:"Eingehender Anruf", pt:"Chamada recebida"},
+      rows: [
+        ["sheet_number", "0813-" + String(1000 + (atk.seed % 8999)) + "-•••"],
+        ["sheet_verified", null], // filled by vSheet with v_no
+        ["sheet_owner", {id:"Tidak terdaftar sebagai resmi ⚠️", en:"Not listed as official ⚠️", es:"No listado como oficial ⚠️", fr:"Non répertorié comme officiel ⚠️", it:"Non elencato come ufficiale ⚠️", de:"Nicht als offiziell gelistet ⚠️", pt:"Não listado como oficial ⚠️"}],
+      ],
+      hint: {id:"💡 CS resmi tidak pernah minta kode OTP via telepon. Tutup, hubungi kanal resmi.", en:"💡 Real support never asks for OTP codes over the phone. Hang up, call the official line.", es:"💡 El soporte real nunca pide OTP por teléfono. Cuelga y llama al canal oficial.", fr:"💡 Le vrai support ne demande jamais d'OTP par téléphone. Raccrochez, appelez le canal officiel.", it:"💡 Il supporto vero non chiede OTP al telefono. Riaggancia e chiama il canale ufficiale.", de:"💡 Echter Support fragt nie nach OTP am Telefon. Auflegen, offiziellen Kanal anrufen.", pt:"💡 Suporte real nunca pede OTP por telefone. Desligue e chame o canal oficial."},
+    };
+  }
+  // default: chat/DM sender
+  return {
+    kind: "chat",
+    label: {id:"Cek pengirim pesan mencurigakan", en:"Verify the suspicious sender", es:"Verifica el remitente sospechoso", fr:"Vérifiez l'expéditeur suspect", it:"Verifica il mittente sospetto", de:"Prüfe den verdächtigen Absender", pt:"Verifique o remetente suspeito"},
+    previewBtn: null, // uses t("check_sender")
+    sheetTitle: atk.from,
+    sheetSub: (APP_CATALOG[atk.app] || {}).name || "",
+    rows: null, // classic rows (number/verified/saved/history)
+    hint: null,
+  };
+}
+function verifyLabelFor(atk) { const v = verifyTargetFor(atk); return v ? v.label : null; }
+
 function showSenderSheet() {
   const atk = state.world?.attack;
   if (!atk) return;
+  const v = verifyTargetFor(atk);
   if (!state.events.some(e => e.includes("🔍"))) trackEvent("🔍 verified: " + atk.from);
-  state.sheet = { type: "sender", name: atk.from, sub: (APP_CATALOG[atk.app] || {}).name || "",
-    number: "0813-" + String(1000 + (atk.seed % 8999)) + "-•••", verified: false, saved: false, history: false, color: "#FEE2E2", avatar: "👤" };
+  state.sheet = { type: v.kind === "wifi" ? "wifi" : (v.kind === "call" ? "caller" : "sender"),
+    name: v.sheetTitle, sub: v.sheetSub, vt: v, number: "0813-" + String(1000 + (atk.seed % 8999)) + "-•••",
+    verified: false, saved: false, history: false, color: v.kind === "wifi" ? "#FEF3C7" : "#FEE2E2", avatar: v.kind === "wifi" ? "📶" : (v.kind === "call" ? "📞" : "👤") };
   render();
 }
 
