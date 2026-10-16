@@ -575,4 +575,21 @@ def profile(sid: str):
 _frontend_dir = Path(__file__).resolve().parent.parent.parent / "frontend"
 if _frontend_dir.is_dir():
     from fastapi.staticfiles import StaticFiles
-    app.mount("/", StaticFiles(directory=str(_frontend_dir), html=True), name="frontend")
+    from starlette.responses import Response
+
+    class NoCacheStaticFiles(StaticFiles):
+        """HTML must never be heuristically cached — players would see stale
+        builds after every deploy. Assets keep ETag revalidation; HTML gets
+        an explicit no-store."""
+        def file_response(self, *args, **kwargs):
+            resp = super().file_response(*args, **kwargs)
+            path = str(args[1] if len(args) > 1 else kwargs.get("path", ""))
+            if path.endswith(".html") or path == "" or path.endswith("/"):
+                resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+                resp.headers["Pragma"] = "no-cache"
+                resp.headers["Expires"] = "0"
+            else:
+                resp.headers["Cache-Control"] = "no-cache"
+            return resp
+
+    app.mount("/", NoCacheStaticFiles(directory=str(_frontend_dir), html=True), name="frontend")
