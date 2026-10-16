@@ -241,11 +241,11 @@ function vLanding() {
             <span>${t("day2_hint")(3)}</span>
           </div>
           <div class="hv-apps">
-            ${[["💬","#0D408E"],["✉️","#2563EB"],["📧","#DC2626"],["🌐","#334155"],["👛","#7C3AED"],["🛒","#EA580C"],["📸","#DB2777"],["🎓","#0891B2"]].map(a =>
-              `<span class="hv-app" style="background:${a[1]}">${a[0]}</span>`).join("")}
+            ${[["icons/chatloop.png"],["icons/messagebox.png"],["icons/mailbox.png"],["icons/safebrowse.png"],["icons/dailymart.png"],["icons/socialsquare.png"]].map(a =>
+              `<img class="hv-app" src="${a[0]}" alt="">`).join("")}
           </div>
           <div class="hv-notif">
-            <div class="hv-n"><span class="hv-ni" style="background:#EA580C">🛒</span><div><strong>DailyMart</strong><p>${L(INAPP.sms[1].text).slice(0, 40)}…</p></div></div>
+            <div class="hv-n"><span class="hv-ni"><img src="icons/dailymart.png" alt=""></span><div><strong>DailyMart</strong><p>${L(INAPP.sms[1].text).slice(0, 40)}…</p></div></div>
             <div class="hv-n"><span class="hv-ni" style="background:#64748B">👤</span><div><strong>0813-5563-•••</strong><p>${t("atk_generic")}</p></div></div>
           </div>
         </div>
@@ -935,7 +935,7 @@ function dismissWelcome() {
         const unreadN = unreadFor(a.id);
         const badge = isAtk ? "!" : (unreadN > 9 ? "9+" : unreadN || "");
         return `<button class="app-icon" onclick="openApp('${a.id}')">
-          <span class="ai" style="background:${a.bg}">${a.icon}${badge ? `<span class="badge">${badge}</span>` : ""}</span>
+          ${a.iconImg ? `<img class="ai-img" src="${a.iconImg}" alt="${a.name}">${badge ? `<span class="badge">${badge}</span>` : ""}` : `<span class="ai" style="background:${a.bg}">${a.icon}${badge ? `<span class="badge">${badge}</span>` : ""}</span>`}
           <span class="label">${a.name}</span>
         </button>`;
       }).join("")}
@@ -946,7 +946,7 @@ function dismissWelcome() {
         const unreadN = unreadFor(a.id);
         const badge = (a.id === atkApp && w.attack) ? "!" : (unreadN > 9 ? "9+" : unreadN || "");
         return `<button class="app-icon" onclick="openApp('${a.id}')" aria-label="${a.name}">
-          <span class="ai" style="background:${a.bg};width:46px;height:46px;font-size:20px">${a.icon}${badge ? `<span class="badge">${badge}</span>` : ""}</span>
+          ${a.iconImg ? `<img class="ai-img dock" src="${a.iconImg}" alt="${a.name}">${badge ? `<span class="badge">${badge}</span>` : ""}` : `<span class="ai" style="background:${a.bg};width:46px;height:46px;font-size:20px">${a.icon}${badge ? `<span class="badge">${badge}</span>` : ""}</span>`}
         </button>`;
       }).join("")}
     </div>
@@ -973,7 +973,7 @@ function vAppWindow() {
   <div class="appwin">
     <div class="appbar">
       <button class="back" onclick="closeApp()" aria-label="back">${icons.back}</button>
-      <h5>${meta.icon} ${meta.name}</h5>
+      <h5>${meta.iconImg ? `<img class="ai-img sm" src="${meta.iconImg}" alt="">` : meta.icon} ${meta.name}</h5>
     </div>
     <div class="appbody">${body}</div>
   </div>`;
@@ -1075,6 +1075,11 @@ function openAtkPreview() {
 function closeAtkPreview() {
   state.atkPreview = false;
   render();
+}
+/* app icon renderer: uses the user's PNG icon set when available */
+function appIconEl(meta, style, badge) {
+  if (meta && meta.iconImg) return `<img class="ai-img" src="${meta.iconImg}" style="${style || ""}" alt="${meta.name}">${badge || ""}`;
+  return `<span class="ai" style="${style || ""}">${meta ? meta.icon : "?"}${badge || ""}</span>`;
 }
 function vAtkPreview() {
   const atk = state.world?.attack;
