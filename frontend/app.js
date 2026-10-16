@@ -956,6 +956,7 @@ function vPhoneApp() {
         <button class="btn btn-ghost" onclick="actDismiss('atk')">${L({id:"📵 Tolak", en:"📵 Decline", es:"📵 Rechazar", fr:"📵 Refuser", it:"📵 Rifiuta", de:"📵 Ablehnen", pt:"📵 Recusar"})}</button>
         <button class="btn btn-primary" onclick="openAtkPreview()">${L({id:"🔍 Cek dulu", en:"🔍 Check first", es:"🔍 Revisar", fr:"🔍 Vérifier", it:"🔍 Verifica", de:"🔍 Erst prüfen", pt:"🔍 Verificar"})}</button>
       </div>
+      <button class="btn btn-ghost btn-block" style="margin-top:8px;color:#94A3B8" onclick="closeApp()">${L({id:"← Kembali — biarkan berdering", en:"← Back — let it ring", es:"← Volver — dejar sonar", fr:"← Retour — laisser sonner", it:"← Indietro — lascia suonare", de:"← Zurück — klingeln lassen", pt:"← Voltar — deixar tocando"})}</button>
     </div>`;
   }
   // call log (day-4 exploration mission + history)
@@ -1037,6 +1038,7 @@ function vAtkPreview() {
         <p class="sub">${subLine}</p>
       </div>
       <span class="dot-un"></span>
+      <button class="ap-close" onclick="closeAtkPreview()" aria-label="back" title="${L({id:"Tutup dulu — insiden tetap ada", en:"Close for now — incident stays", es:"Cerrar por ahora — el incidente sigue", fr:"Fermer pour l'instant — l'incident reste", it:"Chiudi per ora — l'incidente resta", de:"Erst schließen — der Vorfall bleibt", pt:"Fechar por ora — o incidente continua"})}">✕</button>
     </div>
     <div class="ap-bubble">
       <p>${esc(atk.notifText)}</p>
@@ -1525,6 +1527,17 @@ async function startEncounter() {
   const w = state.world;
   const atk = w.attack;
   if (!atk || atk.done) { toast(t("no_event")); return; }
+  // RESUME an in-progress conversation instead of restarting it — the player
+  // may back out of a chat and reopen it; the thread must survive that.
+  const m = state.mission;
+  if (m && !m.finished && state.encounterChat?.length && (m.scenario?.id || m.scenario) === atk.scenario) {
+    state.openApp = null;
+    state.atkPreview = false;
+    state.notifOpen = false;
+    state.screen = "encounter";
+    render();
+    return;
+  }
   state.openApp = null;
   state.atkPreview = false;
   state.notifOpen = false;
@@ -1702,9 +1715,8 @@ async function finishEncounter(outcome) {
   render();
 }
 function exitEncounter() {
-  if (state.mission && !state.mission.finished) {
-    if (!confirm(t("exit_enc_confirm"))) return;
-  }
+  // back out of the chat — the mission stays ALIVE and resumable (player is
+  // never locked in; reopening the incident resumes the same thread)
   state.screen = "phone"; render();
 }
 
