@@ -29,7 +29,7 @@ deploy/    AMD setup notes (vLLM + ROCm on Instinct MI300X)
 
 ## The AMD part
 
-The adversary and coach are open-weight models (**Qwen2.5-7B-Instruct**) served via **vLLM on AMD Instinct MI300X** (ROCm) on AMD Developer Cloud. Self-hostable inference = a government can deploy HumanPatch fully on-prem. Citizen data never leaves the country.
+The adversary and coach run on **AMD Radeon Open API** (`https://developer.amd.com.cn/radeon/api/v1`) serving **DeepSeek-V4-Flash** — an OpenAI-compatible endpoint on AMD hardware (the client also targets vLLM on **AMD Instinct MI300X** / ROCm for full self-hosting). Self-hostable inference = a government can deploy HumanPatch fully on-prem. Citizen data never leaves the country.
 
 ## Run locally (dev mode, no GPU needed)
 
@@ -41,9 +41,25 @@ MOCK_LLM=1 uvicorn app.main:app --reload --port 8000
 # then open frontend/index.html  (or serve it: python3 -m http.server 8080)
 ```
 
-`MOCK_LLM=1` uses a deterministic scripted adversary so the engine is fully testable before the GPU endpoint exists.
+`MOCK_LLM=1` uses a deterministic scripted adversary so the engine is fully testable before the LLM endpoint exists.
 
-## Run with the real LLM (vLLM on AMD)
+## Run with the real LLM (AMD Radeon Open API)
+
+```bash
+cd backend
+cp .env.example .env   # or create .env manually — NEVER commit it (gitignored)
+
+# .env contents:
+# LLM_PROVIDER=amdradeon
+# LLM_MODEL=DeepSeek-V4-Flash
+# AMD_RAIDEN_API_KEY=<your key from developer.amd.com.cn>
+
+uvicorn app.main:app --port 8000
+```
+
+The client (`backend/app/llm/client.py`) is provider-aware with a fallback chain (`DeepSeek-V4.1-Flash` → `DeepSeek-V4-Flash`) and retries on 429/5xx, since the endpoint is concurrency-limited.
+
+### Alternative: self-hosted vLLM on AMD Instinct (MI300X)
 
 ```bash
 # on AMD Developer Cloud (MI300X):
