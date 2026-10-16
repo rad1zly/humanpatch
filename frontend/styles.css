@@ -49,7 +49,7 @@ img { max-width: 100%; }
 }
 .topbar-inner { display: flex; align-items: center; justify-content: space-between; height: 56px; }
 .brand { display: flex; align-items: center; gap: 8px; font-weight: 800; letter-spacing: -.02em; }
-.brand-mark { width: 180px; height: 60px; display: block; flex-shrink: 0; object-fit: contain; background: transparent; }
+/* legacy brand-mark size (v64) — superseded */
 
 .brand span small { display: block; font-size: 10px; font-weight: 600; color: var(--muted); letter-spacing: .12em; }
 
@@ -599,7 +599,7 @@ body { scroll-snap-type: y proximity; } /* gentle snap, still free-scrolls insid
 }
 .topbar-fixed .brand > span { color: var(--ink); }
 .topbar-fixed .brand small { color: #64748B; }
-.topbar-fixed .brand-mark { width: 200px; height: 81px; cursor: pointer; transition: transform .2s; object-fit: contain; background: transparent; }
+.topbar-fixed /* legacy brand-mark size (v64 large) — superseded */
 .topbar-fixed .navlink { color: #334155; }
 .topbar-fixed .navlink:hover { color: #0F172A; background: rgba(15,23,42,.07); }
 .topbar-fixed .navburger { color: #0F172A; border-color: #CBD5E1; background: #fff; }
@@ -855,3 +855,13 @@ body { scroll-snap-type: y proximity; } /* gentle snap, still free-scrolls insid
 .login-form { max-width:280px; margin:14px auto 6px; text-align:left; }
 .lfield { background:#fff; border:1px solid #CBD5E1; border-radius:10px; padding:10px 12px; margin-bottom:8px; color:#94A3B8; font-size:13px; }
 .footer-logo { height: 72px; width: auto; max-width: 100%; object-fit: contain; filter: drop-shadow(0 2px 6px rgba(8,37,79,.18)); margin: 0 auto; }
+
+/* --- topbar logo alignment (v69): match the page content grid ---
+   snap-page content = max-width 1280 + padding clamp(24px,7vw,120px);
+   topbar was .wrap-wide (1080/1280/1400 + 20px) → logo sat ~23px right of content.
+   Same box model here so the brand hugs the page's left edge at every viewport. */
+.topbar .topbar-inner { max-width: 1280px; padding: 0 clamp(24px, 7vw, 120px); }
+/* trimmed logo is 1481×348 (4.26:1) — size by height so it renders bigger & sharper */
+/* final brand-mark: trimmed 1481×348 asset, sized by height so the
+   wordmark reads full-size; width follows the 4.26:1 aspect ratio */
+.brand-mark { width: auto !important; height: 46px !important; max-width: none !important; object-fit: contain; display: block; flex-shrink: 0; cursor: pointer; }
