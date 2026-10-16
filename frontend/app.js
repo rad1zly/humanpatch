@@ -987,6 +987,7 @@ function openApp(id) {
   if (id === "settings" && !state.events.some(e => e.includes("📶"))) trackEvent("📶 WiFi settings");
   if (id === "phone" && !state.events.some(e => e.includes("📞"))) trackEvent("📞 phone log");
   if (id === "chatloop") state.openedChat = true;
+  if (id === "mailbox" && !state.events.some(e => e.includes("📧"))) trackEvent("📧 Mailbox");
   if (id === "security") state.openedSecurity = true;
   if (id === "journal") state.openedJournal = true;
   render();
@@ -1420,6 +1421,27 @@ function readSms(id, from, text) {
 
 /* ---------- Day-1 exploration objectives ---------- */
 /* ---------- per-day mission panel (all days, story-aligned) ---------- */
+/* CHANNEL-DRIVEN objectives: each chapter's "where to look" objective
+   is derived from the active attack's app (A slot + B slot), NOT hardcoded
+   per day. That way Ch1→Mailbox, Ch3→Settings, Ch6→MessageBox, Ch7→Phone
+   etc. all tell the player the RIGHT place to inspect. */
+const CHAN_OBJ = {
+  'mailbox':    {icon:'📧', ev:['📧'], label:{id:'Buka Mailbox & baca email mencurigakan', en:'Open Mailbox & read the suspicious email', es:'Abre Mailbox y lee el correo sospechoso', fr:'Ouvre Mailbox et lis le mail suspect', it:"Apri Mailbox e leggi l'email sospetta", de:'Öffne Mailbox und lies die verdächtige E-Mail', pt:'Abra o Mailbox e leia o e-mail suspeito'}},
+  'chatloop':   {icon:'💬', ev:['💬'], label:{id:'Buka ChatLoop & baca chat mencurigakan', en:'Open ChatLoop & read the suspicious chat', es:'Abre ChatLoop y lee el chat sospechoso', fr:'Ouvre ChatLoop et lis le chat suspect', it:"Apri ChatLoop e leggi la chat sospetta", de:'Öffne ChatLoop und lies den verdächtigen Chat', pt:'Abra o ChatLoop e leia o chat suspeito'}},
+  'messagebox': {icon:'📬', ev:['📬'], label:{id:'Buka MessageBox & baca SMS mencurigakan', en:'Open MessageBox & read the suspicious SMS', es:'Abre MessageBox y lee el SMS sospechoso', fr:'Ouvre MessageBox et lis le SMS suspect', it:"Apri MessageBox e leggi l'SMS sospetto", de:'Öffne MessageBox und lies die verdächtige SMS', pt:'Abra o MessageBox e leia o SMS suspeito'}},
+  'settings':   {icon:'📶', ev:['📶'], label:{id:'Buka Settings & periksa WiFi mencurigakan', en:'Open Settings & inspect the suspicious WiFi', es:'Abre Ajustes y revisa la WiFi sospechosa', fr:'Ouvre Réglages et inspecte le WiFi suspect', it:'Apri Impostazioni e controlla il WiFi sospetto', de:'Öffne Einstellungen und prüfe das verdächtige WLAN', pt:'Abra Ajustes e inspecione o Wi-Fi suspeito'}},
+  'phone':      {icon:'📞', ev:['📞'], label:{id:'Buka Phone & periksa panggilan masuk', en:'Open Phone & check the incoming call', es:'Abre Phone y revisa la llamada entrante', fr:"Ouvre Phone et vérifie l'appel entrant", it:'Apri Phone e controlla la chiamata in arrivo', de:'Öffne Phone und prüfe den eingehenden Anruf', pt:'Abra o Phone e verifique a chamada'}},
+  'safebrowse': {icon:'🌐', ev:['🌐'], label:{id:'Buka SafeBrowse & periksa halaman login', en:'Open SafeBrowse & inspect the login page', es:'Abre SafeBrowse y revisa la página de login', fr:'Ouvre SafeBrowse et inspecte la page de login', it:'Apri SafeBrowse e controlla la pagina di login', de:'Öffne SafeBrowse und prüfe die Login-Seite', pt:'Abra o SafeBrowse e inspecione a página de login'}},
+};
+function channelObjFor(app) { return app && CHAN_OBJ[app] ? CHAN_OBJ[app] : null; }
+function isEventOpen(app) {
+  if (!app) return true;
+  const c = CHAN_OBJ[app]; if (!c) return true;
+  if (c.ev.some(e => state.events.some(ev => ev.startsWith(e)))) return true;
+  // also: opening the attack via openApp counts
+  if (state.openApp === app) return true;
+  return false;
+}
 function dayObjectives(day) {
   const w = state.world;
   const atk = w?.attack;
@@ -1445,33 +1467,23 @@ function dayObjectives(day) {
       })(),
       done: !atkOpen && !reserveOpen },
   ];
-  const dayExtras = {
-    1: [
-      { id: "obj_sms", icon: "📬", label: {id:"Baca SMS di MessageBox", en:"Read an SMS in MessageBox", es:"Lee un SMS en MessageBox", fr:"Lisez un SMS dans MessageBox", it:"Leggi un SMS in MessageBox", de:"Lies eine SMS in MessageBox", pt:"Leia um SMS no MessageBox"},
-        done: state.events.some(e => e.startsWith("📬")) },
-      { id: "obj_chat", icon: "💬", label: {id:"Baca chat di ChatLoop", en:"Read a chat in ChatLoop", es:"Lee un chat en ChatLoop", fr:"Lisez un chat dans ChatLoop", it:"Leggi una chat in ChatLoop", de:"Lies einen Chat in ChatLoop", pt:"Leia um chat no ChatLoop"},
-        done: state.openedChat || false },
-      { id: "obj_journal", icon: "📓", label: {id:"Cek Journal harianmu", en:"Check your Journal", es:"Revisa tu Journal", fr:"Consultez votre Journal", it:"Controlla il Journal", de:"Prüfe dein Journal", pt:"Confira seu Journal"},
-        done: state.openedJournal || false },
-    ],
-    2: [
-      { id: "obj_wifi", icon: "📶", label: {id:"Cek daftar WiFi di Settings", en:"Check the WiFi list in Settings", es:"Revisa las redes WiFi en Ajustes", fr:"Vérifiez les WiFi dans Réglages", it:"Controlla i WiFi in Impostazioni", de:"Prüfe die WLAN-Liste in Einstellungen", pt:"Confira os Wi-Fi nos Ajustes"},
-        done: state.events.some(e => e.includes("📶")) || state.openApp === "settings" || false },
-    ],
-    3: [
-      { id: "obj_apk", icon: "📱", label: {id:"Periksa izin aplikasi di Security", en:"Review app permissions in Security", es:"Revisa permisos en Security", fr:"Vérifiez les autorisations dans Security", it:"Controlla i permessi in Security", de:"Prüfe App-Berechtigungen in Security", pt:"Revise permissões no Security"},
-        done: state.openedSecurity || false },
-    ],
-    4: [
-      { id: "obj_call", icon: "📞", label: {id:"Cek riwayat panggilan di Phone", en:"Check the call log in Phone", es:"Revisa el registro de llamadas", fr:"Consultez le journal d'appels", it:"Controlla il registro chiamate", de:"Prüfe die Anrufliste", pt:"Confira o histórico de chamadas"},
-        done: state.events.some(e => e.includes("📞")) || false },
-    ],
-    5: [
-      { id: "obj_family", icon: "👨‍👩‍👧", label: {id:"Baca pesan keluarga di MessageBox", en:"Read family messages in MessageBox", es:"Lee mensajes familiares en MessageBox", fr:"Lisez les messages familiaux", it:"Leggi i messaggi di famiglia", de:"Lies Familiennachrichten", pt:"Leia mensagens da família"},
-        done: state.events.some(e => e.includes("👨‍👩‍👧") || e.includes("📬")) || false },
-    ],
-  };
-  return [...(dayExtras[day] || []), ...common];
+   const channelExtras = [];
+  // A slot: tell player WHERE to look for the current chapter's attack
+  if (atk && atk.app && CHAN_OBJ[atk.app]) {
+    const c = CHAN_OBJ[atk.app];
+    channelExtras.push({ id: "obj_chan_a", icon: c.icon, label: c.label,
+      done: isEventOpen(atk.app) });
+  }
+  // B slot: also derived once it surfaces (attackB.app may exist before promotion)
+  const b = w?.attackB;
+  if (b && b.app && CHAN_OBJ[b.app]) {
+    const c = CHAN_OBJ[b.app];
+    channelExtras.push({ id: "obj_chan_b_" + b.app, icon: c.icon, label: c.label,
+      done: isEventOpen(b.app) });
+  }
+  // always keep the journal objective (low-cost exploration that grounds the phone UX)
+  if (w?.day === 1) channelExtras.push({ id: "obj_journal", icon: "📓", label: {id:"Cek Journal harianmu", en:"Check your Journal", es:"Revisa tu Journal", fr:"Consultez votre Journal", it:"Controlla il Journal", de:"Prüfe dein Journal", pt:"Confira seu Journal"}, done: state.openedJournal || false });
+  return [...channelExtras, ...common];
 }
 function day1Objectives() {
   return [
