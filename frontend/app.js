@@ -2152,7 +2152,9 @@ function siteFooter() {
   return `
   <footer class="site-footer">
     <div class="inner">
-      <div class="footer-brand">🛡️ HumanPatch</div>
+      <div class="footer-brand">
+        <img class="footer-logo" src="HumanPatch_Logo.svg?v=62" alt="HumanPatch — Every Choice Shapes Your Safety.">
+      </div>
       <p class="footer-note">${t("foot_note")}</p>
       <nav class="footer-nav">
         ${DOC_ORDER.map(d => `<button onclick="openDoc('${d}')">${L(DOCS[d].title)}</button>`).join("")}
