@@ -724,36 +724,22 @@ function vDashboard() {
 
     <div class="dash-cta">
       <div class="play-card">
-        ${(() => {
-          const r = p.mdRun;
-          const doneN = r ? r.outcomes.filter(Boolean).length : 0;
-          const finishedAll = doneN >= 10;
-          const n = finishedAll ? 10 : doneN + 1;
-          if (finishedAll) return `
-        <p class="kicker">${L({id:"SEMUA 10 CHAPTER SELESAI", en:"ALL 10 CHAPTERS DONE"})}</p>
-        <h2>${L({id:"Lihat Hasil Akhirmu", en:"See Your Final Result"})}</h2>
-        <p>${L({id:"Perjalanan 10 domain keamanan siber kelar — cek jejak keputusanmu.", en:"The 10-domain journey is complete — check your decision trail."})}</p>`;
-          return `
-        <p class="kicker">${L({id:`CHAPTER ${n} DARI 10`, en:`CHAPTER ${n} OF 10`})}</p>
-        <h2>${L(MD_CHAPTERS[n - 1].title)}</h2>
-        <p>${L(MD_CHAPTERS[n - 1].domain)}</p>`;
-        })()}
-        <button class="btn" onclick="enterChapters()">${L({id:"Masuk Chapter ▸", en:"Enter Chapter ▸"})}</button>
+        <p class="kicker">${t("chap_day_of")(p.day)}</p>
+        <h2>${t("day"+p.day+"_t")}</h2>
+        <p>${t("day"+p.day+"_o")}</p>
+        <button class="btn" onclick="startDay()">${t("btn_continue")}</button>
       </div>
     </div>
 
     <section class="section" style="border-top:none;padding-top:6px">
-      <h2 style="font-size:16px">${L({id:"Perjalanan 10 Chapter", en:"10-Chapter Journey"})}</h2>
-      <p class="sub" style="margin-bottom:12px">${L({id:"Sepuluh domain keamanan siber — setiap keputusan membentuk chapter berikutnya.", en:"Ten cybersecurity domains — every decision shapes the next chapter."})}</p>
+      <h2 style="font-size:16px">${t("journey_h")}</h2>
+      <p class="sub" style="margin-bottom:12px">${t("journey_sub")}</p>
       <div class="journey">
-        ${MD_CHAPTERS.map((ch) => {
-          const r = p.mdRun;
-          const doneN = r ? r.outcomes.filter(Boolean).length : 0;
-          const done = r && !!r.outcomes[ch.n - 1];
-          const cur = ch.n === doneN + 1 && !done;
-          const o = r ? r.outcomes[ch.n - 1] : null;
-          return `<div class="jday ${done ? "done" : ""} ${cur ? "cur" : ""}" title="${esc(L(ch.title))}">
-            <div class="jdot">${done ? "✓" : ch.n}</div><span>${esc(L(ch.title))}${o ? `<em style="display:block;font-size:9px;opacity:.8">${o}</em>` : ""}</span>
+        ${STORY_DAYS.map((d) => {
+          const done = p.done.includes(d.day);
+          const cur = d.day === p.day;
+          return `<div class="jday ${done ? "done" : ""} ${cur ? "cur" : ""}">
+            <div class="jdot">${done ? "✓" : (d.day*2-1)}</div><span>${t("chap_day_of")(d.day)}</span>
           </div>`;
         }).join("")}
       </div>
