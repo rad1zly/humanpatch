@@ -69,6 +69,7 @@ window.render = mdRender;
 
 // init
 window.addEventListener("DOMContentLoaded", () => {
+  try { const sl = localStorage.getItem("hp_lang"); if (sl && typeof LANGS !== "undefined" && LANGS.some(x=>x.id===sl)) LANG = sl; } catch(e){}
   mdLoad();
   mdRender();
 });

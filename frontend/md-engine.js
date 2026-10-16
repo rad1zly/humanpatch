@@ -130,7 +130,10 @@ function vMdHome() {
   const done = run ? run.outcomes.filter(Boolean).length : 0;
   return `
   <div class="md-wrap">
-    <h1 class="md-title">🛡️ HumanPatch <span class="md-sub">— Five Days to Digital Safety</span></h1>
+    <div class="md-langbar">
+      ${LANGS.map(l => `<button class="md-lang ${LANG === l.id ? "on" : ""}" onclick="mdSetLang('${l.id}')">${l.flag} ${l.label}</button>`).join("")}
+    </div>
+    <h1 class="md-title">🛡️ HumanPatch <span class="md-sub">— Sepuluh Chapter Menuju Aman Digital</span></h1>
     <p class="dim">${L({id:"Sepuluh chapter. Sepuluh domain. Setiap keputusanmu membentuk chapter berikutnya.", en:"Ten chapters. Ten domains. Every decision shapes the next one."})}</p>
     <div class="md-chapter-grid">
       ${MD_CHAPTERS.map(ch => {
@@ -159,12 +162,29 @@ function mdResetConfirm() {
     state.mdRun = null; render();
   }
 }
+function mdSetLang(l) { LANG = l; try { localStorage.setItem("hp_lang", l); } catch(e){} render(); }
 
 /* --- notification screen --- */
 function vMdNotif() {
   const ch = mdCur();
   const run = state.mdRun;
   const isUrgent = ch.key === "takeover" && mdCh6Urgent();
+  // chapter loading splash — no "day" vocabulary anywhere
+  if (!MD.seenNotif) {
+    return `
+    <div class="md-phone">
+      <div class="md-statusbar"><span>${L({id:"Chapter", en:"Chapter"})} ${ch.n}/10</span><span>📶 🔋</span></div>
+      <div class="md-loading">
+        <div class="md-loading-ring"></div>
+        <h4>${L({id:"Menyiapkan Chapter " + ch.n, en:"Preparing Chapter " + ch.n})}</h4>
+        <p class="dim">${L(ch.title)} · ${L(ch.domain)}</p>
+        <p class="dim small">${L({id:"Membangun skenario · menghubungkan notifikasi…", en:"Building the scenario · connecting the notification…"})}</p>
+      </div>
+      <div class="md-notif-actions">
+        <button class="btn btn-primary btn-block" onclick="mdOpenChannel()">${L({id:"Buka notifikasi", en:"Open notification"})}</button>
+      </div>
+    </div>`;
+  }
   return `
   <div class="md-phone">
     <div class="md-statusbar"><span>${L({id:"Chapter", en:"Chapter"})} ${ch.n}/10</span><span>📶 🔋</span></div>
