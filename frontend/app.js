@@ -935,7 +935,7 @@ function dismissWelcome() {
         const unreadN = unreadFor(a.id);
         const badge = isAtk ? "!" : (unreadN > 9 ? "9+" : unreadN || "");
         return `<button class="app-icon" onclick="openApp('${a.id}')">
-          ${a.iconImg ? `<img class="ai-img" src="${a.iconImg}" alt="${a.name}">${badge ? `<span class="badge">${badge}</span>` : ""}` : `<span class="ai" style="background:${a.bg}">${a.icon}${badge ? `<span class="badge">${badge}</span>` : ""}</span>`}
+          ${a.iconImg ? `<span class="ai-canvas"><img class="ai-img" src="${a.iconImg}" alt="${a.name}">${badge ? `<span class="badge">${badge}</span>` : ""}</span>` : `<span class="ai" style="background:${a.bg}">${a.icon}${badge ? `<span class="badge">${badge}</span>` : ""}</span>`}
           <span class="label">${a.name}</span>
         </button>`;
       }).join("")}
@@ -946,7 +946,7 @@ function dismissWelcome() {
         const unreadN = unreadFor(a.id);
         const badge = (a.id === atkApp && w.attack) ? "!" : (unreadN > 9 ? "9+" : unreadN || "");
         return `<button class="app-icon" onclick="openApp('${a.id}')" aria-label="${a.name}">
-          ${a.iconImg ? `<img class="ai-img dock" src="${a.iconImg}" alt="${a.name}">${badge ? `<span class="badge">${badge}</span>` : ""}` : `<span class="ai" style="background:${a.bg};width:46px;height:46px;font-size:20px">${a.icon}${badge ? `<span class="badge">${badge}</span>` : ""}</span>`}
+          ${a.iconImg ? `<span class="ai-canvas dock"><img class="ai-img" src="${a.iconImg}" alt="${a.name}">${badge ? `<span class="badge">${badge}</span>` : ""}</span>` : `<span class="ai" style="background:${a.bg};width:46px;height:46px;font-size:20px">${a.icon}${badge ? `<span class="badge">${badge}</span>` : ""}</span>`}
         </button>`;
       }).join("")}
     </div>
