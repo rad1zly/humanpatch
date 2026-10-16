@@ -32,6 +32,16 @@ class LLMClient:
             "model": "MiniMax-M2.7-highspeed",
             "key_env": "MINIMAX_API_KEY",
         },
+        "amdradeon": {
+            "base_url": "https://developer.amd.com.cn/radeon/api/v1",
+            "model": "DeepSeek-V4.1-Flash",
+            "key_env": "AMD_RAIDEN_API_KEY",
+            # endpoint is slow + concurrency-limited: generous timeout, no retry storm
+            "timeout": 60,
+            "retries": 1,
+            # same-family fallback when the primary GPU node 504s upstream
+            "fallback_models": ["DeepSeek-V4-Flash"],
+        },
         "tokenrouter": {
             "base_url": "https://api.tokenrouter.com/v1",
             "model": "MiniMax-M3",
@@ -50,13 +60,29 @@ class LLMClient:
         api_key = os.environ.get("LLM_API_KEY") or (
             os.environ.get(key_env, "") if key_env else "")
         self.headers = {"Authorization": f"Bearer {api_key}"} if api_key else {}
+        # provider tuning: slow/concurrency-limited endpoints need longer timeouts
+        self.timeout = int(conf.get("timeout", 60))
+        self.retries = int(conf.get("retries", 1))
+        self.fallback_models = conf.get("fallback_models", [])
 
     # scripts that must never appear in output (leak guard for reasoning models)
     import re as _re
     _FOREIGN = _re.compile(r"[\u0400-\u04FF\u4E00-\u9FFF\u3040-\u30FF\uAC00-\uD7AF]")
 
     def chat(self, system, messages, temperature=0.8, max_tokens=700):
-        content = self._chat_once(system, messages, temperature, max_tokens)
+        try:
+            content = self._chat_once(system, messages, temperature, max_tokens)
+        except Exception:
+            # primary model/node unavailable → try same-family fallbacks
+            content = None
+            for fb in self.fallback_models:
+                try:
+                    content = self._chat_once(system, messages, temperature, max_tokens, model=fb)
+                    break
+                except Exception:
+                    continue
+            if content is None:
+                raise
         # language-leak guard: reasoning models occasionally slip into
         # Cyrillic/CJK mid-sentence — retry once with an explicit correction
         if self._FOREIGN.search(content):
@@ -77,18 +103,36 @@ class LLMClient:
                 return clean
         return content
 
-    def _chat_once(self, system, messages, temperature, max_tokens):
+    def _chat_once(self, system, messages, temperature, max_tokens, model=None):
         import httpx  # local import so Mock mode needs no net deps timing-wise
         payload = {
-            "model": self.model,
+            "model": model or self.model,
             "messages": [{"role": "system", "content": system}] + messages,
             "temperature": temperature,
             "max_tokens": max_tokens,
         }
-        r = httpx.post(f"{self.base_url}/chat/completions", json=payload,
-                       headers=self.headers, timeout=60)
-        r.raise_for_status()
-        content = r.json()["choices"][0]["message"]["content"] or ""
+        # retry on 429/5xx: concurrency-limited endpoints (AMD Radeon API)
+        content = ""
+        last_exc = None
+        for attempt in range(max(1, self.retries)):
+            try:
+                r = httpx.post(f"{self.base_url}/chat/completions", json=payload,
+                               headers=self.headers, timeout=self.timeout)
+                if r.status_code in (429, 500, 502, 503, 504) and attempt < self.retries - 1:
+                    import time
+                    time.sleep(3 * (attempt + 1))
+                    continue
+                r.raise_for_status()
+                content = r.json()["choices"][0]["message"]["content"] or ""
+                break
+            except (httpx.ReadTimeout, httpx.ConnectError) as e:
+                last_exc = e
+                if attempt < self.retries - 1:
+                    continue
+                raise
+        else:
+            if last_exc:
+                raise last_exc
         # reasoning models (MiniMax M-series) inline <think>...</think>.
         # If the budget cut the reply inside <think>, take the LAST usable
         # sentence-like fragment instead of returning the raw reasoning.
