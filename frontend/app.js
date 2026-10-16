@@ -1265,7 +1265,7 @@ function vNotifPanel() {
           <div class="nb">
             <div class="nt"><strong>${esc(n.from)}</strong><time>09:0${n.id.slice(-1)}</time></div>
             <p>${esc(n.text)}</p>
-            ${n.attack ? `<div class="actions"><button class="pri" onclick="toggleNotif(false); openApp('${n.app}'); openAtkPreview()">${t("open")}</button><button onclick="actDismiss('${n.id}')">${t("ignore")}</button></div>` : `<div class="actions"><button onclick="readNotif('${n.id}')">${t("mark_read")}</button></div>`}
+            ${n.attack ? `<div class="actions"><button class="pri" onclick="toggleNotif(false); ${n.slotB ? `activateAttackB('${n.id}')` : `openApp('${n.app}'); openAtkPreview()`}">${t("open")}</button><button onclick="${n.slotB ? `activateAttackB('${n.id}', true)` : `actDismiss('${n.id}')`}">${t("ignore")}</button></div>` : `<div class="actions"><button onclick="readNotif('${n.id}')">${t("mark_read")}</button></div>`}
           </div>
         </div>`).join("")}
     </div>
@@ -1288,6 +1288,8 @@ function dayObjectives(day) {
   const w = state.world;
   const atk = w?.attack;
   const atkOpen = atk && !atk.done;
+  // two chapters per day: an unresolved reserve chapter still blocks the day
+  const reserveOpen = !!w?.attackB;
   const verified = state.events.some(e => e.includes("🔍"));
   // verify counts if: player opened the sender sheet, OR the incident is already
   // resolved (ignore/engage decision made from the visible notif/preview) — never
@@ -1300,7 +1302,7 @@ function dayObjectives(day) {
     { id: "obj_verify", icon: "🔍", label: (verifyLabelFor(atk) || {id:"Cek pengirim pesan mencurigakan", en:"Verify the suspicious sender"}),
       done: readAtk || false },
     { id: "obj_enc", icon: "⚔️", label: {id:"Selesaikan insiden hari ini (serang atau abaikan)", en:"Resolve today's incident (fight or ignore)", es:"Resuelve el incidente de hoy", fr:"Résolvez l'incident du jour", it:"Risolvi l'incidente di oggi", de:"Löse das heutige Ereignis", pt:"Resolva o incidente de hoje"},
-      done: !atkOpen },
+      done: !atkOpen && !reserveOpen },
   ];
   const dayExtras = {
     1: [
@@ -1362,10 +1364,49 @@ function actDismiss(id) {
     atk.done = true;
     if (n) n.read = true;
     trackEvent("🙈 ignored: " + atk.from);
+    promoteAttackB();
   } else if (n) { n.read = true; trackEvent("🙈 " + n.from); }
   state.atkPreview = false;
   render();
   toast(t("ignored_toast"));
+}
+
+/* Two chapters per day: when the first incident resolves, the reserve
+   chapter surfaces in the notification bar. */
+function promoteAttackB() {
+  const w = state.world;
+  if (!w) return;
+  // attackB is seeded at world-build; "promotion" = surfacing it in the notif
+  // bar once chapter A resolves. Guarded so it only happens once.
+  if (w.attack?.done !== true || !w.attackB || w.attackB.surfaced) return;
+  const B = w.attackB;
+  B.surfaced = true;
+  w.notifs.unshift({ id: nid(), app: B.app, from: B.from, text: B.notifText, attack: true, read: false, slotB: true });
+  state.mission = null; // chapter A's mission is closed; B starts fresh via its notif
+  toast(L({id:"📮 Insiden baru masuk…", en:"📮 A new incident just came in…", es:"📮 Nuevo incidente entrante…", fr:"📮 Nouvel incident entrant…", it:"📮 Nuovo incidente in arrivo…", de:"📮 Neuer Vorfall eingegangen…", pt:"📮 Novo incidente chegando…"}));
+}
+
+/* Player taps chapter B's notification: promote it to the ACTIVE attack
+   (swap) so preview/encounter/verify all operate on it. */
+function activateAttackB(notifId, dismiss) {
+  const w = state.world;
+  const n = w.notifs.find(x => x.id === notifId);
+  if (n) n.read = true;
+  if (!w.attackB) return;
+  const B = w.attackB;
+  w.attack = { ...B, done: false };
+  delete w.attack.surfaced;
+  w.attackB = null;
+  toggleNotif(false);
+  if (dismiss) {
+    w.attack.done = true;
+    trackEvent("🙈 ignored: " + w.attack.from);
+    toast(t("ignored_toast"));
+    render();
+    return;
+  }
+  openApp(B.app);
+  openAtkPreview();
 }
 
 /* ---------- sheets ---------- */
@@ -1590,6 +1631,8 @@ async function finishEncounter(outcome) {
     state.debrief = { summary: { outcome }, coach: "-" };
   }
   state.world.attack.done = true;
+  // chapter A resolved → surface chapter B in the notif bar (after the debrief)
+  promoteAttackB();
   state.screen = "debrief";
   render();
 }
