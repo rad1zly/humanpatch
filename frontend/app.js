@@ -964,6 +964,7 @@ function vAppWindow() {
   else if (app === "chatloop") body = vChatLoop();
   else if (app === "messagebox") body = vMessageBox();
   else if (app === "journal") body = vJournalApp();
+  else if (app === "mailbox") body = vMailboxApp(meta);
   else if (app === "security") body = vSecurityApp();
   else if (app === "settings") body = vSettingsApp();
   else if (app === "phone") body = vPhoneApp();
@@ -1085,6 +1086,30 @@ function vAtkPreview() {
   const subLine = isWifi ? L({id:"Jaringan terbuka terdeteksi", en:"Open network detected", es:"Red abierta detectada", fr:"Réseau ouvert détecté", it:"Rete aperta rilevata", de:"Offenes Netzwerk erkannt", pt:"Rede aberta detectada"})
     : (isCall ? L({id:"Nomor tidak dikenal", en:"Unknown number", es:"Número desconocido", fr:"Numéro inconnu", it:"Numero sconosciuto", de:"Unbekannte Nummer", pt:"Número desconhecido"})
     : t("not_in_contacts"));
+  // MD Ch1: after the email link, the preview IS the spoofed login page —
+  // render it as a browser page with a fake URL bar, not a chat bubble.
+  const isPortal = atk.scenario === "story_komp_d1_password";
+  if (isPortal) {
+    return `
+    <div class="atk-preview portal-page">
+      <div class="url-bar"><span class="lock">🔒</span><span class="url">portal-kompetisi-daftar<b style="color:#DC2626">.id</b>/login</span><button class="ap-close" onclick="closeAtkPreview()" title="${L({id:"Tutup dulu — insiden tetap ada", en:"Close for now — incident stays"})}">✕</button></div>
+      <div class="portal-body">
+        <div style="font-size:30px">🏆</div>
+        <h4>${esc(L(atk.from))}</h4>
+        <p class="small dim">${esc(t("mail_ch1_subject"))}</p>
+        <div class="login-form">
+          <div class="lfield">📧 ${L({id:"Email sekolah", en:"School email", es:"Correo escolar", fr:"E-mail scolaire", it:"Email scolastica", de:"Schul-E-Mail", pt:"E-mail escolar"})}</div>
+          <div class="lfield">🔒 ${L({id:"Kata sandi", en:"Password", es:"Contraseña", fr:"Mot de passe", it:"Password", de:"Passwort", pt:"Senha"})}</div>
+          <button class="btn btn-primary btn-block" onclick="closeAtkPreview(); startEncounter()">${L({id:"Masuk", en:"Sign in", es:"Entrar", fr:"Se connecter", it:"Accedi", de:"Anmelden", pt:"Entrar"})}</button>
+        </div>
+        <p class="ap-hint">💡 ${t("check_first_hint")}</p>
+        <div class="ap-actions">
+          <button class="btn btn-ghost" onclick="showSenderSheet()">${checkBtn}</button>
+          <button class="btn btn-ghost" onclick="closeAtkPreview(); actDismiss('atk')">${t("ignore")}</button>
+        </div>
+      </div>
+    </div>`;
+  }
   return `
   <div class="atk-preview">
     <div class="ap-head">
@@ -1301,6 +1326,50 @@ function wifiConnectFlow() {
 function openPerms() {
   trackEvent("🛡️ permissions");
   state.openApp = "security";
+  render();
+}
+
+/* MD Ch1 natural channel: the MAILBOX is a real inbox — the committee email
+   sits there with a subject. Opening it shows the body + the link. The link
+   opens SafeBrowse on the spoofed portal (that's where the decision lives). */
+function vMailboxApp(meta) {
+  const w = state.world;
+  const atk = w.attack;
+  if (atk && atk.app === "mailbox" && !atk.done) {
+    const open = state.mailOpen;
+    if (!open) {
+      return `
+      <div class="maillist">
+        <h6 class="small dim" style="margin:4px 0 8px">${t("mail_inbox")}</h6>
+        <div class="mailrow unread" onclick="state.mailOpen=true;render()">
+          <span style="font-size:22px">📧</span>
+          <div style="flex:1">
+            <strong>${esc(L(atk.from))}</strong>
+            <p class="small dim" style="margin:2px 0 0">${esc(t("mail_ch1_subject"))}</p>
+          </div>
+          <span class="dot"></span>
+        </div>
+      </div>`;
+    }
+    return `
+    <div class="maildetail">
+      <button class="back small" onclick="state.mailOpen=false;render()">◂ ${t("mail_back")}</button>
+      <h4>${esc(t("mail_ch1_subject"))}</h4>
+      <p class="small dim">${esc(L(atk.from))} · ${L({id:"hari ini", en:"today", es:"hoy", fr:"aujourd'hui", it:"oggi", de:"heute", pt:"hoje"})} 08:12</p>
+      <p>${esc(t("mail_ch1_body"))}</p>
+      <div class="btn btn-primary btn-block mt8" onclick="mailboxOpenPortal()">${t("mail_open_link")}</div>
+      <p class="small dim mt8">${t("mail_link_hint")}</p>
+    </div>`;
+  }
+  return vGenericApp(meta);
+}
+function mailboxOpenPortal() {
+  // the link launches the browser on the spoofed portal → decision screen.
+  // From here on the incident LIVES in SafeBrowse (it's a web page, not mail).
+  const w = state.world;
+  if (w?.attack && w.attack.app === "mailbox") w.attack.app = "safebrowse";
+  state.openApp = "safebrowse";
+  state.atkPreview = true;
   render();
 }
 
@@ -1982,7 +2051,7 @@ function endDay1() {
 /* endDay1 handles ALL days now: same debrief shape (exploration view when no
    encounter debrief data, which is the case when the incident was ignored) */
 
-function enterPhone() { state.screen = "phone"; state.notifOpen = false; render(); }
+function enterPhone() { state.screen = "phone"; state.notifOpen = false; state.mailOpen = false; render(); }
 function exitPhone() {
   go("dashboard");
 }

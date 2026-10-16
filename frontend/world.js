@@ -337,9 +337,12 @@ function buildAttack(profile, day, seed) {
   const t = (A[profile.archetype] || A.general);
   let ev = null;
   // MD storyline order — day 1: Ch1 portal login first, Ch2 phishing after
-  if (day === 1) ev = { app: "safebrowse", scenario: "story_komp_d1_password",
-    from: {id:"Portal Kompetisi Digital", en:"Digital Competition Portal", es:"Portal de Competencia Digital", pt:"Portal de Competição Digital", fr:"Portail de Compétition Numérique", it:"Portale Competizione Digitale", de:"Digital-Wettbewerbsportal"},
-    notifText: {id:"Sesi portal kedaluwarsa — masuk email + kata sandi untuk melanjutkan pendaftaran…", en:"Portal session expired — enter email + password to continue registration…", es:"Sesión del portal caducada — introduce correo y contraseña para continuar…", pt:"Sessão do portal expirada — insira e-mail e senha para continuar…", fr:"Session du portail expirée — saisissez e-mail et mot de passe pour continuer…", it:"Sessione del portale scaduta — inserisci email e password per continuare…", de:"Portalsitzung abgelaufen — E-Mail und Passwort eingeben, um fortzufahren…"} };
+  // MD Ch1: the fake portal arrives NATURALLY — an EMAIL first, the browser second.
+  // The email (from the "committee") carries the link; clicking it opens SafeBrowse
+  // on the spoofed login page. Decision happens on the PAGE, not in a chat.
+  if (day === 1) ev = { app: "mailbox", scenario: "story_komp_d1_password",
+    from: {id:"Panitia Kompetisi Digital", en:"Digital Competition Committee", es:"Comité de Competencia Digital", pt:"Comitê de Competição Digital", fr:"Comité de Compétition Numérique", it:"Comitato Competizione Digitale", de:"Digital-Wettbewerbskomitee"},
+    notifText: {id:"📧 Berkas finalis sudah tersedia. Masuk lewat link: portal-kompetisi-daftar.id/login", en:"📧 Your finalist documents are ready. Sign in via: portal-competitions-register.id/login", es:"📧 Tus documentos de finalista están listos. Entra: portal-competitions-register.id/login", pt:"📧 Seus documentos de finalista estão prontos. Acesse: portal-competitions-register.id/login", fr:"📧 Tes documents de finaliste sont prêts. Connecte-toi : portal-competitions-register.id/login", it:"📧 I tuoi documenti da finalista sono pronti. Accedi: portal-competitions-register.id/login", de:"📧 Deine Finalisten-Unterlagen sind bereit. Anmeldung: portal-competitions-register.id/login"} };
   else if (day === 2) ev = t.phishing;
   // MD order — day 3: Ch5 APK first, Ch6 account takeover after
   else if (day === 3) ev = { app: "chatloop", scenario: "story_komp_d3_apk",

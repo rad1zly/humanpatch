@@ -836,3 +836,22 @@ body { scroll-snap-type: y proximity; } /* gentle snap, still free-scrolls insid
 /* preview close (back without deciding) */
 .ap-close { background:none; border:none; color:#94A3B8; font-size:16px; cursor:pointer; padding:4px 8px; margin-left:auto; }
 .ap-close:hover { color:#E2E8F0; }
+
+/* --- mailbox (MD Ch1 email channel) --- */
+.maillist { padding: 8px 4px; }
+.mailrow { display:flex; gap:10px; align-items:center; padding:12px 10px; border-bottom:1px solid rgba(148,163,184,.2); cursor:pointer; border-radius:10px; }
+.mailrow:hover { background:rgba(148,163,184,.08); }
+.mailrow .dot { width:9px; height:9px; border-radius:50%; background:#2563EB; }
+.maildetail { padding:10px 12px; }
+.maildetail h4 { margin:8px 0 2px; }
+.maildetail .back { background:none; border:none; color:#93C5FD; font-weight:700; cursor:pointer; padding:2px 0; }
+.maildetail p { line-height:1.5; }
+
+/* --- MD Ch1 portal login page --- */
+.atk-preview.portal-page { display:flex; flex-direction:column; }
+.url-bar { display:flex; align-items:center; gap:8px; background:#F1F5F9; border-radius:12px; padding:8px 12px; font-size:12px; }
+.url-bar .url { flex:1; background:#fff; border-radius:8px; padding:5px 10px; font-family:monospace; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.portal-body { text-align:center; padding:18px 8px 10px; }
+.portal-body h4 { margin:8px 0 2px; }
+.login-form { max-width:280px; margin:14px auto 6px; text-align:left; }
+.lfield { background:#fff; border:1px solid #CBD5E1; border-radius:10px; padding:10px 12px; margin-bottom:8px; color:#94A3B8; font-size:13px; }
