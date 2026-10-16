@@ -1082,11 +1082,17 @@ function vAtkPreview() {
   const meta = (APP_CATALOG[atk.app] || {});
   const vt = verifyTargetFor(atk) || {};
   const isWifi = vt.kind === "wifi", isCall = vt.kind === "call";
-  const headerIcon = isWifi ? "📶" : (isCall ? "📞" : "👤");
+  // header icon: use the APP's own icon (mailbox=📧, messagebox=📬, chatloop=💬, safebrowse=🌐)
+  // — only fall back to 👤 for unspecific chat senders
+  const appIcon = meta.icon || "👤";
+  const headerIcon = isWifi ? "📶" : (isCall ? "📞" : appIcon);
   const checkBtn = vt.previewBtn ? L(vt.previewBtn) : `🔍 ${t("check_sender")}`;
+  // subline: per-channel, never "unknown number" for non-call incidents
   const subLine = isWifi ? L({id:"Jaringan terbuka terdeteksi", en:"Open network detected", es:"Red abierta detectada", fr:"Réseau ouvert détecté", it:"Rete aperta rilevata", de:"Offenes Netzwerk erkannt", pt:"Rede aberta detectada"})
     : (isCall ? L({id:"Nomor tidak dikenal", en:"Unknown number", es:"Número desconocido", fr:"Numéro inconnu", it:"Numero sconosciuto", de:"Unbekannte Nummer", pt:"Número desconhecido"})
-    : t("not_in_contacts"));
+    : (vt.kind === "email" ? L({id:"Domain pengirim mencurigakan", en:"Suspicious sender domain", es:"Dominio del remitente sospechoso", fr:"Domaine d'expéditeur suspect", it:"Dominio del mittente sospetto", de:"Verdächtige Absender-Domain", pt:"Domínio do remetente suspeito"})
+    : (vt.kind === "sms" ? L({id:"SMS minta kamu balas kode", en:"SMS asks you to reply with a code", es:"SMS pide responder con un código", fr:"SMS demande de répondre avec un code", it:"SMS chiede di rispondere con un codice", de:"SMS bittet um Antwort mit einem Code", pt:"SMS pede para responder com um código"})
+    : t("not_in_contacts"))));
   // MD Ch1: after the email link, the preview IS the spoofed login page —
   // render it as a browser page with a fake URL bar, not a chat bubble.
   const isPortal = atk.scenario === "story_komp_d1_password";
@@ -1358,6 +1364,7 @@ function vMailboxApp(meta) {
       <h4>${esc(t("mail_ch1_subject"))}</h4>
       <p class="small dim">${esc(L(atk.from))} · ${L({id:"hari ini", en:"today", es:"hoy", fr:"aujourd'hui", it:"oggi", de:"heute", pt:"hoje"})} 08:12</p>
       <p>${esc(t("mail_ch1_body"))}</p>
+      <div class="btn btn-ghost btn-block mt8" onclick="showSenderSheet()">🔍 ${t("check_sender")}</div>
       <div class="btn btn-primary btn-block mt8" onclick="mailboxOpenPortal()">${t("mail_open_link")}</div>
       <p class="small dim mt8">${t("mail_link_hint")}</p>
     </div>`;
@@ -1813,6 +1820,39 @@ function verifyTargetFor(atk) {
         ["sheet_owner", {id:"Tidak terdaftar sebagai resmi ⚠️", en:"Not listed as official ⚠️", es:"No listado como oficial ⚠️", fr:"Non répertorié comme officiel ⚠️", it:"Non elencato come ufficiale ⚠️", de:"Nicht als offiziell gelistet ⚠️", pt:"Não listado como oficial ⚠️"}],
       ],
       hint: {id:"💡 CS resmi tidak pernah minta kode OTP via telepon. Tutup, hubungi kanal resmi.", en:"💡 Real support never asks for OTP codes over the phone. Hang up, call the official line.", es:"💡 El soporte real nunca pide OTP por teléfono. Cuelga y llama al canal oficial.", fr:"💡 Le vrai support ne demande jamais d'OTP par téléphone. Raccrochez, appelez le canal officiel.", it:"💡 Il supporto vero non chiede OTP al telefono. Riaggancia e chiama il canale ufficiale.", de:"💡 Echter Support fragt nie nach OTP am Telefon. Auflegen, offiziellen Kanal anrufen.", pt:"💡 Suporte real nunca pede OTP por telefone. Desligue e chame o canal oficial."},
+    };
+  }
+  // MD Ch1: email sender verification — the URL is the red flag, not a phone number.
+  if (atk.app === "mailbox") {
+    return {
+      kind: "email",
+      label: {id:"Periksa alamat email & domain pengirim", en:"Check the sender address & domain", es:"Revisa el correo y dominio del remitente", fr:"Vérifie l'adresse et le domaine de l'expéditeur", it:"Controlla indirizzo e dominio del mittente", de:"Prüfe Absender-Adresse und Domain", pt:"Confira o endereço e domínio do remetente"},
+      previewBtn: {id:"🔍 Detail email", en:"🔍 Email details", es:"🔍 Detalles del correo", fr:"🔍 Détails de l'e-mail", it:"🔍 Dettagli email", de:"🔍 E-Mail-Details", pt:"🔍 Detalhes do e-mail"},
+      sheetTitle: atk.from,
+      sheetSub: {id:"Email masuk", en:"Email received", es:"Correo recibido", fr:"E-mail reçu", it:"Email ricevuta", de:"E-Mail empfangen", pt:"E-mail recebido"},
+      rows: [
+        ["sheet_address", "noreply@portal-kompetisi-daftar.id"],
+        ["sheet_spoof", {id:"Domain hampir identik dengan aslinya, tapi salah ⚠️", en:"Domain looks almost like the real one, but isn't ⚠️", es:"El dominio se parece al real, pero no lo es ⚠️", fr:"Le domaine ressemble à l'officiel, mais ne l'est pas ⚠️", it:"Il dominio somiglia all'originale, ma non lo è ⚠️", de:"Domain sieht aus wie das echte, ist es aber nicht ⚠️", pt:"Domínio parecido com o real, mas não é ⚠️"}],
+        ["sheet_urgency", {id:"Meminta tindakan dalam 24 jam ⏰", en:"Demands action within 24 hours ⏰", es:"Pide actuar en 24 horas ⏰", fr:"Demande d'agir en 24 h ⏰", it:"Chiede azione entro 24 ore ⏰", de:"Verlangt Handeln in 24 Std. ⏰", pt:"Exige ação em 24 horas ⏰"}],
+        ["sheet_owner", {id:"BCC: banyak email sekolah sekaligus 📣", en:"BCC'd to many school emails at once 📣", es:"En BCC a muchos correos escolares 📣", fr:"En CCI à de nombreux e-mails scolaires 📣", it:"In CCN a molte email scolastiche 📣", de:"In BCC an viele Schul-E-Mails gleichzeitig 📣", pt:"Em CCO para muitos e-mails escolares 📣"}],
+      ],
+      hint: {id:"💡 Domain 'portal-kompetisi-daftar.id' bukan domain resmi lomba. Cek 'daftAR' vs 'daftER'.", en:"💡 'portal-kompetisi-daftar.id' is not the real domain. Notice the swapped letters.", es:"💡 'portal-kompetisi-daftar.id' no es el dominio real. Fíjate en letras cambiadas.", fr:"💡 'portal-kompetisi-daftar.id' n'est pas le vrai domaine. Lettres permutées.", it:"💡 'portal-kompetisi-daftar.id' non è il dominio reale. Nota le lettere scambiate.", de:"💡 'portal-kompetisi-daftar.id' ist nicht die echte Domain. Buchstaben vertauscht.", pt:"💡 'portal-kompetisi-daftar.id' não é o domínio real. Letras trocadas."},
+    };
+  }
+  // Ch6: SMS sender — the suspicious thing is the LOGIN-ATTEMPT context, not the number.
+  if (atk.app === "messagebox") {
+    return {
+      kind: "sms",
+      label: {id:"Periksa SMS 'percobaan login' ini", en:"Check this 'sign-in attempt' SMS", es:"Revisa el SMS de 'intento de login'", fr:"Vérifie ce SMS 'tentative de connexion'", it:"Controlla l'SMS 'tentativo di accesso'", de:"Prüfe diese 'Anmeldeversuch'-SMS", pt:"Confira o SMS de 'tentativa de login'"},
+      previewBtn: {id:"🔍 Detail SMS", en:"🔍 SMS details", es:"🔍 Detalles del SMS", fr:"🔍 Détails du SMS", it:"🔍 Dettagli SMS", de:"🔍 SMS-Details", pt:"🔍 Detalhes do SMS"},
+      sheetTitle: atk.from,
+      sheetSub: {id:"SMS masuk", en:"SMS received", es:"SMS recibido", fr:"SMS reçu", it:"SMS ricevuto", de:"SMS empfangen", pt:"SMS recebido"},
+      rows: [
+        ["sheet_address", {id:"Google (Kode) <no-reply@accounts.google.com>", en:"Google (Code) <no-reply@accounts.google.com>", es:"Google (Código) <no-reply@accounts.google.com>", fr:"Google (Code) <no-reply@accounts.google.com>", it:"Google (Codice) <no-reply@accounts.google.com>", de:"Google (Code) <no-reply@accounts.google.com>", pt:"Google (Código) <no-reply@accounts.google.com>"}],
+        ["sheet_context", {id:"Disebutkan 'login dari Windows · Jakarta'", en:"Mentions 'login from Windows · Jakarta'", es:"Menciona 'login desde Windows · Yakarta'", fr:"Mentionne 'connexion depuis Windows · Jakarta'", it:"Cita 'accesso da Windows · Jakarta'", de:"Erwähnt 'Anmeldung von Windows · Jakarta'", pt:"Menciona 'login do Windows · Jacarta'"}],
+        ["sheet_warning", {id:"Siapa pun yang minta kode ini = scammer 🚨", en:"Anyone asking for this code = scammer 🚨", es:"Quien pida este código = estafador 🚨", fr:"Quiconque demande ce code = arnaqueur 🚨", it:"Chiunque chieda questo codice = truffatore 🚨", de:"Wer diesen Code verlangt = Betrüger 🚨", pt:"Quem pedir este código = golpista 🚨"}],
+      ],
+      hint: {id:"💡 OTP dari Google tidak pernah diminta oleh 'Tim Dukungan Akun'.", en:"💡 Google never sends codes for 'Account Support' to read.", es:"💡 Google nunca envía códigos para que el 'Soporte' los lea.", fr:"💡 Google n'envoie jamais de codes pour que le 'Support' les lise.", it:"💡 Google non invia codici da far leggere al 'Supporto'.", de:"💡 Google verschickt keine Codes, die 'Support' lesen darf.", pt:"💡 O Google nunca envia códigos para o 'Suporte' ler."},
     };
   }
   // default: chat/DM sender
