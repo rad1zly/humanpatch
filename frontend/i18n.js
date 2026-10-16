@@ -13,6 +13,12 @@ function t(k) {
 
 const I18N = {
 id: {
+  mail_inbox: "Kotak Masuk",
+  mail_back: "Kembali",
+  mail_ch1_subject: "Berkas Finalis Kompetisi Digital — Tindak Lanjut",
+  mail_ch1_body: "Selamat! Kamu terpilih sebagai finalis. Berkas pendaftaran akhir sudah kami siapkan. Untuk melihat dan mengunggah berkas, masuk ke portal menggunakan email + kata sandi sekolahmu. Sesi berlaku 24 jam.",
+  mail_open_link: "Buka Portal Kompetisi ▸",
+  mail_link_hint: "Link: portal-kompetisi-daftar.id/login — cek domain dengan teliti sebelum login.",
   day1_t: 'Peringatan Pertama',
   day2_t: 'Jejak Digital',
   day3_t: 'Ada yang Tidak Beres',
@@ -233,6 +239,12 @@ id: {
   chapter10_o: 'Keluargamu butuh bantuanmu, sekarang.'
 },
 en: {
+  mail_inbox: "Inbox",
+  mail_back: "Back",
+  mail_ch1_subject: "Digital Competition Finalist Documents — Action Needed",
+  mail_ch1_body: "Congratulations! You have been selected as a finalist. Your final registration documents are ready. To view and upload them, sign in to the portal with your school email + password. Session valid for 24 hours.",
+  mail_open_link: "Open Competition Portal ▸",
+  mail_link_hint: "Link: portal-competitions-register.id/login — check the domain carefully before signing in.",
   day1_t: 'The First Warning',
   day2_t: 'A Digital Footprint',
   day3_t: 'Something Is Wrong',
