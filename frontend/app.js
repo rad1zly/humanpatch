@@ -1312,7 +1312,12 @@ function dayObjectives(day) {
       done: state.notifSeen || false },
     { id: "obj_verify", icon: "🔍", label: (verifyLabelFor(atk) || {id:"Cek pengirim pesan mencurigakan", en:"Verify the suspicious sender"}),
       done: readAtk || false },
-    { id: "obj_enc", icon: "⚔️", label: {id:"Selesaikan insiden hari ini (serang atau abaikan)", en:"Resolve today's incident (fight or ignore)", es:"Resuelve el incidente de hoy", fr:"Résolvez l'incident du jour", it:"Risolvi l'incidente di oggi", de:"Löse das heutige Ereignis", pt:"Resolva o incidente de hoje"},
+    { id: "obj_enc", icon: "⚔️", label: (() => {
+        // when chapter B is pending, the objective must SAY so — a silent
+        // unchecked box after "ignore" reads like a bug
+        if (w?.attackB) return {id:"Insiden ke-2 baru masuk — selesaikan juga (cek 🔔)", en:"A 2nd incident just arrived — resolve it too (check 🔔)", es:"Un 2.º incidente llegó — resuélvelo también (mira 🔔)", fr:"Un 2e incident arrive — résolvez-le aussi (voir 🔔)", it:"Un 2° incidente è arrivato — risolvi anche quello (vedi 🔔)", de:"Ein 2. Vorfall kam — löse auch ihn (siehe 🔔)", pt:"Um 2º incidente chegou — resolva também (veja 🔔)"};
+        return {id:"Selesaikan insiden hari ini (serang atau abaikan)", en:"Resolve today's incident (fight or ignore)", es:"Resuelve el incidente de hoy", fr:"Résolvez l'incident du jour", it:"Risolvi l'incidente di oggi", de:"Löse das heutige Ereignis", pt:"Resolva o incidente de hoje"};
+      })(),
       done: !atkOpen && !reserveOpen },
   ];
   const dayExtras = {
@@ -1380,7 +1385,11 @@ function actDismiss(id) {
   } else if (n) { n.read = true; trackEvent("🙈 " + n.from); }
   state.atkPreview = false;
   render();
-  toast(t("ignored_toast"));
+  // tell the player what's still pending — never let "ignore" feel dead
+  const pendingB = state.world?.attackB;
+  toast(pendingB
+    ? L({id:"Diabaikan ✅ — tapi 📮 insiden ke-2 baru masuk! Cek 🔔", en:"Ignored ✅ — but 📮 a 2nd incident just arrived! Check 🔔", es:"Ignorado ✅ — ¡pero 📮 llegó un 2.º incidente! Mira 🔔", fr:"Ignoré ✅ — mais 📮 un 2e incident arrive ! Voir 🔔", it:"Ignorato ✅ — ma 📮 è arrivato un 2° incidente! Vedi 🔔", de:"Ignoriert ✅ — aber 📮 ein 2. Vorfall kam! Siehe 🔔", pt:"Ignorado ✅ — mas 📮 um 2º incidente chegou! Veja 🔔"})
+    : t("ignored_toast"));
 }
 
 /* Two chapters per day: when the first incident resolves, the reserve
@@ -1466,7 +1475,7 @@ function activateAttackB(notifId, dismiss) {
     w.attack.done = true;
     trackEvent("🙈 ignored: " + w.attack.from);
     recordIncidentOutcome(w.attack.scenario, "ignored");
-    toast(t("ignored_toast"));
+    toast(L({id:"Diabaikan ✅ — semua insiden hari ini sudah kelar", en:"Ignored ✅ — all of today's incidents are resolved", es:"Ignorado ✅ — todos los incidentes de hoy resueltos", fr:"Ignoré ✅ — tous les incidents du jour sont résolus", it:"Ignorato ✅ — tutti gli incidenti di oggi risolti", de:"Ignoriert ✅ — alle heutigen Vorfälle gelöst", pt:"Ignorado ✅ — todos os incidentes de hoje resolvidos"}));
     render();
     return;
   }
