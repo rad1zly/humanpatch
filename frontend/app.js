@@ -73,7 +73,7 @@ function startWizBadgeTicker() {
     const isReady = !!state.prefetchedCast;
     pill.textContent = txt;
     pill.style.background = isReady ? "rgba(52,211,153,.15)" : "rgba(148,163,184,.1)";
-    pill.style.color = isReady ? "#34D399" : "#94A3B8";
+    pill.style.color = isReady ? "#1C82FF" : "#94A3B8";
   }, 1200);
 }
 function stopWizBadgeTicker() { if (wizAIBadgeTicker) { clearInterval(wizAIBadgeTicker); wizAIBadgeTicker = null; } }
@@ -135,7 +135,7 @@ const WORLD_PATHS = [
   // but clicking routes to a "coming soon" toast instead of the wizard.
   { arch: "merchant", emoji: "🛒", color: "#FFE4E6", personas: [], default: "", demo: true, demoPersona: { id: "merchant", flag: "🏪", nk: "arch_merchant", bk: "arch_merchant_d", face: "" } },
   { arch: "worker",   emoji: "💼", color: "#DBEAFE", personas: [], default: "", demo: true, demoPersona: { id: "worker", flag: "🏢", nk: "arch_worker", bk: "arch_worker_d", face: "" } },
-  { arch: "parent",   emoji: "🏡", color: "#DCFCE7", personas: [], default: "", demo: true, demoPersona: { id: "parent", flag: "👨‍👩‍👧", nk: "arch_parent", bk: "arch_parent_d", face: "" } },
+  { arch: "parent",   emoji: "🏡", color: "#A6D9FF", personas: [], default: "", demo: true, demoPersona: { id: "parent", flag: "👨‍👩‍👧", nk: "arch_parent", bk: "arch_parent_d", face: "" } },
   { arch: "general",  emoji: "🌐", color: "#E0E7FF", personas: [], default: "", demo: true, demoPersona: { id: "general", flag: "🌍", nk: "arch_general", bk: "arch_general_d", face: "" } },
 ];
 const ALL_PERSONAS = WORLD_PATHS.flatMap(w => w.personas);
@@ -241,7 +241,7 @@ function vLanding() {
             <span>${t("day2_hint")(3)}</span>
           </div>
           <div class="hv-apps">
-            ${[["💬","#0F766E"],["✉️","#2563EB"],["📧","#DC2626"],["🌐","#334155"],["👛","#7C3AED"],["🛒","#EA580C"],["📸","#DB2777"],["🎓","#0891B2"]].map(a =>
+            ${[["💬","#0D408E"],["✉️","#2563EB"],["📧","#DC2626"],["🌐","#334155"],["👛","#7C3AED"],["🛒","#EA580C"],["📸","#DB2777"],["🎓","#0891B2"]].map(a =>
               `<span class="hv-app" style="background:${a[1]}">${a[0]}</span>`).join("")}
           </div>
           <div class="hv-notif">
@@ -565,7 +565,7 @@ function vWizard() {
   <header class="topbar"><div class="wrap-wide topbar-inner">
     <button class="brand" onclick="go('profiles')" style="background:none;border:none"><img class="brand-mark" src="HumanPatch_Logo.png?v=3" alt="CyberLife"></button>
     <span class="dim small">${t("step_of")(step)}</span>
-    <span id="wiz-ai-pill" class="wiz-ai-pill" style="${state.prefetchedCast ? 'background:rgba(52,211,153,.15);color:#34D399' : 'background:rgba(148,163,184,.1);color:#94A3B8'}">${wizAIBadge()}</span>
+    <span id="wiz-ai-pill" class="wiz-ai-pill" style="${state.prefetchedCast ? 'background:rgba(52,211,153,.15);color:#1C82FF' : 'background:rgba(148,163,184,.1);color:#94A3B8'}">${wizAIBadge()}</span>
   </div></header>
   <main class="wrap" style="padding-bottom:40px">
     <div class="wizard-progress">${[1,2,3,4].map(i => `<span class="${i < step ? "done" : i === step ? "cur" : ""}"></span>`).join("")}</div>
@@ -618,7 +618,7 @@ function vPrep() {
     <div class="prep-phone-mock"></div>
     <h1 style="font-size:22px">${t("prep_h")}</h1>
     <p class="dim small" style="margin-top:6px">${t("prep_sub")}</p>
-    ${stTitle ? `<div style="margin-top:10px;padding:10px 16px;border-radius:12px;background:#CCFBF1;color:#0F766E;font-weight:700;font-size:13px">📖 ${state.lang === "id" ? "Storyline" : "Storyline"}: ${stTitle}</div>` : ""}
+    ${stTitle ? `<div style="margin-top:10px;padding:10px 16px;border-radius:12px;background:#60B6FF;color:#0D408E;font-weight:700;font-size:13px">📖 ${state.lang === "id" ? "Storyline" : "Storyline"}: ${stTitle}</div>` : ""}
     <div class="prep-steps">
       ${[1,2,3,4].map(i => `
         <div class="prep-step" id="ps-${i-1}"><div class="spin"></div><p>${t("prep_s"+i)}</p></div>`).join("")}
@@ -2111,7 +2111,7 @@ function trackEvent(text) { state.events.push(text); }
 
 /* wallpaper css */
 const WALL_CSS = {
-  0: "linear-gradient(160deg,#0F172A,#134E4A)",
+  0: "linear-gradient(160deg,#0F172A,#0D408E)",
   1: "linear-gradient(160deg,#1F2937,#7C2D12)",
   2: "linear-gradient(160deg,#0F172A,#86198F)",
   3: "linear-gradient(160deg,#0F172A,#3F3F46)",

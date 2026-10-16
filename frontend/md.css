@@ -81,7 +81,7 @@
 .md-outcome-head { text-align: center; margin: 18px 0 8px; }
 .md-outcome-icon { font-size: 42px; }
 .md-outcome h2 { margin: 6px 0 2px; letter-spacing: .06em; }
-.md-outcome.good h2 { color: #4ADE80; }
+.md-outcome.good h2 { color: #1C82FF; }
 .md-outcome.bad h2 { color: #F87171; }
 .md-outcome.mid h2 { color: #FBBF24; }
 .md-debrief { display: grid; gap: 10px; margin: 14px 0; }
@@ -94,7 +94,7 @@
 .md-recovery { margin: 12px 0; }
 .md-rec-note { font-size: 13px; color: #FCA5A5; }
 .md-rec-step { display: block; width: 100%; text-align: left; background: #0F1B2F; border: 1px solid rgba(251,191,36,.4); color: #FCD34D; border-radius: 12px; padding: 11px 14px; font-size: 13px; margin-bottom: 8px; cursor: pointer; }
-.md-rec-step.done { border-color: rgba(74,222,128,.4); color: #4ADE80; cursor: default; opacity: .8; }
+.md-rec-step.done { border-color: rgba(74,222,128,.4); color: #1C82FF; cursor: default; opacity: .8; }
 .md-outcome-actions { margin-top: 14px; }
 
 /* --- finale --- */
