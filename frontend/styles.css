@@ -832,3 +832,7 @@ body { scroll-snap-type: y proximity; } /* gentle snap, still free-scrolls insid
 /* storyline continuity notes on day splash */
 .carry-note { margin:14px 0; padding:10px 14px; border-radius:12px; background:rgba(251,191,36,.12); border:1px solid rgba(251,191,36,.35); text-align:left; }
 .carry-note p { margin:4px 0; font-size:13px; color:#FCD34D; }
+
+/* preview close (back without deciding) */
+.ap-close { background:none; border:none; color:#94A3B8; font-size:16px; cursor:pointer; padding:4px 8px; margin-left:auto; }
+.ap-close:hover { color:#E2E8F0; }
