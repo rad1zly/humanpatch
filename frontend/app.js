@@ -207,7 +207,7 @@ function vLanding() {
   return `
   <div id="bg3d" aria-hidden="true"></div>
   <header class="topbar topbar-fixed"><div class="wrap-wide topbar-inner">
-    <button class="brand" onclick="go('landing'); location.hash=''">🛡️ HumanPatch</button>
+    <button class="brand" onclick="go('landing'); location.hash=''"><img class="brand-mark" src="HumanPatch_Logo.png?v=64" alt="HumanPatch — Every Choice Shapes Your Safety."></button>
     <div class="navwrap">
       <nav class="navlinks" aria-label="Sections">${navLinks()}</nav>
       <button class="navburger" onclick="toggleNavDD(event)" aria-label="Menu">☰</button>
@@ -334,7 +334,7 @@ function vAuth() {
   return `
   <div class="auth-wrap"><div class="wrap auth-main">
     <div class="auth-card">
-      <div class="brand" style="margin-bottom:14px">🛡️ HumanPatch</div>
+      <div class="brand" style="margin-bottom:14px"><img class="brand-mark" src="HumanPatch_Logo.png?v=64" alt="HumanPatch — Every Choice Shapes Your Safety."></div>
       ${langDropdown()}
       <h1 style="margin-top:12px">${isLogin ? t("auth_login_h") : t("auth_signup_h")}</h1>
       <p class="sub">${isLogin ? t("auth_login_sub") : t("auth_signup_sub")}</p>
@@ -436,7 +436,7 @@ function vProfiles() {
   const ps = state.profiles;
   return `
   <header class="topbar"><div class="wrap-wide topbar-inner">
-    <div class="brand">🛡️ HumanPatch</div>
+    <div class="brand"><img class="brand-mark" src="HumanPatch_Logo.png?v=64" alt="HumanPatch — Every Choice Shapes Your Safety."></div>
     <div style="display:flex;gap:10px;align-items:center">
       ${langDropdown()}
       <button class="btn btn-ghost nav-btn" onclick="logout()">${t("nav_logout")}</button>
@@ -563,7 +563,7 @@ function vWizard() {
   }
   return `
   <header class="topbar"><div class="wrap-wide topbar-inner">
-    <button class="brand" onclick="go('profiles')" style="background:none;border:none">🛡️ HumanPatch</button>
+    <button class="brand" onclick="go('profiles')" style="background:none;border:none"><img class="brand-mark" src="HumanPatch_Logo.png?v=64" alt="HumanPatch — Every Choice Shapes Your Safety."></button>
     <span class="dim small">${t("step_of")(step)}</span>
     <span id="wiz-ai-pill" class="wiz-ai-pill" style="${state.prefetchedCast ? 'background:rgba(52,211,153,.15);color:#1C82FF' : 'background:rgba(148,163,184,.1);color:#94A3B8'}">${wizAIBadge()}</span>
   </div></header>
@@ -705,7 +705,7 @@ function vDashboard() {
   const xpPct = Math.min(100, Math.round((p.xp / xpNeed) * 100));
   return `
   <header class="topbar"><div class="wrap-wide topbar-inner">
-    <div class="brand">🛡️ HumanPatch</div>
+    <div class="brand"><img class="brand-mark" src="HumanPatch_Logo.png?v=64" alt="HumanPatch — Every Choice Shapes Your Safety."></div>
     <div style="display:flex;gap:10px;align-items:center">
       ${langDropdown()}
       <button class="btn btn-ghost nav-btn" onclick="go('profiles')">${t("nav_profiles")}</button>
@@ -2152,7 +2152,9 @@ function siteFooter() {
   return `
   <footer class="site-footer">
     <div class="inner">
-      <div class="footer-brand">🛡️ HumanPatch</div>
+      <div class="footer-brand">
+        <img class="footer-logo" src="HumanPatch_Logo.png?v=64" alt="HumanPatch — Every Choice Shapes Your Safety.">
+      </div>
       <p class="footer-note">${t("foot_note")}</p>
       <nav class="footer-nav">
         ${DOC_ORDER.map(d => `<button onclick="openDoc('${d}')">${L(DOCS[d].title)}</button>`).join("")}
@@ -2188,7 +2190,7 @@ function vDoc(id) {
   return `
   <div class="doc-page">
     <header class="topbar topbar-fixed"><div class="wrap-wide topbar-inner">
-      <button class="brand brand-btn" onclick="go('landing'); location.hash='';">🛡️ HumanPatch</button>
+      <button class="brand brand-btn" onclick="go('landing'); location.hash='';"><img class="brand-mark" src="HumanPatch_Logo.png?v=64" alt="HumanPatch — Every Choice Shapes Your Safety."></button>
       <div style="margin-left:auto;display:flex;gap:10px;align-items:center">
         ${langDropdown()}
         <button class="btn btn-ghost nav-btn" onclick="go('landing'); location.hash='';">‹ ${t("back_home")}</button>
