@@ -18,7 +18,7 @@ const MD = {
 };
 
 function mdProfile() { return state.mdRun || null; }
-function mdSave() { saveLocal(); }
+function mdSave() { if (typeof saveLocal === "function") saveLocal(); }
 
 function mdStart() {
   state.mdRun = {
@@ -130,10 +130,8 @@ function vMdHome() {
   const done = run ? run.outcomes.filter(Boolean).length : 0;
   return `
   <div class="md-wrap">
-    <div class="md-langbar">
-      ${LANGS.map(l => `<button class="md-lang ${LANG === l.id ? "on" : ""}" onclick="mdSetLang('${l.id}')">${l.flag} ${l.label}</button>`).join("")}
-    </div>
-    <h1 class="md-title">🛡️ HumanPatch <span class="md-sub">— Sepuluh Chapter Menuju Aman Digital</span></h1>
+    <button class="btn btn-ghost md-exit" onclick="mdExitToWorld()">← ${L({id:"Kembali ke Dunia", en:"← Back to World"})}</button>
+    <h1 class="md-title">🛡️ ${L({id:"Perjalanan 10 Chapter", en:"10-Chapter Journey"})}</h1>
     <p class="dim">${L({id:"Sepuluh chapter. Sepuluh domain. Setiap keputusanmu membentuk chapter berikutnya.", en:"Ten chapters. Ten domains. Every decision shapes the next one."})}</p>
     <div class="md-chapter-grid">
       ${MD_CHAPTERS.map(ch => {
@@ -153,7 +151,7 @@ function vMdHome() {
     </div>
     <div class="md-actions">
       ${started ? `<button class="btn btn-ghost" onclick="mdResetConfirm()">${L({id:"↺ Mulai ulang", en:"↺ Restart"})}</button>` : ""}
-      ${!started ? `<button class="btn btn-primary" onclick="mdStart()">${L({id:"Mulai Chapter 1 →", en:"Start Chapter 1 →"})}</button>` : ""}
+      ${!started ? `<button class="btn btn-primary" onclick="mdGoChapter(state.mdRun?.chapter || 1)">${L({id:"Lanjutkan →", en:"Continue →"})}</button>` : ""}
     </div>
   </div>`;
 }
@@ -179,6 +177,7 @@ function vMdNotif() {
         <h4>${L({id:"Menyiapkan Chapter " + ch.n, en:"Preparing Chapter " + ch.n})}</h4>
         <p class="dim">${L(ch.title)} · ${L(ch.domain)}</p>
         <p class="dim small">${L({id:"Membangun skenario · menghubungkan notifikasi…", en:"Building the scenario · connecting the notification…"})}</p>
+        <button class="btn btn-ghost md-exit" style="margin-top:22px" onclick="mdExitToWorld()">${L({id:"← Kembali ke Dunia", en:"← Back to World"})}</button>
       </div>
       <div class="md-notif-actions">
         <button class="btn btn-primary btn-block" onclick="mdOpenChannel()">${L({id:"Buka notifikasi", en:"Open notification"})}</button>
