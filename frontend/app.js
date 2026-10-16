@@ -762,11 +762,20 @@ function startDay() {
 function vSplash() {
   const w = state.world;
   const ready = state.splashReady;
+  const s = storyState();
+  // storyline continuity (doc §4.C): yesterday's mistakes cast a shadow
+  const carry = [];
+  if (s.credentials_leaked || s.wifi_leaked) carry.push(L({id:"Kredensialmu sempat bocor — akunmu rawan hari ini.", en:"Your credentials leaked — your account is at risk today.", es:"Tus credenciales se filtraron — tu cuenta está en riesgo hoy.", fr:"Vos identifiants ont fuité — votre compte est menacé aujourd'hui.", it:"Le tue credenziali sono trapelate — il tuo account è a rischio oggi.", de:"Deine Zugangsdaten sind geleakt — dein Konto ist heute gefährdet.", pt:"Suas credenciais vazaram — sua conta está em risco hoje."}));
+  if (s.account_breached) carry.push(L({id:"Akunmu sempat dibajak kemarin — periksa perangkat aktif.", en:"Your account was hijacked yesterday — check active devices.", es:"Tu cuenta fue hackeada ayer — revisa los dispositivos activos.", fr:"Ton compte a été piraté hier — vérifie les appareils actifs.", it:"Il tuo account è stato violato ieri — controlla i dispositivi attivi.", de:"Dein Konto wurde gestern übernommen — prüfe aktive Geräte.", pt:"Sua conta foi invadida ontem — verifique os dispositivos ativos."}));
+  if (s.spyware_installed) carry.push(L({id:"Ada aplikasi mencurigakan di HP-mu — periksa izin di Security.", en:"A suspicious app is on your phone — check permissions in Security.", es:"Hay una app sospechosa en tu teléfono — revisa permisos en Security.", fr:"Une app suspecte est sur ton téléphone — vérifie dans Security.", it:"C'è un'app sospetta sul telefono — controlla i permessi in Security.", de:"Eine verdächtige App ist auf dem Handy — prüfe die Rechte in Security.", pt:"Há um app suspeito no seu celular — revise permissões no Security."}));
+  if (s.personal_data_public) carry.push(L({id:"Datamu terlihat publik — orang asing bisa menyebut identitasmu.", en:"Your data is public — strangers can cite your identity.", es:"Tus datos son públicos — extraños pueden citar tu identidad.", fr:"Tes données sont publiques — des inconnus peuvent citer ton identité.", it:"I tuoi dati sono pubblici — sconosciuti possono citare la tua identità.", de:"Deine Daten sind öffentlich — Fremde können deine Identität zitieren.", pt:"Seus dados são públicos — estranhos podem citar sua identidade."}));
+  if (s.wallet_damaged) carry.push(L({id:"Dompetmu sempat terkuras — waspada permintaan uang berikutnya.", en:"Your wallet took a hit — stay alert for the next money ask.", es:"Tu cartera sufrió — alerta a la próxima petición de dinero.", fr:"Ton portefeuille a souffert — méfie-toi des prochaines demandes d'argent.", it:"Il tuo portafoglio ha sofferto — attento alla prossima richiesta di denaro.", de:"Dein Portemonnaie wurde belastet — Vorsicht bei der nächsten Geldfrage.", pt:"Sua carteira sofreu — atenção ao próximo pedido de dinheiro."}));
   return `
   <div class="day-splash">
     <p class="daynum">${t("chap_day_of")(w ? w.day : activeProfile().day)}</p>
     <h1>${w ? t("day"+w.day+"_t") : t("loading_world")}</h1>
     ${w ? `<p class="dim">${STORY_DAYS[w.day-1].engTitle}</p>` : ""}
+    ${carry.length ? `<div class="carry-note">${carry.map(c => `<p>⚠️ ${c}</p>`).join("")}</div>` : ""}
     ${w ? `<div class="obj">${t("obj_prefix")} ${t("day"+w.day+"_o")}</div>` : ""}
     ${ready
       ? `<button class="btn btn-primary" onclick="enterPhone()">${t("btn_power")}</button>`
@@ -1364,6 +1373,7 @@ function actDismiss(id) {
     atk.done = true;
     if (n) n.read = true;
     trackEvent("🙈 ignored: " + atk.from);
+    recordIncidentOutcome(atk.scenario, "ignored");
     promoteAttackB();
   } else if (n) { n.read = true; trackEvent("🙈 " + n.from); }
   state.atkPreview = false;
@@ -1386,6 +1396,58 @@ function promoteAttackB() {
   toast(L({id:"📮 Insiden baru masuk…", en:"📮 A new incident just came in…", es:"📮 Nuevo incidente entrante…", fr:"📮 Nouvel incident entrant…", it:"📮 Nuovo incidente in arrivo…", de:"📮 Neuer Vorfall eingegangen…", pt:"📮 Novo incidente chegando…"}));
 }
 
+/* ---------- cross-day storyline state (storyline doc §4.C) ----------
+   Set from each resolved incident's outcome; consumed by later days to
+   shape intensity/context. Persisted on the profile. */
+function storyState() {
+  const p = activeProfile();
+  if (!p) return {};
+  if (!p.storyState) p.storyState = {};
+  return p.storyState;
+}
+function recordIncidentOutcome(scenario, outcome) {
+  const s = storyState();
+  const ss = (v) => { s[v] = true; saveLocal(); };
+  switch (scenario) {
+    // Day 1 — credentials: phishing chat / fake portal
+    case "story_komp_d1_phishing":
+    case "story_komp_d1_password":
+      if (outcome === "compromised") ss("credentials_leaked");
+      else if (outcome === "survived" || outcome === "survived_reported") ss("knows_scam_pattern");
+      break;
+    // Day 2 — wifi evil twin / privacy overshare
+    case "story_komp_d2_wifi":
+      if (outcome === "compromised") ss("wifi_leaked");
+      else if (outcome !== "ignored") ss("knows_scam_pattern");
+      break;
+    case "story_komp_d2_privacy":
+      if (outcome === "compromised") ss("personal_data_public");
+      break;
+    // Day 3 — APK / takeover
+    case "story_komp_d3_apk":
+      if (outcome === "compromised") ss("spyware_installed");
+      break;
+    case "story_komp_d3_takeover":
+      if (outcome === "compromised") ss("account_breached");
+      else if (outcome === "survived" || outcome === "survived_reported") ss("knows_scam_pattern");
+      break;
+    // Day 4 — OTP call / QRIS
+    case "story_komp_d4_otpcall":
+    case "story_komp_d4_qris":
+      if (outcome === "compromised") ss("wallet_damaged");
+      else if (outcome === "survived" || outcome === "survived_reported") ss("knows_scam_pattern");
+      break;
+    // Day 5 — threat / family
+    case "story_komp_d5_threat":
+      if (outcome === "compromised") ss("wallet_damaged");
+      break;
+    case "story_komp_d5_family":
+      if (outcome === "survived" || outcome === "survived_reported") ss("family_safe");
+      break;
+  }
+  saveLocal();
+}
+
 /* Player taps chapter B's notification: promote it to the ACTIVE attack
    (swap) so preview/encounter/verify all operate on it. */
 function activateAttackB(notifId, dismiss) {
@@ -1401,6 +1463,7 @@ function activateAttackB(notifId, dismiss) {
   if (dismiss) {
     w.attack.done = true;
     trackEvent("🙈 ignored: " + w.attack.from);
+    recordIncidentOutcome(w.attack.scenario, "ignored");
     toast(t("ignored_toast"));
     render();
     return;
@@ -1631,6 +1694,8 @@ async function finishEncounter(outcome) {
     state.debrief = { summary: { outcome }, coach: "-" };
   }
   state.world.attack.done = true;
+  // storyline state: credentials leak, wallet damage, etc. (doc §4.C)
+  recordIncidentOutcome(state.world.attack.scenario, outcome);
   // chapter A resolved → surface chapter B in the notif bar (after the debrief)
   promoteAttackB();
   state.screen = "debrief";

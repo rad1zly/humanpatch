@@ -13,6 +13,18 @@ function t(k) {
 
 const I18N = {
 id: {
+  day1_t: 'Peringatan Pertama',
+  day2_t: 'Jejak Digital',
+  day3_t: 'Ada yang Tidak Beres',
+  day4_t: 'Kepercayaan Ada Harganya',
+  day5_t: 'Melampaui Dirimu',
+
+  day1_id: 'Peringatan Pertama',
+  day2_id: 'Jejak Digital',
+  day3_id: 'Ada yang Tidak Beres',
+  day4_id: 'Kepercayaan Ada Harganya',
+  day5_id: 'Melampaui Dirimu',
+
   sheet_security: 'Keamanan',
   sheet_twin: 'SSID Kembar',
   sheet_owner: 'Pemilik',
@@ -157,7 +169,6 @@ id: {
   dash_lvl: (l)=>`★ LEVEL ${l}`, chap_day_of: (d)=>`BAB 1 · HARI ${d} DARI 5`, btn_continue: "Lanjutkan Cerita ▸",
   journey_h: "Perjalananmu", journey_sub: "Selesaikan hari untuk membuka berikutnya.",
   world_h: (n)=>`Dunia ${n}`, world_sub: "Kontak fiktif yang tinggal di HP-mu.",
-  day1_t: "Hari Biasa", day2_t: "Ada yang Perasaan", day3_t: "Lindungi Akun", day4_t: "Konsekuensi", day5_t: "Pulihkan & Laporkan",
   day1_o: "Kenali HP-mu: aplikasi, kontak, dan cara cek detail pengirim.",
   day2_o: "Ada pesan janggal. Periksa sebelum percaya.",
   day3_o: "Izin aplikasi, pemulihan akun, dan keputusan autentikasi.",
@@ -202,6 +213,18 @@ id: {
   atk_generic: "Pesan baru dari nomor tidak dikenal…",
 },
 en: {
+  day1_t: 'The First Warning',
+  day2_t: 'A Digital Footprint',
+  day3_t: 'Something Is Wrong',
+  day4_t: 'Trust Has a Price',
+  day5_t: 'Beyond Yourself',
+
+  day1_en: 'The First Warning',
+  day2_en: 'A Digital Footprint',
+  day3_en: 'Something Is Wrong',
+  day4_en: 'Trust Has a Price',
+  day5_en: 'Beyond Yourself',
+
   sheet_security: 'Security',
   sheet_twin: 'Twin SSID',
   sheet_owner: 'Owner',
@@ -349,7 +372,6 @@ en: {
   dash_lvl: (l)=>`★ LEVEL ${l}`, chap_day_of: (d)=>`CHAPTER 1 · DAY ${d} OF 5`, btn_continue: "Continue Story ▸",
   journey_h: "Your journey", journey_sub: "Complete days to unlock the next.",
   world_h: (n)=>`${n}'s world`, world_sub: "Fictional contacts living in your phone.",
-  day1_t: "The Ordinary Day", day2_t: "Something Feels Wrong", day3_t: "Protect Your Accounts", day4_t: "The Consequences", day5_t: "Recover & Respond",
   day1_o: "Know your phone: apps, contacts, and how to check sender details.",
   day2_o: "An odd message arrived. Verify before trusting.",
   day3_o: "App permissions, account recovery, and authentication decisions.",
@@ -394,6 +416,18 @@ en: {
   atk_generic: "New message from an unknown number…",
 },
 es: {
+  day1_t: 'La Primera Advertencia',
+  day2_t: 'Una Huella Digital',
+  day3_t: 'Algo Está Mal',
+  day4_t: 'La Confianza Tiene un Precio',
+  day5_t: 'Más Allá de Ti',
+
+  day1_es: 'La Primera Advertencia',
+  day2_es: 'Una Huella Digital',
+  day3_es: 'Algo Está Mal',
+  day4_es: 'La Confianza Tiene un Precio',
+  day5_es: 'Más Allá de Ti',
+
   sheet_security: 'Seguridad',
   sheet_twin: 'SSID Gemelo',
   sheet_owner: 'Propietario',
@@ -574,7 +608,6 @@ es: {
   btn_play: "Jugar ▸", btn_new_profile: "＋ Crear Perfil Nuevo", btn_next: "Siguiente ▸", btn_back: "◂ Atrás",
   btn_create_world: "Crear Mi Mundo ▸",
   prep_h: "Preparando tu vida digital…",
-  day1_t: "Un Día Cualquiera", day2_t: "Algo Se Siente Raro", day3_t: "Protege Tus Cuentas", day4_t: "Las Consecuencias", day5_t: "Recupera y Reporta",
   btn_continue: "Continuar Historia ▸", btn_power: "Encender Tu Teléfono ▸",
   exit: "◂ Salir", demo_flag: (n) => "IA · Nv " + n,
   chat_placeholder: "Responde con tus propias palabras…",
@@ -587,6 +620,18 @@ es: {
   btn_login: "Entrar", btn_signup: "Crear Cuenta Demo",
 },
 fr: {
+  day1_t: 'Le Premier Avertissement',
+  day2_t: 'Une Empreinte Numérique',
+  day3_t: 'Quelque Chose Ne Va Pas',
+  day4_t: 'La Confiance a un Prix',
+  day5_t: 'Au-delà de Toi',
+
+  day1_fr: 'Le Premier Avertissement',
+  day2_fr: 'Une Empreinte Numérique',
+  day3_fr: 'Quelque Chose Ne Va Pas',
+  day4_fr: 'La Confiance a un Prix',
+  day5_fr: 'Au-delà de Toi',
+
   sheet_security: 'Sécurité',
   sheet_twin: 'SSID Jumeau',
   sheet_owner: 'Propriétaire',
@@ -767,7 +812,6 @@ fr: {
   btn_play: "Jouer ▸", btn_new_profile: "＋ Créer un Nouveau Profil", btn_next: "Suivant ▸", btn_back: "◂ Retour",
   btn_create_world: "Créer Mon Monde ▸",
   prep_h: "Préparation de votre vie numérique…",
-  day1_t: "Une Journée Ordinaire", day2_t: "Quelque Chose Cloche", day3_t: "Protégez Vos Comptes", day4_t: "Les Conséquences", day5_t: "Récupérer et Signaler",
   btn_continue: "Continuer l'Histoire ▸", btn_power: "Allumer Votre Téléphone ▸",
   exit: "◂ Sortir", demo_flag: (n) => "IA · Niv " + n,
   chat_placeholder: "Répondez avec vos propres mots…",
@@ -781,6 +825,17 @@ fr: {
 },
 
 it: {
+  day1_t: 'Il Primo Avvertimento',
+  day2_t: "Un'Impronta Digitale",
+  day3_t: 'Qualcosa Non Va',
+  day4_t: 'La Fiducia Ha un Prezzo',
+  day5_t: 'Oltre Te Stesso',
+
+  day1_it: 'Il Primo Avvertimento',
+  day3_it: 'Qualcosa Non Va',
+  day4_it: 'La Fiducia Ha un Prezzo',
+  day5_it: 'Oltre Te Stesso',
+
   sheet_security: 'Sicurezza',
   sheet_twin: 'SSID Gemello',
   sheet_owner: 'Proprietario',
@@ -961,7 +1016,6 @@ it: {
   btn_play: "Gioca ▸", btn_new_profile: "＋ Crea Nuovo Profilo", btn_next: "Avanti ▸", btn_back: "◂ Indietro",
   btn_create_world: "Crea Il Mio Mondo ▸",
   prep_h: "Preparando la tua vita digitale…",
-  day1_t: "Una Giornata Qualsiasi", day2_t: "Qualcosa Non Quadra", day3_t: "Proteggi I Tuoi Account", day4_t: "Le Conseguenze", day5_t: "Recupera e Segnala",
   btn_continue: "Continua La Storia ▸", btn_power: "Accendi Il Tuo Telefono ▸",
   exit: "◂ Esci", demo_flag: (n) => "AI · Lv " + n,
   chat_placeholder: "Rispondi con le tue parole…",
@@ -975,6 +1029,18 @@ it: {
 },
 
 de: {
+  day1_t: 'Die Erste Warnung',
+  day2_t: 'Ein Digitaler Fußabdruck',
+  day3_t: 'Etwas Ist Faul',
+  day4_t: 'Vertrauen Hat Seinen Preis',
+  day5_t: 'Über Dich Hinaus',
+
+  day1_de: 'Die Erste Warnung',
+  day2_de: 'Ein Digitale Fußabdruck',
+  day3_de: 'Etwas Ist Faul',
+  day4_de: 'Vertrauen Hat Seinen Preis',
+  day5_de: 'Über Dich Hinaus',
+
   sheet_security: 'Sicherheit',
   sheet_twin: 'Zwillings-SSID',
   sheet_owner: 'Besitzer',
@@ -1155,7 +1221,6 @@ de: {
   btn_play: "Spielen ▸", btn_new_profile: "＋ Neues Profil Erstellen", btn_next: "Weiter ▸", btn_back: "◂ Zurück",
   btn_create_world: "Meine Welt Erstellen ▸",
   prep_h: "Dein digitales Leben wird vorbereitet…",
-  day1_t: "Ein Ganz Normaler Tag", day2_t: "Etwas Fühlt Sich Seltsam An", day3_t: "Schütze Deine Konten", day4_t: "Die Konsequenzen", day5_t: "Wiederherstellen & Melden",
   btn_continue: "Geschichte Fortsetzen ▸", btn_power: "Handy Einschalten ▸",
   exit: "◂ Beenden", demo_flag: (n) => "KI · St " + n,
   chat_placeholder: "Antworte mit deinen eigenen Worten…",
@@ -1169,6 +1234,18 @@ de: {
 },
 
 pt: {
+  day1_t: 'O Primeiro Aviso',
+  day2_t: 'Uma Pegada Digital',
+  day3_t: 'Algo Está Errado',
+  day4_t: 'Confiança Tem um Preço',
+  day5_t: 'Além de Você',
+
+  day1_pt: 'O Primeiro Aviso',
+  day2_pt: 'Uma Pegada Digital',
+  day3_pt: 'Algo Está Errado',
+  day4_pt: 'Confiança Tem um Preço',
+  day5_pt: 'Além de Você',
+
   sheet_security: 'Segurança',
   sheet_twin: 'SSID Gêmeo',
   sheet_owner: 'Proprietário',
@@ -1349,7 +1426,6 @@ pt: {
   btn_play: "Jogar ▸", btn_new_profile: "＋ Criar Novo Perfil", btn_next: "Próximo ▸", btn_back: "◂ Voltar",
   btn_create_world: "Criar Meu Mundo ▸",
   prep_h: "Preparando sua vida digital…",
-  day1_t: "Um Dia Comum", day2_t: "Algo Parece Estranho", day3_t: "Proteja Suas Contas", day4_t: "As Consequências", day5_t: "Recupere e Denuncie",
   btn_continue: "Continuar História ▸", btn_power: "Ligar Seu Celular ▸",
   exit: "◂ Sair", demo_flag: (n) => "IA · Nv " + n,
   chat_placeholder: "Responda com suas próprias palavras…",
