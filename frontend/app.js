@@ -302,7 +302,7 @@ function vLanding() {
             </div>
             <div class="pc-barwrap">
               <div class="pc-bar"><span style="width:${Math.max(pct, prof ? 8 : 0)}%"></span></div>
-              <span class="pc-pct">${prof ? `${days}/5 ${t("wp_days_word")}` : t("wp_not_started")}</span>
+              <span class="pc-pct">${prof ? `${days}/10 ${t("wp_chapters_word")}` : t("wp_not_started")}</span>
             </div>
             <button class="btn ${prof ? "btn-primary" : "btn-ghost"} pc-cta" onclick="${prof ? `requireAuth(playProfile)('${prof.id}')` : (p.demo ? `demoSoon('${p.arch}')` : `requireAuth(startWorldPath)('${p.arch}','${p.persona.id}')`)}">
               ${prof ? t("wp_continue") : (p.demo ? t("demo_world_btn") : t("wp_start"))}
