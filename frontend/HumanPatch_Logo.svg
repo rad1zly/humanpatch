@@ -1,60 +1,103 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 260" role="img" aria-label="HumanPatch — Every Choice Shapes Your Safety.">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0D9488"/>
-      <stop offset="100%" stop-color="#0F766E"/>
+    <!-- face gradient: Royal Blue → Bright Blue -->
+    <linearGradient id="face" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#005AE2"/>
+      <stop offset="60%" stop-color="#1C82FF"/>
+      <stop offset="100%" stop-color="#60B6FF"/>
     </linearGradient>
-    <linearGradient id="shield" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#FFFFFF"/>
-      <stop offset="100%" stop-color="#E0F2F1"/>
+    <!-- hair / helmet gradient: Deep Blue → Royal -->
+    <linearGradient id="helmet" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0D408E"/>
+      <stop offset="100%" stop-color="#005AE2"/>
     </linearGradient>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
-      <feOffset dx="0" dy="2" result="off"/>
-      <feComponentTransfer><feFuncA type="linear" slope="0.25"/></feComponentTransfer>
-      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
+    <!-- particles: Light Blue → Soft Cyan -->
+    <linearGradient id="part" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#A6D9FF"/>
+      <stop offset="100%" stop-color="#60B6FF"/>
+    </linearGradient>
+    <!-- dark trim (HUD arc) -->
+    <linearGradient id="trim" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#08254F"/>
+      <stop offset="100%" stop-color="#0D408E"/>
+    </linearGradient>
+    <!-- wordmark color via CSS-friendly attrs -->
+    <linearGradient id="wmHuman" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0D408E"/>
+      <stop offset="100%" stop-color="#08254F"/>
+    </linearGradient>
+    <linearGradient id="wmPatch" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1C82FF"/>
+      <stop offset="100%" stop-color="#60B6FF"/>
+    </linearGradient>
   </defs>
 
-  <!-- Rounded square background -->
-  <rect x="10" y="10" width="180" height="180" rx="42" ry="42" fill="url(#bg)"/>
+  <!-- ============ LUNA-AI STYLE BUST ============ -->
+  <g transform="translate(20 0)">
+    <!-- digital particles (left/bottom of bust) -->
+    <g fill="url(#part)" opacity="0.95">
+      <rect x="0"  y="160" width="18" height="18" rx="3"/>
+      <rect x="22" y="150" width="14" height="14" rx="3"/>
+      <rect x="6"  y="190" width="12" height="12" rx="3"/>
+      <rect x="24" y="200" width="10" height="10" rx="3"/>
+      <rect x="40" y="170" width="8"  height="8"  rx="2"/>
+    </g>
 
-  <!-- Subtle dot grid (cyber feel) -->
-  <g fill="#FFFFFF" opacity="0.08">
-    <circle cx="30" cy="30" r="1.4"/>
-    <circle cx="170" cy="30" r="1.4"/>
-    <circle cx="30" cy="170" r="1.4"/>
-    <circle cx="170" cy="170" r="1.4"/>
-    <circle cx="100" cy="20" r="1.4"/>
-    <circle cx="100" cy="180" r="1.4"/>
-    <circle cx="20" cy="100" r="1.4"/>
-    <circle cx="180" cy="100" r="1.4"/>
+    <!-- neck/collar base (light cyan) -->
+    <path d="M70 230 Q70 200 110 200 L150 200 Q190 200 190 230 L190 260 L70 260 Z" fill="#A6D9FF"/>
+    <!-- neck shadow -->
+    <path d="M110 200 L150 200 L150 230 L110 230 Z" fill="#60B6FF" opacity="0.45"/>
+
+    <!-- shoulders / body (Bright Blue) -->
+    <path d="M55 260 Q55 215 95 205 L130 200 L170 200 L195 210 Q220 220 220 260 Z" fill="#1C82FF"/>
+    <!-- shoulder inner shadow -->
+    <path d="M105 205 L170 205 L185 230 L120 230 Z" fill="#005AE2" opacity="0.55"/>
+    <!-- HUD light strip across chest -->
+    <path d="M100 235 Q140 245 200 235" stroke="#A6D9FF" stroke-width="3" fill="none" opacity="0.85"/>
+
+    <!-- orbiting ring (the signature swoosh) -->
+    <path d="M62 145 Q120 105 200 150" stroke="#A6D9FF" stroke-width="4" fill="none" opacity="0.85"/>
+    <circle cx="200" cy="150" r="6" fill="#1C82FF"/>
+
+    <!-- face oval (Royal gradient) -->
+    <path d="M85 70 Q85 25 135 25 Q185 25 185 70 Q185 130 135 145 Q85 130 85 70 Z" fill="url(#face)"/>
+    <!-- face shadow (right side) -->
+    <path d="M155 25 Q185 25 185 70 Q185 130 145 145 Q150 80 155 25 Z" fill="#005AE2" opacity="0.35"/>
+    <!-- ear -->
+    <ellipse cx="86" cy="85" rx="6" ry="11" fill="#0D408E"/>
+    <!-- nose -->
+    <path d="M135 70 Q140 92 132 100" stroke="#08254F" stroke-width="2" fill="none" opacity="0.6"/>
+    <!-- lips (light cyan accent) -->
+    <path d="M118 118 Q135 128 152 118" stroke="#A6D9FF" stroke-width="3" fill="none"/>
+    <!-- eye (closed/minimal) -->
+    <path d="M108 78 Q118 84 130 78" stroke="#08254F" stroke-width="2" fill="none"/>
+    <!-- cheek highlight -->
+    <path d="M95 90 Q105 100 100 115" stroke="#A6D9FF" stroke-width="2" fill="none" opacity="0.7"/>
+
+    <!-- helmet / hair (Deep Blue → Royal) -->
+    <path d="M70 80 Q60 25 135 18 Q210 25 200 90 Q190 70 175 60 Q165 45 135 45 Q105 45 95 60 Q80 70 70 80 Z" fill="url(#helmet)"/>
+    <!-- helmet top highlight -->
+    <path d="M90 30 Q135 12 180 30 Q170 22 135 22 Q100 22 90 30 Z" fill="#1C82FF" opacity="0.6"/>
+    <!-- helmet trim (navy) along the bottom edge -->
+    <path d="M70 80 Q80 70 95 60 Q105 45 135 45 Q165 45 175 60 Q190 70 200 90" stroke="url(#trim)" stroke-width="3" fill="none"/>
+    <!-- small HUD indicator on helmet -->
+    <circle cx="78" cy="58" r="4" fill="#A6D9FF"/>
+    <circle cx="78" cy="58" r="2" fill="#08254F"/>
   </g>
 
-  <!-- Shield path (centered, white) -->
-  <g filter="url(#shadow)">
-    <path d="M100 38
-             L152 56
-             L152 102
-             C152 134 130 156 100 164
-             C70 156 48 134 48 102
-             L48 56
-             Z"
-          fill="url(#shield)"
-          stroke="#0F172A" stroke-width="2.5" stroke-linejoin="round"/>
+  <!-- ============ WORDMARK ============ -->
+  <g font-family="Inter, system-ui, -apple-system, 'Segoe UI', Arial, sans-serif" font-weight="900">
+    <text x="265" y="155" font-size="118" letter-spacing="-3" fill="url(#wmHuman)">Human</text>
+    <text x="618" y="155" font-size="118" letter-spacing="-3" fill="url(#wmPatch)">Patch</text>
   </g>
 
-  <!-- Inner checkmark (cyber = verified safety) -->
-  <path d="M76 100 L94 118 L126 80"
-        fill="none"
-        stroke="#0D9488"
-        stroke-width="10"
-        stroke-linecap="round"
-        stroke-linejoin="round"/>
+  <!-- ============ TAGLINE ============ -->
+  <text x="267" y="195" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace"
+        font-size="20" fill="#1C82FF" letter-spacing="0.5" opacity="0.9">
+    Every Choice Shapes Your Safety.
+  </text>
 
-  <!-- Small human silhouette inside (the "patch") -->
-  <circle cx="100" cy="84" r="7" fill="#0F172A"/>
-  <path d="M88 102 C88 94 95 90 100 90 C105 90 112 94 112 102"
-        fill="none" stroke="#0F172A" stroke-width="3.5" stroke-linecap="round"/>
+  <!-- tiny orbit dot beside tagline -->
+  <circle cx="252" cy="187" r="4" fill="#60B6FF"/>
+  <circle cx="252" cy="187" r="2" fill="#1C82FF"/>
 </svg>

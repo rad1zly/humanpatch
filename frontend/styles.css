@@ -855,3 +855,8 @@ body { scroll-snap-type: y proximity; } /* gentle snap, still free-scrolls insid
 .portal-body h4 { margin:8px 0 2px; }
 .login-form { max-width:280px; margin:14px auto 6px; text-align:left; }
 .lfield { background:#fff; border:1px solid #CBD5E1; border-radius:10px; padding:10px 12px; margin-bottom:8px; color:#94A3B8; font-size:13px; }
+.footer-logo { height: 88px; width: auto; max-width: 100%; object-fit: contain; filter: drop-shadow(0 2px 6px rgba(8,37,79,.18)); }
+.footer-note { color: var(--slate); font-size: 13px; max-width: 620px; }
+.footer-nav button { color: #A6D9FF; }
+.footer-nav button:hover { color: #60B6FF; }
+.footer-meta { color: #94A3B8; }
