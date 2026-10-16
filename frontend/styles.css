@@ -828,3 +828,7 @@ body { scroll-snap-type: y proximity; } /* gentle snap, still free-scrolls insid
 .path-card.demo-card .pc-icon::after { font-size: 34px; content: "🚧"; }
 .path-card.demo-card { opacity: .82; }
 .path-card.demo-card:hover { opacity: 1; }
+
+/* storyline continuity notes on day splash */
+.carry-note { margin:14px 0; padding:10px 14px; border-radius:12px; background:rgba(251,191,36,.12); border:1px solid rgba(251,191,36,.35); text-align:left; }
+.carry-note p { margin:4px 0; font-size:13px; color:#FCD34D; }
