@@ -13,6 +13,10 @@ function t(k) {
 
 const I18N = {
 id: {
+  sheet_security: 'Keamanan',
+  sheet_twin: 'SSID Kembar',
+  sheet_owner: 'Pemilik',
+
   demo_world_btn: 'Segera Hadir',
   demo_world_toast: '🚧 Dunia ini masih dalam pengembangan — demo hackathon menyertakan dunia Pelajar. Nantikan!',
 
@@ -198,6 +202,10 @@ id: {
   atk_generic: "Pesan baru dari nomor tidak dikenal…",
 },
 en: {
+  sheet_security: 'Security',
+  sheet_twin: 'Twin SSID',
+  sheet_owner: 'Owner',
+
   demo_world_btn: 'Coming Soon',
   demo_world_toast: '🚧 This world is still in development — the hackathon demo includes the Student world. Stay tuned!',
 
@@ -386,6 +394,10 @@ en: {
   atk_generic: "New message from an unknown number…",
 },
 es: {
+  sheet_security: 'Seguridad',
+  sheet_twin: 'SSID Gemelo',
+  sheet_owner: 'Propietario',
+
   demo_world_btn: 'Próximamente',
   demo_world_toast: '🚧 Este mundo sigue en desarrollo — la demo del hackathon incluye el mundo Estudiante. ¡Espéralo!',
 
@@ -575,6 +587,10 @@ es: {
   btn_login: "Entrar", btn_signup: "Crear Cuenta Demo",
 },
 fr: {
+  sheet_security: 'Sécurité',
+  sheet_twin: 'SSID Jumeau',
+  sheet_owner: 'Propriétaire',
+
   demo_world_btn: 'Bientôt disponible',
   demo_world_toast: '🚧 Ce monde est encore en développement — la démo inclut le monde Étudiant. Restez au courant !',
 
@@ -765,6 +781,10 @@ fr: {
 },
 
 it: {
+  sheet_security: 'Sicurezza',
+  sheet_twin: 'SSID Gemello',
+  sheet_owner: 'Proprietario',
+
   demo_world_btn: 'In arrivo',
   demo_world_toast: '🚧 Questo mondo è ancora in sviluppo — la demo include il mondo Studente. Resta sintonizzato!',
 
@@ -955,6 +975,10 @@ it: {
 },
 
 de: {
+  sheet_security: 'Sicherheit',
+  sheet_twin: 'Zwillings-SSID',
+  sheet_owner: 'Besitzer',
+
   demo_world_btn: 'Demnächst',
   demo_world_toast: '🚧 Diese Welt ist noch in Entwicklung — die Demo enthält die Schüler-Welt. Bleib gespannt!',
 
@@ -1145,6 +1169,10 @@ de: {
 },
 
 pt: {
+  sheet_security: 'Segurança',
+  sheet_twin: 'SSID Gêmeo',
+  sheet_owner: 'Proprietário',
+
   demo_world_btn: 'Em breve',
   demo_world_toast: '🚧 Este mundo ainda está em desenvolvimento — a demo inclui o mundo Estudante. Aguente firme!',
 
