@@ -454,7 +454,7 @@ function vProfiles() {
           <div class="avatar-xl" style="width:46px;height:46px;font-size:22px">${p.avatar}</div>
           <div style="flex:1">
             <strong style="font-size:15px">${archName(p.archetype)}</strong>
-            <p style="margin:0">${t("day_word")} ${p.day} · Lv ${p.level}${p.persona ? " · " + (PERSONA_FACTS[p.persona]?.name || p.persona) : ""}</p>
+            <p style="margin:0">Ch ${Math.min(10, p.chapterDone?.length ? p.chapterDone[p.chapterDone.length-1]+1 : 1)}/10 · Lv ${p.level}${p.persona ? " · " + (PERSONA_FACTS[p.persona]?.name || p.persona) : ""}</p>
           </div>
           <button class="btn btn-primary" style="min-height:40px;padding:0 16px;font-size:13px" onclick="requireAuth(playProfile)('${p.id}')">${t("btn_play")}</button>
           <button class="btn btn-ghost" style="min-height:40px;padding:0 12px;font-size:13px;color:#F87171;border-color:#4C1D24" title="${t("delete_profile")}" onclick="delProfile('${p.id}')">🗑</button>
@@ -701,7 +701,6 @@ function activeProfile() { return state.profiles.find(p => p.id === state.active
 function vDashboard() {
   const p = activeProfile();
   if (!p) return vProfiles();
-  const story = STORY_DAYS[p.day - 1] || STORY_DAYS[4];
   const xpNeed = 100 * p.level;
   const xpPct = Math.min(100, Math.round((p.xp / xpNeed) * 100));
   return `
@@ -724,9 +723,9 @@ function vDashboard() {
 
     <div class="dash-cta">
       <div class="play-card">
-        <p class="kicker">${t("chap_day_of")(p.day)}</p>
-        <h2>${t("day"+p.day+"_t")}</h2>
-        <p>${t("day"+p.day+"_o")}</p>
+        <p class="kicker">${t("chap_day_of")(curChapter())}</p>
+        <h2>${chapterTitle(curChapter())}</h2>
+        <p>${chapterObjText(curChapter())}</p>
         <button class="btn" onclick="startDay()">${t("btn_continue")}</button>
       </div>
     </div>
@@ -735,11 +734,12 @@ function vDashboard() {
       <h2 style="font-size:16px">${t("journey_h")}</h2>
       <p class="sub" style="margin-bottom:12px">${t("journey_sub")}</p>
       <div class="journey">
-        ${STORY_DAYS.map((d) => {
-          const done = p.done.includes(d.day);
-          const cur = d.day === p.day;
-          return `<div class="jday ${done ? "done" : ""} ${cur ? "cur" : ""}">
-            <div class="jdot">${done ? "✓" : (d.day*2-1)}</div><span>${t("chap_day_of")(d.day)}</span>
+        ${Array.from({length:10}, (_, i) => {
+          const n = i + 1;
+          const done = p.chapterDone && p.chapterDone.includes(n);
+          const cur = n === curChapter() && !done;
+          return `<div class="jday ${done ? "done" : ""} ${cur ? "cur" : ""}" title="${esc(chapterTitle(n))}">
+            <div class="jdot">${done ? "✓" : n}</div><span>${esc(chapterTitle(n))}</span>
           </div>`;
         }).join("")}
       </div>
@@ -794,6 +794,28 @@ function startDay() {
 /* ============================================================
    DAY SPLASH
    ============================================================ */
+/* ---- MD 10-chapter model: each incident = its own chapter ----
+   world day d (1-5) x slot A/B -> chapter = (d-1)*2 + (A?1:2).
+   Chapter state lives on the profile: p.chapter tracks the NEXT chapter. */
+function curChapter() {
+  // source of truth: p.chapterDone (chapters 1..10 resolved so far).
+  // The next chapter = first gap; all done → 10.
+  const p = activeProfile();
+  if (!p) return 1;
+  const done = p.chapterDone || [];
+  for (let n = 1; n <= 10; n++) if (!done.includes(n)) return n;
+  return 10;
+}
+function markChapterDone(n) {
+  const p = activeProfile();
+  if (!p) return;
+  if (!p.chapterDone) p.chapterDone = [];
+  if (!p.chapterDone.includes(n)) { p.chapterDone.push(n); p.chapterDone.sort((x, y) => x - y); }
+  saveLocal();
+}
+function chapterTitle(n) { return t("chapter" + n + "_t"); }
+function chapterObjText(n) { return t("chapter" + n + "_o"); }
+
 function vSplash() {
   const w = state.world;
   const ready = state.splashReady;
@@ -807,11 +829,11 @@ function vSplash() {
   if (s.wallet_damaged) carry.push(L({id:"Dompetmu sempat terkuras — waspada permintaan uang berikutnya.", en:"Your wallet took a hit — stay alert for the next money ask.", es:"Tu cartera sufrió — alerta a la próxima petición de dinero.", fr:"Ton portefeuille a souffert — méfie-toi des prochaines demandes d'argent.", it:"Il tuo portafoglio ha sofferto — attento alla prossima richiesta di denaro.", de:"Dein Portemonnaie wurde belastet — Vorsicht bei der nächsten Geldfrage.", pt:"Sua carteira sofreu — atenção ao próximo pedido de dinheiro."}));
   return `
   <div class="day-splash">
-    <p class="daynum">${t("chap_day_of")(w ? w.day : activeProfile().day)}</p>
-    <h1>${w ? t("day"+w.day+"_t") : t("loading_world")}</h1>
-    ${w ? `<p class="dim">${STORY_DAYS[w.day-1].engTitle}</p>` : ""}
+    <p class="daynum">${t("chap_day_of")(curChapter())}</p>
+    <h1>${w ? chapterTitle(curChapter()) : t("loading_world")}</h1>
+    ${w ? `<p class="dim">${chapterObjText(curChapter())}</p>` : ""}
     ${carry.length ? `<div class="carry-note">${carry.map(c => `<p>⚠️ ${c}</p>`).join("")}</div>` : ""}
-    ${w ? `<div class="obj">${t("obj_prefix")} ${t("day"+w.day+"_o")}</div>` : ""}
+    ${w ? `<div class="obj">${t("obj_prefix")} ${chapterObjText(curChapter())}</div>` : ""}
     ${ready
       ? `<button class="btn btn-primary" onclick="enterPhone()">${t("btn_power")}</button>`
       : state.castFailed
@@ -835,14 +857,13 @@ function vPhone() {
     else { return `<div class="phone-stage center"><div class="card center"><p>${t("loading_world")}</p></div></div>`; }
   }
   w = state.world; // re-point after possible rebuild above
-  const story = STORY_DAYS[w.day - 1];
   const p = activeProfile();
   const showWelcome = w.day === 1 && !p?.seenWelcome;
   return `
   <div class="phone-stage">
     <div class="phone-topbar">
       <button class="exit" onclick="exitPhone()">${t("exit")}</button>
-      <span>${t("day_word")} ${w.day} · ${t("day"+w.day+"_t")}</span>
+      <span>${t("chap_day_of")(curChapter())} · ${chapterTitle(curChapter())}</span>
       <span class="demo-flag">${t("demo_flag")(state.mission?.level || (state.world?.day || 1))}</span>
     </div>
     <div class="phone-frame">
@@ -893,7 +914,7 @@ function dismissWelcome() {
   return `
   <div class="homescreen" style="background:${wall}">
     <div class="widget">
-      <p class="day-label">${t("day_word")} ${w.day} — ${t("day"+w.day+"_t")}</p>
+      <p class="day-label">${t("chap_day_of")(curChapter())} · ${chapterTitle(curChapter())}</p>
       <h3>${t("morning")(archName(p.archetype).split(" ")[0])}</h3>
       <p>${w.day === 1 ? t("day1_hint")(unread) : t("day2_hint")(unread)}</p>
     </div>
@@ -906,7 +927,7 @@ function dismissWelcome() {
       <ul class="obj-list">
         ${dayObjectives(w.day).map(o => `<li class="${o.done ? "done" : ""}">${o.done ? "✔" : "○"} ${o.icon || ""} ${esc(L(o.label))}</li>`).join("")}
       </ul>
-      ${day1Done() ? `<button class="btn btn-primary btn-block" style="min-height:44px" onclick="endDay1()">${w.day < 5 ? t("end_day_btn")(w.day) : t("btn_finish_ch")}</button>` : `<p class="obj-hint">${t("day_obj_hint")}</p>`}`}
+      ${day1Done() ? `<button class="btn btn-primary btn-block" style="min-height:44px" onclick="endDay1()">${w.day < 5 ? t("end_day_btn")(w.day * 2) : t("btn_finish_ch")}</button>` : `<p class="obj-hint">${t("day_obj_hint")}</p>`}`}
     </div>
     <div class="app-grid">
       ${w.apps.map(a => {
@@ -1203,7 +1224,7 @@ function vJournalApp() {
   const p = activeProfile();
   const w = state.world;
   return `
-    <div class="card"><strong>${t("day_word")} ${w.day}: ${t("day"+w.day+"_t")}</strong><p class="small dim">${t("obj_prefix")} ${t("day"+w.day+"_o")}</p></div>
+    <div class="card"><strong>${t("chap_day_of")(curChapter())} · ${chapterTitle(curChapter())}</strong><p class="small dim">${t("obj_prefix")} ${chapterObjText(curChapter())}</p></div>
     <div class="card"><strong class="small">${t("journal_today")}</strong>
       ${state.events.length ? `<ol class="log-list" style="margin-top:8px">${state.events.map((e, i) => `<li><b>${i + 1}</b><span>${esc(e)}</span></li>`).join("")}</ol>` : `<p class="small dim">${t("journal_none")}</p>`}
     </div>
@@ -1350,8 +1371,8 @@ function dayObjectives(day) {
     { id: "obj_enc", icon: "⚔️", label: (() => {
         // when chapter B is pending, the objective must SAY so — a silent
         // unchecked box after "ignore" reads like a bug
-        if (w?.attackB) return {id:"Insiden ke-2 baru masuk — selesaikan juga (cek 🔔)", en:"A 2nd incident just arrived — resolve it too (check 🔔)", es:"Un 2.º incidente llegó — resuélvelo también (mira 🔔)", fr:"Un 2e incident arrive — résolvez-le aussi (voir 🔔)", it:"Un 2° incidente è arrivato — risolvi anche quello (vedi 🔔)", de:"Ein 2. Vorfall kam — löse auch ihn (siehe 🔔)", pt:"Um 2º incidente chegou — resolva também (veja 🔔)"};
-        return {id:"Selesaikan insiden hari ini (serang atau abaikan)", en:"Resolve today's incident (fight or ignore)", es:"Resuelve el incidente de hoy", fr:"Résolvez l'incident du jour", it:"Risolvi l'incidente di oggi", de:"Löse das heutige Ereignis", pt:"Resolva o incidente de hoje"};
+        if (w?.attackB) return {id:"Chapter berikutnya baru masuk — selesaikan juga (cek 🔔)", en:"The next chapter just arrived — resolve it too (check 🔔)", es:"Un 2.º incidente llegó — resuélvelo también (mira 🔔)", fr:"Un 2e incident arrive — résolvez-le aussi (voir 🔔)", it:"Un 2° incidente è arrivato — risolvi anche quello (vedi 🔔)", de:"Ein 2. Vorfall kam — löse auch ihn (siehe 🔔)", pt:"Um 2º incidente chegou — resolva também (veja 🔔)"};
+        return {id:"Selesaikan insiden chapter ini (serang atau abaikan)", en:"Resolve today's incident (fight or ignore)", es:"Resuelve el incidente de hoy", fr:"Résolvez l'incident du jour", it:"Risolvi l'incidente di oggi", de:"Löse das heutige Ereignis", pt:"Resolva o incidente de hoje"};
       })(),
       done: !atkOpen && !reserveOpen },
   ];
@@ -1414,6 +1435,8 @@ function actDismiss(id) {
   if (atk && !atk.done && (id === "atk" || (n && atk.from === n.from))) {
     atk.done = true;
     if (n) n.read = true;
+    // chapter accounting: slot B ignore = even chapter, slot A = odd (via promoteAttackB)
+    if (atk.isSlotB) markChapterDone((state.world.day - 1) * 2 + 2);
     trackEvent("🙈 ignored: " + atk.from);
     recordIncidentOutcome(atk.scenario, "ignored");
     promoteAttackB();
@@ -1435,6 +1458,8 @@ function promoteAttackB() {
   // attackB is seeded at world-build; "promotion" = surfacing it in the notif
   // bar once chapter A resolves. Guarded so it only happens once.
   if (w.attack?.done !== true || !w.attackB || w.attackB.surfaced) return;
+  // chapter A resolved -> record it as a completed chapter (odd number)
+  markChapterDone((w.day - 1) * 2 + 1);
   const B = w.attackB;
   B.surfaced = true;
   w.notifs.unshift({ id: nid(), app: B.app, from: B.from, text: B.notifText, attack: true, read: false, slotB: true });
@@ -1502,12 +1527,13 @@ function activateAttackB(notifId, dismiss) {
   if (n) n.read = true;
   if (!w.attackB) return;
   const B = w.attackB;
-  w.attack = { ...B, done: false };
+  w.attack = { ...B, done: false, isSlotB: true };
   delete w.attack.surfaced;
   w.attackB = null;
   toggleNotif(false);
   if (dismiss) {
     w.attack.done = true;
+    markChapterDone((w.day - 1) * 2 + 2); // even chapter (B) resolved
     trackEvent("🙈 ignored: " + w.attack.from);
     recordIncidentOutcome(w.attack.scenario, "ignored");
     toast(L({id:"Diabaikan ✅ — semua insiden hari ini sudah kelar", en:"Ignored ✅ — all of today's incidents are resolved", es:"Ignorado ✅ — todos los incidentes de hoy resueltos", fr:"Ignoré ✅ — tous les incidents du jour sont résolus", it:"Ignorato ✅ — tutti gli incidenti di oggi risolti", de:"Ignoriert ✅ — alle heutigen Vorfälle gelöst", pt:"Ignorado ✅ — todos os incidentes de hoje resolvidos"}));
@@ -1751,6 +1777,8 @@ async function finishEncounter(outcome) {
     state.debrief = { summary: { outcome }, coach: "-" };
   }
   state.world.attack.done = true;
+  // chapter accounting: slot B engage = even chapter; slot A odd is marked in promoteAttackB
+  if (state.world.attack.isSlotB) markChapterDone((state.world.day - 1) * 2 + 2);
   // storyline state: credentials leak, wallet damage, etc. (doc §4.C)
   recordIncidentOutcome(state.world.attack.scenario, outcome);
   // chapter A resolved → surface chapter B in the notif bar (after the debrief)
@@ -1777,7 +1805,7 @@ function vDebrief() {
   const xpEarn = isExploration ? d.xp : ((s.outcome === "survived" || s.outcome === "survived_reported" ? 100 : 60) + (s.risky_actions === 0 ? 20 : 0));
   return `
   <div class="debrief-wrap"><div class="wrap">
-    <p class="kicker">${t("deb_kicker")(state.world.day)}</p>
+    <p class="kicker">${t("deb_kicker")(state.world.day * 2)}</p>
     <h1>${(s.outcome || "").startsWith("survived") ? t("deb_survived") : t("deb_exposed")}</h1>
     <p class="xp-note">${t("deb_xp_note")(xpEarn)}</p>
     <div class="deb-cards">
@@ -1811,7 +1839,7 @@ function vDebrief() {
     </div>
     <div class="deb-actions">
       ${state.world.day < 5
-        ? `<button class="btn btn-primary btn-block" onclick="nextDay(${xpEarn})">${t("btn_next_day")(state.world.day + 1)}</button>`
+        ? `<button class="btn btn-primary btn-block" onclick="nextDay(${xpEarn})">${t("btn_next_day")(state.world.day * 2 + 1)}</button>`
         : `<button class="btn btn-primary btn-block" onclick="finishChapter()">${t("btn_finish_ch")}</button>`}
       <button class="btn btn-ghost btn-block" style="color:#CBD5E1;border-color:#334155" onclick="requireAuth(go)('dashboard')">${t("back_dash")}</button>
     </div>
@@ -1939,6 +1967,8 @@ function vFinale() {
 function toggleObj() { state.objCollapsed = !state.objCollapsed; render(); }
 function endDay1() {
   const p = activeProfile();
+  // both chapters of this world-day are resolved here -> record the even one
+  if (state.world) markChapterDone(state.world.day * 2);
   const xp = 100 + state.events.length * 5;
   state.debrief = {
     summary: { outcome: "survived", indicators: {} },
