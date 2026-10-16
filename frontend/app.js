@@ -1006,9 +1006,9 @@ function vPhoneApp() {
     return `
     <div class="card center call-live">
       <span style="font-size:44px" class="pulse">📞</span>
-      <h3 style="margin:8px 0 2px">${esc(atk.from)}</h3>
+      <h3 style="margin:8px 0 2px">${esc(L(atk.from))}</h3>
       <p class="small dim">${L({id:"Panggilan masuk…", en:"Incoming call…", es:"Llamada entrante…", fr:"Appel entrant…", it:"Chiamata in arrivo…", de:"Eingehender Anruf…", pt:"Chamada recebida…"})}</p>
-      <p class="small" style="margin:10px 0;opacity:.85">${esc(atk.notifText)}</p>
+      <p class="small" style="margin:10px 0;opacity:.85">${esc(L(atk.notifText))}</p>
       <div class="call-actions">
         <button class="btn btn-ghost" onclick="actDismiss('atk')">${L({id:"📵 Tolak", en:"📵 Decline", es:"📵 Rechazar", fr:"📵 Refuser", it:"📵 Rifiuta", de:"📵 Ablehnen", pt:"📵 Recusar"})}</button>
         <button class="btn btn-primary" onclick="openAtkPreview()">${L({id:"🔍 Cek dulu", en:"🔍 Check first", es:"🔍 Revisar", fr:"🔍 Vérifier", it:"🔍 Verifica", de:"🔍 Erst prüfen", pt:"🔍 Verificar"})}</button>
@@ -1030,7 +1030,7 @@ function vPhoneApp() {
         <div class="notif-item">
           <div class="cav" style="background:#E2E8F0">${c.icon}</div>
           <div class="cb">
-            <div class="ct"><strong>${esc(c.name)}</strong> <span class="dim small">${c.when}</span></div>
+            <div class="ct"><strong>${esc(L(c.name))}</strong> <span class="dim small">${c.when}</span></div>
             <p class="small dim">${L(c.tag)}</p>
           </div>
         </div>`).join("")}
@@ -1048,8 +1048,8 @@ function vChatLoop() {
     <div class="chat-list-item unread" onclick="openAtkPreview()">
       <div class="cav" style="background:#FEE2E2">👤</div>
       <div class="cb">
-        <div class="ct"><strong>${esc(atkThread.from)}</strong><time>09:02</time></div>
-        <p>${esc(atkThread.notifText)}</p>
+        <div class="ct"><strong>${esc(L(atkThread.from))}</strong><time>09:02</time></div>
+        <p>${esc(L(atkThread.notifText))}</p>
       </div>
       <span class="dot-un"></span>
     </div>` : ""}
@@ -1059,7 +1059,7 @@ function vChatLoop() {
       <div class="chat-list-item" onclick="openChat('${c.id}')">
         <div class="cav" style="background:${c.color}">${c.avatar}</div>
         <div class="cb">
-          <div class="ct"><strong>${esc(c.name)}</strong><time>08:${String(30 + (c.name.length % 20)).padStart(2, "0")}</time></div>
+          <div class="ct"><strong>${esc(L(c.name))}</strong><time>08:${String(30 + (c.name.length % 20)).padStart(2, "0")}</time></div>
           <p>${esc(msg)}</p>
         </div>
       </div>`;
@@ -1115,14 +1115,14 @@ function vAtkPreview() {
     <div class="ap-head">
       <button class="cav" style="background:${isWifi ? "#FEF3C7" : "#FEE2E2"}" onclick="showSenderSheet()" title="${t("check_sender")}">${headerIcon}</button>
       <div>
-        <strong>${esc(atk.from)}</strong>
+        <strong>${esc(L(atk.from))}</strong>
         <p class="sub">${subLine}</p>
       </div>
       <span class="dot-un"></span>
       <button class="ap-close" onclick="closeAtkPreview()" aria-label="back" title="${L({id:"Tutup dulu — insiden tetap ada", en:"Close for now — incident stays", es:"Cerrar por ahora — el incidente sigue", fr:"Fermer pour l'instant — l'incident reste", it:"Chiudi per ora — l'incidente resta", de:"Erst schließen — der Vorfall bleibt", pt:"Fechar por ora — o incidente continua"})}">✕</button>
     </div>
     <div class="ap-bubble">
-      <p>${esc(atk.notifText)}</p>
+      <p>${esc(L(atk.notifText))}</p>
       <time>09:02</time>
     </div>
     <p class="ap-hint">💡 ${t("check_first_hint")}</p>
@@ -1207,8 +1207,8 @@ function vChatThread(cid) {
   <div class="appwin" style="height:100%">
     <div class="appbar">
       <button class="back" onclick="closeChat()" aria-label="back">${icons.back}</button>
-      <h5><span class="cav" style="background:${c.color};width:26px;height:26px;font-size:13px">${c.avatar}</span> ${esc(c.name)}</h5>
-      <button class="back" onclick="normContactInfo('${esc(c.name)}')" aria-label="info">ⓘ</button>
+      <h5><span class="cav" style="background:${c.color};width:26px;height:26px;font-size:13px">${c.avatar}</span> ${esc(L(c.name))}</h5>
+      <button class="back" onclick="normContactInfo('${esc(L(c.name))}')" aria-label="info">ⓘ</button>
     </div>
     <div class="appbody" id="chat-scroll">
       <p class="chat-day-sep">${t("chat_encrypted")}</p>
@@ -1233,8 +1233,8 @@ function vMessageBox() {
     <div class="chat-list-item unread" onclick="openAtkPreview()">
       <div class="cav" style="background:#FEE2E2">📩</div>
       <div class="cb">
-        <div class="ct"><strong>${esc(atkThread.from)}</strong><time>09:02</time></div>
-        <p>${esc(atkThread.notifText)}</p>
+        <div class="ct"><strong>${esc(L(atkThread.from))}</strong><time>09:02</time></div>
+        <p>${esc(L(atkThread.notifText))}</p>
       </div><span class="dot-un"></span>
     </div>` : ""}
     ${smsList.map(s => `
@@ -1380,8 +1380,8 @@ function vGenericApp(meta) {
     return `
       <div class="card center">
         <span style="font-size:34px">${meta.icon}</span>
-        <h3 style="margin:6px 0">${esc(atk.from)}</h3>
-        <p class="small dim">${esc(atk.notifText)}</p>
+        <h3 style="margin:6px 0">${esc(L(atk.from))}</h3>
+        <p class="small dim">${esc(L(atk.notifText))}</p>
         <button class="btn btn-primary btn-block mt8" onclick="openAtkPreview()">${t("open")} ▸</button>
       </div>`;
   }
@@ -1399,8 +1399,8 @@ function vNotifPanel() {
         <div class="ncard ${n.read ? "read" : ""}">
           <div class="ni" style="background:${(APP_CATALOG[n.app] || {}).bg || "#64748B"}">${(APP_CATALOG[n.app] || {}).icon || "🔔"}</div>
           <div class="nb">
-            <div class="nt"><strong>${esc(n.from)}</strong><time>09:0${n.id.slice(-1)}</time></div>
-            <p>${esc(n.text)}</p>
+            <div class="nt"><strong>${esc(L(n.from))}</strong><time>09:0${n.id.slice(-1)}</time></div>
+            <p>${esc(L(n.text))}</p>
             ${n.attack ? `<div class="actions"><button class="pri" onclick="toggleNotif(false); ${n.slotB ? `activateAttackB('${n.id}')` : `openApp('${n.app}'); openAtkPreview()`}">${t("open")}</button><button onclick="${n.slotB ? `activateAttackB('${n.id}', true)` : `actDismiss('${n.id}')`}">${t("ignore")}</button></div>` : `<div class="actions"><button onclick="readNotif('${n.id}')">${t("mark_read")}</button></div>`}
           </div>
         </div>`).join("")}
@@ -1506,7 +1506,7 @@ function actDismiss(id) {
     if (n) n.read = true;
     // chapter accounting: slot B ignore = even chapter, slot A = odd (via promoteAttackB)
     if (atk.isSlotB) markChapterDone((state.world.day - 1) * 2 + 2);
-    trackEvent("🙈 ignored: " + atk.from);
+    trackEvent("🙈 ignored: " + L(atk.from));
     recordIncidentOutcome(atk.scenario, "ignored");
     promoteAttackB();
   } else if (n) { n.read = true; trackEvent("🙈 " + n.from); }
@@ -1603,7 +1603,7 @@ function activateAttackB(notifId, dismiss) {
   if (dismiss) {
     w.attack.done = true;
     markChapterDone((w.day - 1) * 2 + 2); // even chapter (B) resolved
-    trackEvent("🙈 ignored: " + w.attack.from);
+    trackEvent("🙈 ignored: " + L(w.attack.from));
     recordIncidentOutcome(w.attack.scenario, "ignored");
     toast(L({id:"Diabaikan ✅ — semua insiden hari ini sudah kelar", en:"Ignored ✅ — all of today's incidents are resolved", es:"Ignorado ✅ — todos los incidentes de hoy resueltos", fr:"Ignoré ✅ — tous les incidents du jour sont résolus", it:"Ignorato ✅ — tutti gli incidenti di oggi risolti", de:"Ignoriert ✅ — alle heutigen Vorfälle gelöst", pt:"Ignorado ✅ — todos os incidentes de hoje resolvidos"}));
     render();
@@ -1694,7 +1694,7 @@ async function startEncounter() {
     if (m.paywall) { toast(m.msg); state.screen = "phone"; render(); return; }
     state.mission = m;
     state.encounterChat = [{ role: "them", text: m.message, time: nowT() }];
-    trackEvent("📬 " + atk.from);
+    trackEvent("📬 " + L(atk.from));
     render();
   } catch (e) {
     toast("ERR " + e.message);
