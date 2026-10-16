@@ -355,6 +355,33 @@ function buildAttack(profile, day, seed) {
            from: L(ev.from), notifText: L(ev.notifText), _fromRaw: ev.from, _notifRaw: ev.notifText };
 }
 
+/* ---------- second incident per day (storyline chapter B) ----------
+   Each day carries TWO chapters: after the first incident resolves, the
+   second lands in the notification bar. Channels follow the storyline spec. */
+const ATTACK_B = {
+  1: { app: "safebrowse", scenario: "story_komp_d1_password",
+    from: {id:"Portal Kompetisi Digital", en:"Digital Competition Portal", es:"Portal de Competencia Digital", pt:"Portal de Competição Digital", fr:"Portail de Compétition Numérique", it:"Portale Competizione Digitale", de:"Digital-Wettbewerbsportal"},
+    notifText: {id:"Sesi portal kedaluwarsa — masuk email + kata sandi untuk melanjutkan pendaftaran…", en:"Portal session expired — enter email + password to continue registration…", es:"Sesión del portal caducada — introduce correo y contraseña para continuar…", pt:"Sessão do portal expirada — insira e-mail e senha para continuar…", fr:"Session du portail expirée — saisissez e-mail et mot de passe pour continuer…", it:"Sessione del portale scaduta — inserisci email e password per continuare…", de:"Portalsitzung abgelaufen — E-Mail und Passwort eingeben, um fortzufahren…"} },
+  2: { app: "chatloop", scenario: "story_komp_d2_privacy",
+    from: {id:"Ketua Tim (grup lomba)", en:"Team Captain (contest group)", es:"Capitán del equipo", pt:"Capitã da equipe", fr:"Capitaine d'équipe", it:"Capitano della squadra", de:"Teamkapitän"},
+    notifText: {id:"Foto tim kita keren! Kartu pelajarmu kelihatan jelas — ayo upload bareng!", en:"Our team photo is great! Your student ID is clearly visible — let's upload it together!", es:"¡La foto del equipo quedó genial! Tu carnet se ve claro — ¡súbela!", pt:"A foto da equipe ficou ótima! Seu cartão estudantil aparece — vamos postar!", fr:"La photo d'équipe est top ! Ta carte scolaire se voit clairement — on la poste ?", it:"La foto della squadra è fantastica! La tua tessera si vede bene — pubblichiamola!", de:"Das Teamfoto ist toll! Dein Schülerausweis ist deutlich sichtbar — lass es hochladen!"} },
+  3: { app: "chatloop", scenario: "story_komp_d3_apk",
+    from: {id:"Teman Grup Lomba", en:"Contest Group Friend", es:"Amigo del grupo", pt:"Amigo do grupo", fr:"Ami du groupe", it:"Amico del gruppo", de:"Freund aus der Gruppe"},
+    notifText: {id:"APK editor video PREMIUM gratis! Instal dari link ini, gak perlu Play Store~", en:"PREMIUM video editor APK for free! Install from this link, no Play Store needed~", es:"¡APK editor de video PREMIUM gratis! Instálala desde este enlace, sin Play Store~", pt:"APK editor de vídeo PREMIUM grátis! Instala deste link, sem Play Store~", fr:"APK montage vidéo PREMIUM gratuite ! Installe depuis ce ligne, sans Play Store~", it:"APK editor video PREMIUM gratis! Installa da questo link, senza Play Store~", de:"PREMIUM-Video-Editor-APK gratis! Über diesen Link installieren, ohne Play Store~"} },
+  4: { app: "chatloop", scenario: "story_komp_d4_qris",
+    from: {id:"Keuangan Panitia Lomba", en:"Contest Finance Committee", es:"Finanzas del comité", pt:"Finanças do comitê", fr:"Finances du comité", it:"Finanze del comitato", de:"Finanzkomitee"},
+    notifText: {id:"FINALIS WAJIB BAYAR biaya administrasi Rp 250.000 via QRIS hari ini. Hadiah langsung diproses!", en:"FINALISTS MUST PAY a Rp 250,000 admin fee via QRIS today. Prize processed instantly!", es:"LOS FINALISTAS DEBEN PAGAR 250.000 Rp de administración por QRIS hoy. ¡El premio se procesa ya!", pt:"FINALISTAS DEVEM PAGAR taxa de R$ 250.000 via QRIS hoje. Prêmio processado na hora!", fr:"LES FINALISTES DOIVENT PAYER 250 000 Rp de frais via QRIS aujourd'hui. Gain traité immédiatement !", it:"I FINALISTI DEVONO PAGARE 250.000 Rp di amministrazione via QRIS oggi. Premio elaborato subito!", de:"FINALISTEN MÜSSEN heute 250.000 Rp Verwaltungsgebühr per QRIS zahlen. Gewinn sofort bearbeitet!"} },
+  5: { app: "messagebox", scenario: "story_komp_d5_family",
+    from: {id:"Ibu (rumah)", en:"Mom (home)", es:"Mamá (casa)", pt:"Mãe (casa)", fr:"Maman (maison)", it:"Mamma (casa)", de:"Mama (zu Hause)"},
+    notifText: {id:"Nak, ada telepon 'bank' minta nomor kartu & kode. Kartunya sudah aku kasih, kode belum. Itu beneran bank ya?", en:"Sweetie, a 'bank' called asking for card number & code. I gave the card, not the code yet. Is that a real bank?", es:"Cariño, el 'banco' llamó pidiendo tarjeta y código. Di la tarjeta, aún no el código. ¿Es un banco real?", pt:"Querido, o 'banco' ligou pedindo cartão e código. Dei o cartão, ainda não o código. É um banco real?", fr:"Chéri, la « banque » a appelé pour la carte et le code. J'ai donné la carte, pas encore le code. C'est une vraie banque ?", it:"Tesoro, la 'banca' ha chiamato chiedendo carta e codice. Ho dato la carta, non ancora il codice. È una banca vera?", de:"Schatz, die 'Bank' hat nach Karte und Code gefragt. Die Karte habe ich gegeben, den Code noch nicht. Ist das eine echte Bank?"} },
+};
+function buildAttackB(profile, day, seed) {
+  const ev = ATTACK_B[day];
+  if (!ev) return null;
+  return { id: "atkB" + day, seed, app: ev.app, scenario: ev.scenario,
+           from: L(ev.from), notifText: L(ev.notifText), _fromRaw: ev.from, _notifRaw: ev.notifText, slot: "b" };
+}
+
 /* ---------- build a world from profile ---------- */
 function buildWorld(profile, day = 1) {
   const tpl = WORLD_TEMPLATES[profile.archetype] || WORLD_TEMPLATES.general;
@@ -403,11 +430,15 @@ function buildWorld(profile, day = 1) {
     // every day's incident lands in the notification bar first (check-first flow)
     notifs.unshift({ id: nid(), app: attack.app, from: attack.from, text: attack.notifText, attack: true, read: false });
   }
+  // the day's SECOND chapter sits in reserve — it surfaces in the notif bar
+  // the moment the first incident resolves (two chapters per day, in sequence)
+  const attackB = buildAttackB(profile, day, seed);
 
   return {
     profile, day,
     apps, contacts, notifs,
     attack: attack || null,
+    attackB: attackB || null,
     wallpaper: tpl.wallpaper,
     phoneTime: "08:47",
     battery: 78,
