@@ -12,13 +12,13 @@ function L(obj) {
 
 /* ---------- app catalog ---------- */
 const APP_CATALOG = {
-  chatloop:   { id: "chatloop",   name: "ChatLoop",   icon: "💬", bg: "#0F766E" },
-  messagebox: { id: "messagebox", name: "MessageBox", icon: "✉️", bg: "#2563EB" },
-  mailbox:    { id: "mailbox",    name: "Mailbox",    icon: "📧", bg: "#DC2626" },
-  safebrowse: { id: "safebrowse", name: "SafeBrowse", icon: "🌐", bg: "#334155" },
+  chatloop:   { id: "chatloop",   name: "ChatLoop",   icon: "💬", bg: "#0F766E" , iconImg: "icons/chatloop.png" },
+  messagebox: { id: "messagebox", name: "MessageBox", icon: "✉️", bg: "#2563EB" , iconImg: "icons/messagebox.png" },
+  mailbox:    { id: "mailbox",    name: "Mailbox",    icon: "📧", bg: "#DC2626" , iconImg: "icons/mailbox.png" },
+  safebrowse: { id: "safebrowse", name: "SafeBrowse", icon: "🌐", bg: "#334155" , iconImg: "icons/safebrowse.png" },
   pocketpay:  { id: "pocketpay",  name: "PocketPay",  icon: "👛", bg: "#7C3AED" },
-  dailymart:  { id: "dailymart",  name: "DailyMart",  icon: "🛒", bg: "#EA580C" },
-  socialsquare:{id: "socialsquare",name: "SocialSquare",icon: "📸", bg: "#DB2777" },
+  dailymart:  { id: "dailymart",  name: "DailyMart",  icon: "🛒", bg: "#EA580C" , iconImg: "icons/dailymart.png" },
+  socialsquare:{id: "socialsquare",name: "SocialSquare",icon: "📸", bg: "#DB2777" , iconImg: "icons/socialsquare.png" },
   campushub:  { id: "campushub",  name: "CampusHub",  icon: "🎓", bg: "#0891B2" },
   workdesk:   { id: "workdesk",   name: "WorkDesk",   icon: "💼", bg: "#475569" },
   settings:   { id: "settings",   name: "Settings",   icon: "⚙️", bg: "#64748B" },
