@@ -478,7 +478,7 @@ button.statusbar { background: none; border: none; width: 100%; cursor: pointer;
 /* ============================================================
    SITE FOOTER (docs pages nav) — from HumanPatch-GUI concept
    ============================================================ */
-.site-footer { border-top: 1px solid rgba(8,37,79,.08); margin-top: 0; background: #60B6FF; }
+.site-footer { border-top: 1px solid rgba(8,37,79,.08); margin-top: 0; background: #A6D9FF; }
 .site-footer .inner { max-width: 1080px; margin: 0 auto; padding: 18px 20px 22px; }
 @media (min-width: 1600px) { .site-footer .inner { max-width: 1280px; } }
 .footer-brand { display: flex; align-items: center; gap: 8px; color: #08254F; font-weight: 800; letter-spacing: .02em; margin-bottom: 8px; }
