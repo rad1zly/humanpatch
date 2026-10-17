@@ -147,9 +147,12 @@ function demoSoon(arch) {
 function startWorldPath(arch, personaId) {
   state.wizard.archetype = arch;
   if (personaId) state.wizard.persona = personaId;
-  state.wizard.step = 2; // archetype preselected → jump to customization
-  prefetchCast(arch, personaId); // AI starts generating DURING the wizard
-  go("wizard");
+  // direct-entry: persona card click builds a default profile immediately —
+  // the customization wizard stays available via dashboard "Buat Profil Baru"
+  prefetchCast(arch, personaId); // AI cast generation starts NOW (runs during prep)
+  state.wizard.step = 4;
+  state.wizard.avatar = state.wizard.avatar || "🙂";
+  createProfile();
 }
 
 /* Kick off cast generation before the profile exists — result lands in
@@ -225,7 +228,7 @@ function vLanding() {
         <h1>${t("hero_h1a")} <em>${t("hero_h1b")}</em></h1>
         <p class="lead">${t("hero_lead")}</p>
         <div class="ctas">
-          <button class="btn btn-primary" onclick="go('auth')">${t("hero_cta")}</button>
+          <button class="btn btn-primary" onclick="document.getElementById('worlds').scrollIntoView({behavior:'smooth'})">${t("hero_cta")}</button>
           <button class="btn btn-ghost" onclick="scrollToSec()">${t("hero_cta2")}</button>
         </div>
         <p class="note">${t("hero_note")}</p>
@@ -284,7 +287,7 @@ function vLanding() {
         ).map(p => {
           const prof = (state.profiles||[]).find(x => x.archetype === p.arch && x.persona === p.persona.id);
           const days = prof ? (prof.day - 1) : 0;
-          const pct = Math.round(days / 5 * 100);
+          const pct = Math.round(days / 10 * 100);
           return `
           <article class="path-card ${prof ? "started" : ""} ${p.demo ? "demo-card" : ""}">
             <div class="pc-head">
@@ -319,7 +322,7 @@ function vLanding() {
 
     <section class="section snap-page center">
       <h2>${t("final_h2")}</h2>
-      <button class="btn btn-primary btn-block mt16" onclick="go('auth')">${t("hero_cta")}</button>
+      <button class="btn btn-primary btn-block mt16" onclick="document.getElementById('worlds').scrollIntoView({behavior:'smooth'})">${t("hero_cta")}</button>
     </section>
   </main>
   ${siteFooter()}`;
@@ -587,7 +590,7 @@ function createProfile() {
   const story = (typeof pickStoryline === "function") ? pickStoryline(w.archetype) : null;
   const p = {
     id: "p" + Date.now().toString(36),
-    name: archName(w.archetype),
+    name: (typeof PERSONA_FACTS !== "undefined" && w.persona && PERSONA_FACTS[w.persona]) ? PERSONA_FACTS[w.persona].name : archName(w.archetype),
     archetype: w.archetype,
     persona: w.persona || "",
     avatar: w.avatar,
