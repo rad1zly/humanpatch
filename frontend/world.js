@@ -7,6 +7,11 @@
 function L(obj) {
   if (obj == null) return "";
   if (typeof obj === "string") return obj;
+  const s = (typeof state !== "undefined" && state.mdAdapted) ? state.mdAdapted : null;
+  if (s) {
+    const cur = obj[LANG] || obj.en || obj.id || "";
+    if (cur && s[cur]) return s[cur];
+  }
   return obj[LANG] || obj.en || obj.id || "";
 }
 

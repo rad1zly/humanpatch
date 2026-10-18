@@ -350,6 +350,61 @@ def adapt_story(req: AdaptStoryReq):
         return {"adapted": {}, "adapted_by": f"error:{e}"}
 
 
+class AdaptChapterReq(BaseModel):
+    lang: str = "id"
+    persona: dict = {}
+    chapter: int = 1
+    items: list = []  # [{id, text}] narrative fields of the chapter
+
+
+@app.post("/api/adapt-chapter")
+def adapt_chapter(req: AdaptChapterReq):
+    """Rewrite a chapter's narrative text for the persona.
+    Mission structure / choices / outcomes are fixed by design - only words change."""
+    lang = req.lang if req.lang in ("id", "en", "es", "fr", "it", "de", "pt") else "id"
+    lang_name = {"id": "Indonesian (Bahasa Indonesia)", "en": "English", "es": "Spanish",
+                 "fr": "French", "it": "Italian", "de": "German", "pt": "Portuguese"}[lang]
+    persona = req.persona or {}
+    items = [it for it in req.items if it.get("id") and it.get("text")][:24]
+    if not items:
+        return {"adapted": {}, "adapted_by": "none"}
+
+    if os.environ.get("MOCK_LLM", "") in ("1", "true", "yes"):
+        name = persona.get("name", "")
+        adapted = {it["id"]: it["text"].replace("kamu", name) if name and lang == "id" else it["text"]
+                   for it in items}
+        return {"adapted": adapted, "adapted_by": "mock"}
+
+    sys_prompt = (
+        "You rewrite narrative texts of a cybersecurity-simulation chapter so they fit ONE player.\n"
+        f"Player: {persona.get('name')}, {persona.get('age')} years old, "
+        f"{persona.get('level')} in {persona.get('city')}. {persona.get('context','')}\n"
+        f"Write in {lang_name}. Rules:\n"
+        "1. KEEP the exact same teaching point, sender identity, urgency and trick. Do not soften or change the scam.\n"
+        "2. Adapt vocabulary to the player's age (12-year-old: simple words; 22-year-old: adult tone).\n"
+        "3. Localize small details (school subject, app names, currency, places) to the player's city/country.\n"
+        "4. You may address the player by name once or twice where natural.\n"
+        "5. Keep each text roughly the same length (max +20%).\n"
+        "6. Latin script only for these languages.\n"
+        'Return STRICT JSON: {"items": [{"id": "<same id>", "text": "<rewritten>}]}'
+    )
+    try:
+        out = get_llm().chat(system=sys_prompt,
+                             messages=[{"role": "user",
+                                        "content": json.dumps({"chapter": req.chapter, "items": items}, ensure_ascii=False)}],
+                             temperature=0.7, max_tokens=1800)
+        raw = out.strip()
+        if raw.startswith("```"):
+            raw = raw.split("```")[1]
+            if raw.startswith("json"):
+                raw = raw[4:]
+        data = json.loads(raw)
+        adapted = {it["id"]: it["text"] for it in data.get("items", [])}
+        return {"adapted": adapted, "adapted_by": "ai"}
+    except Exception as e:
+        return {"adapted": {}, "adapted_by": f"error:{e}"}
+
+
 class StoryContextReq(BaseModel):
     lang: str = "id"
     archetype: str = "student"

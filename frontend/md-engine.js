@@ -32,8 +32,38 @@ function mdGoChapter(n) {
   run.chapter = n;
   MD.choice = null; MD.outcome = null; MD.exposed = false;
   MD.recoveryDone = []; MD.seenNotif = false; MD.explored = false; MD.log = [];
+  state.mdAdapted = null; // clear previous chapter's persona rewrite
   state.screen = "md-notif";
   render();
+  mdAdaptChapterText(n);
+}
+
+/* Persona-flavored narrative: rewrite the chapter's narrative fields via AI.
+   Mission structure (choices/outcomes/red flags) stays fixed by design.
+   Runs fire-and-forget; original text shows until the rewrite lands. */
+async function mdAdaptChapterText(n) {
+  try {
+    const ch = mdCur();
+    if (!ch) return;
+    const p = activeProfile ? activeProfile() : null;
+    const persona = (p && p.persona && typeof PERSONA_FACTS !== "undefined" && PERSONA_FACTS[p.persona]) || null;
+    if (!persona) return;
+    const items = [];
+    const F = (id, obj) => { const t = L(obj); if (t) items.push({ id, text: t }); };
+    F("notif", ch.notif); F("message", ch.message);
+    if (ch.messageUrgent) F("messageUrgent", ch.messageUrgent);
+    if (ch.messageReal) F("messageReal", ch.messageReal);
+    if (ch.otpSms) F("otpSms", ch.otpSms);
+    if (!items.length) return;
+    const r = await fetch(API + "/adapt-chapter", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ lang: LANG, persona, chapter: n, items })
+    }).then(x => x.json());
+    if (r && r.adapted && Object.keys(r.adapted).length) {
+      state.mdAdapted = r.adapted;
+      if (state.mdRun && state.mdRun.chapter === n) render();
+    }
+  } catch (e) { /* keep original text */ }
 }
 function mdCur() { return MD_CHAPTERS[(state.mdRun?.chapter || 1) - 1]; }
 
