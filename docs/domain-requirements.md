@@ -1,8 +1,8 @@
-# Domain Requirements — Kontrak Wajib per Hari × Domain
+# Domain Requirements - Kontrak Wajib per Hari × Domain
 (STORY-VARIABLE, DOMAIN-INVARIANT)
 
 > Doc ini BUKAN cerita. Ini **daftar syarat** yang WAJIB terpenuhi apapun alur
-> yang di-generate AI. Storyline bebas variabel — coverage domain TIDAK boleh bolong.
+> yang di-generate AI. Storyline bebas variabel - coverage domain TIDAK boleh bolong.
 > Dipakai sebagai: (1) prompt constraint buat generator, (2) checklist QA,
 > (3) ground-truth buat training data.
 
@@ -18,19 +18,19 @@
 6. Debrief tiap insiden WAJIB berisi: red flags (min 3) + safe response + 1 prinsip.
 7. Tiap hari WAJIB menyentuh 4 indikator perilaku:
    `verify_source, under_pressure, protect_data, report_threat`
-8. Nama/tempat/SSID dari AI cast — gak boleh hardcoded.
+8. Nama/tempat/SSID dari AI cast - gak boleh hardcoded.
 9. Kesulitan naik per hari: H1-2 attack kentara → H4-5 halus/emosional/personal.
 10. Tiap hari ada min 1 misi eksplorasi (bukan attack) di app utilitas.
 
 ---
 
-# HARI 1 — D1 KATA SANDI & AKUN + D2 PHISHING & PESAN
+# HARI 1 - D1 KATA SANDI & AKUN + D2 PHISHING & PESAN
 
 ## D1 · Kata Sandi & Akun
 **Konsep wajib diajarkan:** password unik per akun · 2FA · email pemulihan · tanda akun dibajak · mana password yang gak boleh dipakai ulang.
 
 **Elemen wajib hadir:**
-- 1 halaman/layar login (asli vs tiruan — harus BISA dibedakan)
+- 1 halaman/layar login (asli vs tiruan - harus BISA dibedakan)
 - 1 momen minta kredensial (password/kode) dari pihak tidak resmi
 - 1 SMS/notif kode verifikasi ASLI (biar player belajar: kode = buat aku, bukan buat dibacain)
 
@@ -66,13 +66,13 @@
 
 ---
 
-# HARI 2 — D3 BROWSING AMAN + D4 PRIVASI SOSMED
+# HARI 2 - D3 BROWSING AMAN + D4 PRIVASI SOSMED
 
 ## D3 · Browsing Aman
 **Konsep:** HTTPS/lock · domain palsu · WiFi umum/evil twin · auto-connect · captive portal.
 
 **Elemen wajib:**
-- 1 SSID dari AI cast (kafe/lokasi persona) — muncul di Settings/WLAN, BUKAN chat
+- 1 SSID dari AI cast (kafe/lokasi persona) - muncul di Settings/WLAN, BUKAN chat
 - Situasi 2 jaringan mirip (asli vs palsu) ATAU portal login aneh setelah konek
 - 1 momen minta password email di portal WiFi
 
@@ -90,7 +90,7 @@
 **Konsep:** apa yang aman dibagikan · metadata/identitas terlihat di foto · lokasi & rutinitas · akun publik vs privat.
 
 **Elemen wajib:**
-- 1 konteks sosial (grup/teman — BUKAN scammer) yang mendorong sharing
+- 1 konteks sosial (grup/teman - BUKAN scammer) yang mendorong sharing
 - 1 konten berisi data pribadi (kartu identitas/jadwal/struk/lokasi)
 - Tekanan sosial ("semua juga upload")
 
@@ -108,14 +108,14 @@
 
 ---
 
-# HARI 3 — D5 KEAMANAN HP + D6 LAPOR & PULIHKAN
+# HARI 3 - D5 KEAMANAN HP + D6 LAPOR & PULIHKAN
 
 ## D5 · Keamanan HP
 **Konsep:** izin aplikasi berlebihan · APK di luar toko resmi · spyware · update sistem.
 
 **Elemen wajib:**
 - 1 tawaran install app dari luar toko resmi (vektornya chat/link)
-- Layar daftar izin yang mencurigakan (SMS/kontak/aksesibilitas) — gak nyambung dengan fungsi app
+- Layar daftar izin yang mencurigakan (SMS/kontak/aksesibilitas) - gak nyambung dengan fungsi app
 - App Security = tempat audit (misi eksplorasi hari ini WAJIB kesini)
 
 **Jenis keputusan:** `comply` (install + izinkan semua) · `verify` (cek izin/developer/review) · `refuse` · `uninstall` (recovery) · `install` dari sumber resmi (alternatif aman)
@@ -132,14 +132,14 @@
 **Konsep:** ke mana melapor (platform/kanal resmi/aduankonten.id) · urutan pemulihan akun · logout perangkat · cek aktivitas akun.
 
 **Elemen wajib:**
-- 1 insiden akun (percobaan login/perubahan pemulihan) — intensitasnya boleh nyambung state `credentials_leaked` dari H1
+- 1 insiden akun (percobaan login/perubahan pemulihan) - intensitasnya boleh nyambung state `credentials_leaked` dari H1
 - Momen minta OTP dari pihak "dukungan" (penipuan OTP)
 - Tombol/aksi [LAPOR] pertama kali meaningful + dinilai
 - Layar perangkat aktif (Settings) untuk cek & logout remote
 
 **Jenis keputusan:** `comply` (kasih kode) · `verify` (cek perangkat aktif) · `refuse` · `report` · aksi pemulihan berurutan (logout semua → ganti password → pulihkan email)
 
-**Outcome reachable:** EXPOSED (akun dibajak) · RECOVERED (jalankan urutan pemulihan sukses — nilai tinggi) · REPORTED (best path) · SURVIVED
+**Outcome reachable:** EXPOSED (akun dibajak) · RECOVERED (jalankan urutan pemulihan sukses - nilai tinggi) · REPORTED (best path) · SURVIVED
 
 **Red flag min 3:** minta OTP (resmi TIDAK PERNAH) · deadline "akun dikunci 5 menit" · kanal tidak resmi · email pemulihan diganti
 
@@ -151,14 +151,14 @@
 
 ---
 
-# HARI 4 — D7 TELEPON & CS PALSU + D8 PEMBAYARAN DIGITAL
+# HARI 4 - D7 TELEPON & CS PALSU + D8 PEMBAYARAN DIGITAL
 
 ## D7 · Telepon & CS Palsu
 **Konsep:** vishing · verifikasi balik (callback) · suara yakin ≠ resmi · nomor resmi vs pribadi · OTP gak pernah dibacakan.
 
 **Elemen wajib:**
 - 1 telepon MASUK (UI panggilan, bukan chat) dengan identitas "petugas/CS/institusi"
-- OTP asli masuk ke SMS saat nelpon (realistis — kode ada di tangan korban)
+- OTP asli masuk ke SMS saat nelpon (realistis - kode ada di tangan korban)
 - 1 nomor resmi tersimpan di contacts sebagai alat verifikasi balik
 
 **Jenis keputusan:** `reject` (tolak panggilan) · `comply` (bacakan kode) · `verify` (callback ke nomor resmi) · `refuse` (tutup) · `report` (blokir + lapor nomor)
@@ -181,7 +181,7 @@
 
 **Jenis keputusan:** `pay` (scan/bayar) · `verify` (cek nama penerima/kanal resmi) · `refuse` · `report` · `stop` (berhenti di biaya kedua)
 
-**Outcome reachable:** EXPOSED (bayar sekali) · EXPOSED TOTAL (bayar lagi — sunk cost) · SURVIVED (cek nama/kanal resmi) · REPORTED
+**Outcome reachable:** EXPOSED (bayar sekali) · EXPOSED TOTAL (bayar lagi - sunk cost) · SURVIVED (cek nama/kanal resmi) · REPORTED
 
 **Red flag min 3:** bayar untuk MENERIMA uang · QR atas nama pribadi · deadline tanpa dokumen resmi · biaya kedua muncul
 
@@ -193,34 +193,34 @@
 
 ---
 
-# HARI 5 — D9 PSIKOLOGI PENIPUAN + D10 KELUARGA & KOMUNITAS
+# HARI 5 - D9 PSIKOLOGI PENIPUAN + D10 KELUARGA & KOMUNITAS
 
 ## D9 · Psikologi Penipuan
 **Konsep:** tekanan waktu · umpan greed · fear/ancaman · authority bias · FOMO · kesadaran emosi sendiri · klaim data sering bluff.
 
 **Elemen wajib:**
 - 1 insiden klimaks yang pakai KOMBINASI taktik (min 3 dari: urgency, greed, fear, authority, social proof)
-- Konten attack bersifat PERSONAL (nyebut data/identitas — asli kalau `personal_data_public=true`, fabrikasi kalau false → bisa dibongkar)
+- Konten attack bersifat PERSONAL (nyebut data/identitas - asli kalau `personal_data_public=true`, fabrikasi kalau false → bisa dibongkar)
 - Momen "bayar supaya berhenti" yang TIDAK berhenti (extortion berlanjut)
 - 1 titik refleksi emosi ("apa yang kamu rasakan?")
 
 **Jenis keputusan:** `comply` (bayar) · `verify` (uji klaim data) · `refuse` · `report` (platform+sekolah+ortu+aduankonten.id) · `block` · `delay`
 
-**Outcome reachable:** EXPOSED TOTAL (bayar berulang) · RECOVERED (stop + report setelah bayar) · SURVIVED (panggil bluff) · REPORTED (best path — ancaman kosong terbukti)
+**Outcome reachable:** EXPOSED TOTAL (bayar berulang) · RECOVERED (stop + report setelah bayar) · SURVIVED (panggil bluff) · REPORTED (best path - ancaman kosong terbukti)
 
 **Red flag min 3:** deadline ekstrem (15 menit) · ancaman sebar ke kontak · data akurat dipakai buat intimidasi · minta "tanda kerja sama" tambahan · transfer ke pribadi
 
-**Debrief wajib:** ancaman = umpan panik bukan fakta · BAYAR = dianggap target hidup · klaim data sering bluff — uji dulu · "ini bukan salahmu" (destigmatization) · review semua taktik H1-H4
+**Debrief wajib:** ancaman = umpan panik bukan fakta · BAYAR = dianggap target hidup · klaim data sering bluff - uji dulu · "ini bukan salahmu" (destigmatization) · review semua taktik H1-H4
 
 **Indikator:** under_pressure, report_threat
 
 ## D10 · Keluarga & Komunitas
-**Konsep:** transfer of learning — player jadi GURU · orang tua/adik lebih rentan · aturan sederhana yang bisa diajarkan · efek domino ke komunitas.
+**Konsep:** transfer of learning - player jadi GURU · orang tua/adik lebih rentan · aturan sederhana yang bisa diajarkan · efek domino ke komunitas.
 
 **Elemen wajib:**
 - 1 anggota keluarga (dari cast: ortu/adik) yang JADI KORBAN HAMPIR (bukan player)
 - Keluarga nanya/minta tolong KE PLAYER (player = penolong, bukan korban)
-- Min 2 vektor berbeda nyerang keluarga (misal: telepon CS palsu ke ibu + hadiah game ke adik — reuse D7 & D2)
+- Min 2 vektor berbeda nyerang keluarga (misal: telepon CS palsu ke ibu + hadiah game ke adik - reuse D7 & D2)
 - Momen player HARUS menjelaskan aturan ("OTP/kartu/password gak pernah dibagikan")
 - 1 aksi konkret nyelametin (blokir kartu / ganti password keluarga / lapor)
 

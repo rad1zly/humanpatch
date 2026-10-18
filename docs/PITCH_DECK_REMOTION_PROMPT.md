@@ -1,4 +1,4 @@
-# HumanPatch Pitch Deck — Remotion Generation Prompt v2 (CINEMATIC)
+# HumanPatch Pitch Deck - Remotion Generation Prompt v2 (CINEMATIC)
 
 > Paste prompt ini ke LLM apapun (Claude Opus paling oke, Sonnet OK, GPT-4 juga).
 > Output: project Remotion 4 + React 18 + TypeScript, dirender dengan
@@ -12,7 +12,7 @@
 You are an expert Remotion developer with a cinematography background.
 Generate a complete, production-ready Remotion 4 project for a **90-second
 cinematic pitch deck** that **SHOWCASES THE REAL, LIVE PRODUCT** called
-"HumanPatch — AI Cybersecurity Awareness Trainer".
+"HumanPatch - AI Cybersecurity Awareness Trainer".
 
 THE PRODUCT IS LIVE AT: https://humanpatch.taila281c8.ts.net
 The 3D-network background and full mobile simulator can be captured via
@@ -24,7 +24,7 @@ SPECIFICATIONS (HARD)
 ─────────────────────────────────────────────────────────────────────
 • Framework: Remotion 4.0.x + React 18.3 + TypeScript
 • Resolution: 1920×1080 (Full HD), fps 30, total 2700 frames (90s)
-• NO voiceover — only text + music + visual effects
+• NO voiceover - only text + music + visual effects
 • Output: `npx remotion render HumanPatch out/pitch.mp4` produces ONE file
 • Project boots with `npm install && npx remotion studio` (no network deps at render time)
 • Keep total source under 2000 lines across all files
@@ -51,13 +51,13 @@ Typography: "Inter" via @remotion/google-fonts/Inter
   - Body 500/600
   - Captions/labels: monospace "JetBrains Mono" via @remotion/google-fonts/JetBrainsMono
 
-CAMERA LANGUAGE — these are the ONLY motion tools you should use:
+CAMERA LANGUAGE - these are the ONLY motion tools you should use:
   1. Ken Burns zoom (slow interpolate scale 1.0 → 1.15 over 4-8 seconds)
   2. Pan (translateX/Y by small amount with ease-in-out)
   3. Push-in (scale + slight zoom blur for "tension")
   4. Rack focus (CSS filter blur 0→6px→0px simulating depth-of-field shift)
   5. Whip pan (very fast 200-frame translateX with motion-blur via opacity dip)
-  6. Handheld shake (translate3d ±2px noise — for "documentary realism")
+  6. Handheld shake (translate3d ±2px noise - for "documentary realism")
   7. Letterbox (top+bottom black bars 8% to evoke cinema, 16:9 → 2.35:1 look)
   8. Cut-on-action (hard cut at the moment of impact, no fade)
   9. Speed ramp (time-warp: slow-mo 0.4x then snap to 2x for emphasis)
@@ -100,13 +100,13 @@ humanpatch-pitch/
 │       └── frames.ts             ← metadata for each product frame
 
 ─────────────────────────────────────────────────────────────────────
-THE 9 SHOTS — CINEMATIC 90 SECONDS
+THE 9 SHOTS - CINEMATIC 90 SECONDS
 ─────────────────────────────────────────────────────────────────────
 Total: 2700 frames @ 30fps. Each shot is a real camera move. Use
 <Sequence from={N} durationInFrames={D}> inside <Pitch>.
 
 ═══════════════════════════════════════════════════════════════════════
-SHOT 1 — THE COLD OPEN (0–240 frames, 0:00–0:08) — establish dread
+SHOT 1 - THE COLD OPEN (0–240 frames, 0:00–0:08) - establish dread
 ═══════════════════════════════════════════════════════════════════════
 • Visual: Black screen. 2-second silence (visually = 60 black frames).
 • 60 frames in: faint terminal text appears, typewriter:
@@ -122,10 +122,10 @@ SHOT 1 — THE COLD OPEN (0–240 frames, 0:00–0:08) — establish dread
 • Camera: slight handheld shake (translate ±2px)
 
 ═══════════════════════════════════════════════════════════════════════
-SHOT 2 — REAL DASHBOARD SLOW REVEAL (240–600 frames, 0:08–0:20)
+SHOT 2 - REAL DASHBOARD SLOW REVEAL (240–600 frames, 0:08–0:20)
 ═══════════════════════════════════════════════════════════════════════
 • Visual: SCREENSHOT of the real landing page from
-  https://humanpatch.taila281c8.ts.net — pre-captured to
+  https://humanpatch.taila281c8.ts.net - pre-captured to
   public/frames/landing.png (1920x1080)
 • Camera: Starts at 1.4× scale centered on hero text, slowly Ken Burns
   zoom out to 1.0× (pulls back to reveal full page) over 360 frames
@@ -136,7 +136,7 @@ SHOT 2 — REAL DASHBOARD SLOW REVEAL (240–600 frames, 0:08–0:20)
 • VFX: 8% letterbox, vignette, grain
 
 ═══════════════════════════════════════════════════════════════════════
-SHOT 3 — THE PHONE REVEAL (600–960 frames, 0:20–0:32)
+SHOT 3 - THE PHONE REVEAL (600–960 frames, 0:20–0:32)
 ═══════════════════════════════════════════════════════════════════════
 • Visual: Browser frame in background, fading to 30% opacity. A
   realistic PhoneFrame (375×812 bezel + status bar) zooms in from center
@@ -154,7 +154,7 @@ SHOT 3 — THE PHONE REVEAL (600–960 frames, 0:20–0:32)
 • Music: beat drop here, bass kicks in
 
 ═══════════════════════════════════════════════════════════════════════
-SHOT 4 — THE 10 DOMAINS RAPID FIRE (960–1320 frames, 0:32–0:44)
+SHOT 4 - THE 10 DOMAINS RAPID FIRE (960–1320 frames, 0:32–0:44)
 ═══════════════════════════════════════════════════════════════════════
 • Visual: 10 domain cards flying in WHIP PAN from right
   (each card translateX 1920→0 over 18 frames, blur 8→0px) staggered
@@ -164,15 +164,15 @@ SHOT 4 — THE 10 DOMAINS RAPID FIRE (960–1320 frames, 0:32–0:44)
   • Hard CUT between slow-mo and the next shot
 • Final state (frames 1260–1320): camera pushes in to grid center,
   scale 1.0 → 1.15, while one card glows teal (the "scam psychology"
-  🎭 card — the secret weapon)
+  🎭 card - the secret weapon)
 • Title (top): "10 domains, taught through your daily life"
 
 ═══════════════════════════════════════════════════════════════════════
-SHOT 5 — AI IN ACTION (1320–1740 frames, 0:44–0:58)
+SHOT 5 - AI IN ACTION (1320–1740 frames, 0:44–0:58)
 ═══════════════════════════════════════════════════════════════════════
 • Split screen 50/50:
   • LEFT: SCREENSHOT of the chat thread "Panitia Beasiswa" (pre-captured
-    public/frames/chat-ai.png) — Ken Burns slow zoom 1.0→1.1
+    public/frames/chat-ai.png) - Ken Burns slow zoom 1.0→1.1
   • RIGHT: animated DataViz line chart showing "Suspicion: 0% → 95%"
     rising over 360 frames. Color shifts green→yellow→red.
 • 1500 frames: a "threat meter" fills up like a battery
@@ -183,7 +183,7 @@ SHOT 5 — AI IN ACTION (1320–1740 frames, 0:44–0:58)
 • Bottom strip: "Powered by AMD MI300X · ROCm · vLLM" (monospace, teal)
 
 ═══════════════════════════════════════════════════════════════════════
-SHOT 6 — THE 5 WORLDS FLYBY (1740–2040 frames, 0:58–1:08)
+SHOT 6 - THE 5 WORLDS FLYBY (1740–2040 frames, 0:58–1:08)
 ═══════════════════════════════════════════════════════════════════════
 • Visual: 5 phone-frame cards WHIP PAN in horizontally with stagger
   (same technique as Shot 4 but slower, 30 frames apart)
@@ -198,7 +198,7 @@ SHOT 6 — THE 5 WORLDS FLYBY (1740–2040 frames, 0:58–1:08)
   scale 1.0 → 0.8, the cards drift slightly (subtle)
 
 ═══════════════════════════════════════════════════════════════════════
-SHOT 7 — THE FINALE / COACH DEBRIEF (2040–2400 frames, 1:08–1:20)
+SHOT 7 - THE FINALE / COACH DEBRIEF (2040–2400 frames, 1:08–1:20)
 ═══════════════════════════════════════════════════════════════════════
 • Visual: the Chapter 1 FINALE screen (pre-captured public/frames/finale.png)
   scaled to 70% of frame, with cinematic rack focus:
@@ -206,13 +206,13 @@ SHOT 7 — THE FINALE / COACH DEBRIEF (2040–2400 frames, 1:08–1:20)
   • Frames 2100–2160: rack focus → sharp on middle card (🧠 AI Coach)
   • Frames 2160–2220: rack focus → sharp on right card (5 principles)
 • 2220 frames: AI coach text "Bagus sekali Rani..." typewriter reveals
-  (genuine, warm, in Bahasa Indonesia — use the actual response)
+  (genuine, warm, in Bahasa Indonesia - use the actual response)
 • 2300 frames: bar chart of "Verify +2 · Refuse +1 · Risky -3" animates
   with each bar filling 0→100% over 40 frames staggered
 • Music: soaring, hopeful
 
 ═══════════════════════════════════════════════════════════════════════
-SHOT 8 — IMPACT STATS (2400–2580 frames, 1:20–1:26)
+SHOT 8 - IMPACT STATS (2400–2580 frames, 1:20–1:26)
 ═══════════════════════════════════════════════════════════════════════
 • Black background, white monospace text, three StatCards animate in
   one at a time, each on beat (every 60 frames):
@@ -223,7 +223,7 @@ SHOT 8 — IMPACT STATS (2400–2580 frames, 1:20–1:26)
 • Last 60 frames: cards drift down slightly, reveal of "👨‍👩‍👧"
 
 ═══════════════════════════════════════════════════════════════════════
-SHOT 9 — THE CALL TO ACTION (2580–2700 frames, 1:26–1:30)
+SHOT 9 - THE CALL TO ACTION (2580–2700 frames, 1:26–1:30)
 ═══════════════════════════════════════════════════════════════════════
 • Fade from black to logo centered
 • Camera: very slow push-in (scale 1.0 → 1.04 over 120 frames)
@@ -236,7 +236,7 @@ SHOT 9 — THE CALL TO ACTION (2580–2700 frames, 1:26–1:30)
 • Bottom: "Built in 6 days for AMD ACT III Hackathon · Track 4"
 
 ─────────────────────────────────────────────────────────────────────
-REAL PRODUCT CAPTURE — REQUIRED PRE-RENDER STEP
+REAL PRODUCT CAPTURE - REQUIRED PRE-RENDER STEP
 ─────────────────────────────────────────────────────────────────────
 Before rendering this pitch, the user must capture these frames using
 Playwright (include a `scripts/capture.ts` for them):
@@ -267,7 +267,7 @@ await browser.close();
 
 The Remotion code must reference these frames via `staticFile('frames/landing.png')`
 etc. If a frame is missing, the ShotBase component should show a tasteful
-fallback: gradient + text "Frame: landing.png — run scripts/capture.ts".
+fallback: gradient + text "Frame: landing.png - run scripts/capture.ts".
 
 ─────────────────────────────────────────────────────────────────────
 REMOTION PATTERNS REQUIRED
@@ -284,7 +284,7 @@ REMOTION PATTERNS REQUIRED
 />
 ```
 
-2. SpeedRamp component — child plays at variable rate:
+2. SpeedRamp component - child plays at variable rate:
 ```tsx
 export const SpeedRamp: React.FC<{children: React.ReactNode; rate: number}> = ({children, rate}) => {
   const frame = useCurrentFrame();
@@ -308,7 +308,7 @@ const tx = interpolate(frame, [0, 18, 30], [1920, -50, 0], {extrapolateRight: 'c
 const blur = interpolate(frame, [0, 9, 18], [10, 4, 0], {extrapolateRight: 'clamp'});
 ```
 
-5. Determinism — no Math.random(). Use:
+5. Determinism - no Math.random(). Use:
 ```ts
 const seeded = (s: number) => () => { s = (s * 9301 + 49297) % 233280; return s / 233280; };
 ```
