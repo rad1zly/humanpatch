@@ -7,12 +7,14 @@
 function L(obj) {
   if (obj == null) return "";
   if (typeof obj === "string") return obj;
-  const s = (typeof state !== "undefined" && state.mdAdapted) ? state.mdAdapted : null;
-  if (s) {
-    const cur = obj[LANG] || obj.en || obj.id || "";
-    if (cur && s[cur]) return s[cur];
+  const cur = obj[LANG] || obj.en || obj.id || "";
+  // persona-adapted chapter text: only while inside the MD campaign screens,
+  // matched by exact original string (chapter fields are long & unique)
+  if (cur && typeof state !== "undefined" && state.mdAdapted &&
+      String(state.screen).startsWith("md-") && state.mdAdapted[cur]) {
+    return state.mdAdapted[cur];
   }
-  return obj[LANG] || obj.en || obj.id || "";
+  return cur;
 }
 
 /* ---------- app catalog ---------- */

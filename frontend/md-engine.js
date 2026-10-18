@@ -12,6 +12,7 @@ const MD = {
   outcome: null,       // EXPOSED | SURVIVED | REPORTED | IGNORED | RECOVERED
   exposed: false,      // did the risky path hit in this chapter
   recoveryDone: [],    // completed recovery step ids
+  adaptGen: 0,         // in-flight persona-adaptation token (race guard)
   seenNotif: false,
   explored: false,
   log: [],             // per-chapter action log
@@ -42,10 +43,11 @@ function mdGoChapter(n) {
    Mission structure (choices/outcomes/red flags) stays fixed by design.
    Runs fire-and-forget; original text shows until the rewrite lands. */
 async function mdAdaptChapterText(n) {
+  const gen = ++MD.adaptGen; // invalidate in-flight adaptations from earlier chapters
   try {
-    const ch = mdCur();
+    const ch = MD_CHAPTERS[n - 1];
     if (!ch) return;
-    const p = activeProfile ? activeProfile() : null;
+    const p = (typeof activeProfile === "function") ? activeProfile() : null;
     const persona = (p && p.persona && typeof PERSONA_FACTS !== "undefined" && PERSONA_FACTS[p.persona]) || null;
     if (!persona) return;
     const items = [];
@@ -59,8 +61,12 @@ async function mdAdaptChapterText(n) {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ lang: LANG, persona, chapter: n, items })
     }).then(x => x.json());
+    if (gen !== MD.adaptGen) return; // a newer chapter started - drop stale result
     if (r && r.adapted && Object.keys(r.adapted).length) {
-      state.mdAdapted = r.adapted;
+      // map: original text -> adapted text (keyed by request id to be exact)
+      const byOrig = {};
+      items.forEach(it => { if (r.adapted[it.id]) byOrig[it.text] = r.adapted[it.id]; });
+      state.mdAdapted = byOrig;
       if (state.mdRun && state.mdRun.chapter === n) render();
     }
   } catch (e) { /* keep original text */ }

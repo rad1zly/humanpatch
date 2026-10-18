@@ -386,7 +386,7 @@ def adapt_chapter(req: AdaptChapterReq):
         "4. You may address the player by name once or twice where natural.\n"
         "5. Keep each text roughly the same length (max +20%).\n"
         "6. Latin script only for these languages.\n"
-        'Return STRICT JSON: {"items": [{"id": "<same id>", "text": "<rewritten>}]}'
+        'Return STRICT JSON: {"items": [{"id": "<same id>", "text": "<rewritten text>"}]}'
     )
     try:
         out = get_llm().chat(system=sys_prompt,
