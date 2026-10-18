@@ -1,35 +1,35 @@
-# Storyline Breakdown Detail — Branching Tree per Hari × Domain × Attack
+# Storyline Breakdown Detail - Branching Tree per Hari × Domain × Attack
 
 > Fungsi doc ini:
 > 1. **Spec lengkap** buat generate/finetune AI adversary (intent → response → state).
 > 2. **Fallback plan** kalau AMD gak ngasih akses GPU: semua tree di bawah bisa jalan
->    TANPA LLM (rule-based intent classifier + scripted replies) — mode `MOCK_LLM`.
+>    TANPA LLM (rule-based intent classifier + scripted replies) - mode `MOCK_LLM`.
 > 3. Sumber truth buat QA branching (tiap cabang harus bisa ditempuh & konsisten).
 
 ## Notasi
 
 - Intent pemain (klasifikasi reply, regex/keyword juga cukup untuk fallback):
-  - `COMPLY` — ngasih data / ikut arahan / klik link / bayar / bacain kode
-  - `SUSPECT` — nanya balik skeptis ("kok gini?", "aku gak pernah daftar")
-  - `REFUSE` — nolak tegas / keluar chat
-  - `REPORT` — tekan tombol lapor / bilang mau lapor
-  - `DELAY` — basa-basi gak jelas / minta waktu
+  - `COMPLY` - ngasih data / ikut arahan / klik link / bayar / bacain kode
+  - `SUSPECT` - nanya balik skeptis ("kok gini?", "aku gak pernah daftar")
+  - `REFUSE` - nolak tegas / keluar chat
+  - `REPORT` - tekan tombol lapor / bilang mau lapor
+  - `DELAY` - basa-basi gak jelas / minta waktu
 - State adversary: `HOOK → PRESSURE → ESCALATE → (WIN_attacker | GIVE_UP)`
 - Terminal outcome per attack:
-  - `EXPOSED` — kecolongan (data/klik/bayar/kode keluar)
-  - `SURVIVED` — nolak & keluar
-  - `REPORTED` — nolak + lapor (skor terbaik)
-  - `IGNORED` — gak pernah engage (aman tapi indikator report gak keisi)
+  - `EXPOSED` - kecolongan (data/klik/bayar/kode keluar)
+  - `SURVIVED` - nolak & keluar
+  - `REPORTED` - nolak + lapor (skor terbaik)
+  - `IGNORED` - gak pernah engage (aman tapi indikator report gak keisi)
 - Indikator (4): `verify_source`, `under_pressure`, `protect_data`, `report_threat`
 
 ---
 
-# HARI 1 — D2 Phishing & Pesan (pagi) + D1 Kata Sandi & Akun (siang)
+# HARI 1 - D2 Phishing & Pesan (pagi) + D1 Kata Sandi & Akun (siang)
 
 **App urutan:** notif → ChatLoop (attack A) → SafeBrowse (attack B, dari link A) → MessageBox (SMS kode) → Journal
 **Misi eksplorasi:** 📬 baca SMS · 💬 baca chat · 📓 buka Journal
 
-## Attack A — "Panitia Lomba Palsu" (D2, ChatLoop)
+## Attack A - "Panitia Lomba Palsu" (D2, ChatLoop)
 
 **PREVIEW (sebelum chat):** cek pengirim → nomor asing, verified ✗, saved ✗, no history.
 - **Verify dulu** → indikator `verify_source` ✓, tetep bisa pilih engage/abaikan
@@ -38,19 +38,19 @@
 
 ```
 S1 HOOK: "Selamat! Kamu FINALIS 10 BESAR Kompetisi Nasional!
-         Isi formulir di kompetisi-nasional[.]id/daftar sebelum jam 12 — slot hangus 3 jam!"
+         Isi formulir di kompetisi-nasional[.]id/daftar sebelum jam 12 - slot hangus 3 jam!"
 ├─ A COMPLY "oke, mau isi"      → attacker kirim link resmi-looking + minta data lengkap
 │    S2a PRESSURE: "Isi nama lengkap, NISN, nama ibu kandung untuk verifikasi ya!"
 │    ├─ A2 COMPLY kirim data    → EXPOSED (protect_data ✗) → data dipakai D6 Hari 3 (takeover)
 │    ├─ B2 SUSPECT "kok minta nama ibu?" → S3a: "standar verifikasi panitia" (authority)
 │    │    ├─ A3 COMPLY         → EXPOSED (sama atas)
-│    │    └─ B3 REFUSE/REPORT  → SURVIVED/REPORTED (recovered — belajar di debrief)
+│    │    └─ B3 REFUSE/REPORT  → SURVIVED/REPORTED (recovered - belajar di debrief)
 │    └─ C2 REFUSE "gak dulu"   → S3b: "slot kamu pindah ke peserta lain dalam 30 menit!"
 │         ├─ A3 COMPLY (takut) → EXPOSED + under_pressure ✗
 │         └─ B3 tahan/REPORT   → SURVIVED/REPORTED + under_pressure ✓
 ├─ B SUSPECT "aku gak pernah ikut lomba" → S2b REASSURE: "portal otomatis kirim undangan
 │    ke siswa berprestasi, kamu terpilih dari nilai rapor!" (flattery)
-│    ├─ A2 COMPLY klik link    → lanjut ke Attack B (portal login) — rantai cerita
+│    ├─ A2 COMPLY klik link    → lanjut ke Attack B (portal login) - rantai cerita
 │    ├─ B2 SUSPECT lagi        → S3c: naikin urgensi + ancam slot
 │    │    └─ (cabang sama seperti S3b atas)
 │    └─ C2 REFUSE/EXIT         → SURVIVED
@@ -63,16 +63,16 @@ S1 HOOK: "Selamat! Kamu FINALIS 10 BESAR Kompetisi Nasional!
 
 **Debrief fields** (dari blueprint): red_flags, safe_response, lesson D2.
 
-## Attack B — "Portal Login Tiruan" (D1, SafeBrowse)
+## Attack B - "Portal Login Tiruan" (D1, SafeBrowse)
 
 **Trigger:** klik link dari Attack A (atau langsung buka SafeBrowse → situs udah kebuka).
-Preview: URL `kompetisi-nas1onal[.]id` (huruf dobel/angka) — halaman MIRIP portal asli.
+Preview: URL `kompetisi-nas1onal[.]id` (huruf dobel/angka) - halaman MIRIP portal asli.
 
 ```
-S1 halaman login: "Sesi kedaluwarsa — masuk email + password sekolah"
+S1 halaman login: "Sesi kedaluwarsa - masuk email + password sekolah"
 ├─ A COMPLY login (email+password) → S2a "Password salah" (error palsu, 2x)
 │    ├─ A2 COMPLY coba lagi/coba password lain → S3a "Kami kirim kode verifikasi
-│    │    ke email untuk pemulihan — bacakan kodenya" (OTP minta)
+│    │    ke email untuk pemulihan - bacakan kodenya" (OTP minta)
 │    │    ├─ A3 kasih kode    → EXPOSED TOTAL (kredensial + email) → D6 Hari 3 pasti kena
 │    │    └─ B3 ragu/EXIT     → EXPOSED PARSIAL (password udah keluar) → debrief:
 │    │                           "ganti password SEKARANG" → ada tombol [Ganti Password]
@@ -85,7 +85,7 @@ S1 halaman login: "Sesi kedaluwarsa — masuk email + password sekolah"
 └─ C EXIT langsung            → SURVIVED (netral)
 ```
 
-**SMS MessageBox (edukasi):** kode verifikasi ASLI masuk ke SMS — pemain belajar: kode dari sistem buat AKU, bukan buat dibacain ke orang.
+**SMS MessageBox (edukasi):** kode verifikasi ASLI masuk ke SMS - pemain belajar: kode dari sistem buat AKU, bukan buat dibacain ke orang.
 
 **State yang dibawa ke hari berikutnya:**
 - `credentials_leaked = true|partial|false` → menentukan intensitas D6 Hari 3
@@ -93,14 +93,14 @@ S1 halaman login: "Sesi kedaluwarsa — masuk email + password sekolah"
 
 ---
 
-# HARI 2 — D3 Browsing Aman (pagi) + D4 Privasi Sosmed (siang)
+# HARI 2 - D3 Browsing Aman (pagi) + D4 Privasi Sosmed (siang)
 
 **App urutan:** notif → Settings/WLAN (attack A) → ChatLoop grup (attack B) → Journal
 **Misi eksplorasi:** 📶 cek daftar WiFi di Settings
 
-## Attack A — "Evil-Twin WiFi" (D3, Settings)
+## Attack A - "Evil-Twin WiFi" (D3, Settings)
 
-**Notif:** "Jaringan Wi-Fi gratis terdeteksi — sinyal kuat, tanpa password" (SSID dari AI cast).
+**Notif:** "Jaringan Wi-Fi gratis terdeteksi - sinyal kuat, tanpa password" (SSID dari AI cast).
 **Settings → WLAN list:** 2 SSID mirip: `KafeX_Free_WiFi` (asli 🔒) vs `KafeX_Free_WiFi` (palsu, open).
 
 ```
@@ -112,18 +112,18 @@ S1 list WiFi (klik SSID open):
 │    ├─ B2 SUSPECT "kok WiFi minta password email?" → S2b: "verifikasi keamanan penyedia"
 │    │    ├─ A3 COMPLY  → EXPOSED
 │    │    └─ B3 EXIT    → SURVIVED + verify ✓
-│    └─ C2 EXIT         → SURVIVED (partial — udah konek tapi gak kasih apa2; cookie risk)
+│    └─ C2 EXIT         → SURVIVED (partial - udah konek tapi gak kasih apa2; cookie risk)
 ├─ B VERIFY bandingkan 2 SSID / tanya staf (tombol "Tanya staf kafe") →
 │    → SURVIVED + verify ✓ → staf: "yang asli ada gemboknya, tanya dulu selalu"
 └─ C IGNORE (pakai data seluler aja) → SURVIVED (silent win)
 ```
 
-## Attack B — "Upload Foto Berisi Data" (D4, ChatLoop grup)
+## Attack B - "Upload Foto Berisi Data" (D4, ChatLoop grup)
 
-**Bukan scammer — teman tim.** Foto persiapan lomba: kartu pelajar + jadwal latihan terlihat.
+**Bukan scammer - teman tim.** Foto persiapan lomba: kartu pelajar + jadwal latihan terlihat.
 
 ```
-S1 HOOK: "Foto tim kita keren! Kartu pelajar kelihatan jelas — ayo upload ke IG!"
+S1 HOOK: "Foto tim kita keren! Kartu pelajar kelihatan jelas - ayo upload ke IG!"
 ├─ A COMPLY upload apa adanya → S2a teman puji → 1 jam kemudian DM aneh masuk
 │    (orang asing: "kamu Nadia kan, siswa SMA X? aku panitia…") →
 │    → EXPOSED (data publik dipakai social engineering) → jadi amunisi D9 Hari 5
@@ -133,10 +133,10 @@ S1 HOOK: "Foto tim kita keren! Kartu pelajar kelihatan jelas — ayo upload ke I
 │    ├─ A2 COMPLY         → EXPOSED (versi cepat)
 │    ├─ B2 NEGOSIASI "blur dulu aja NISN-nya" → S3: teman setuju →
 │    │    → SURVIVED + protect_data ✓ → foto aman di-upload (win sosial!)
-│    └─ C2 REFUSE tegas   → SURVIVED (temen agak kecewa — konsekuensi sosial ringan, realistis)
+│    └─ C2 REFUSE tegas   → SURVIVED (temen agak kecewa - konsekuensi sosial ringan, realistis)
 ├─ C DELAY "nanti aku edit dulu" → S2c: teman upload duluan TANPA izin (foto kamu ikut)
 │    ├─ A2 minta dihapus (tombol "Minta hapus") → RECOVERED + report ✓ (platform action)
-│    └─ B2 diam            → EXPOSED (bocor via tangan orang lain — pelajaran: minta izin juga norma)
+│    └─ B2 diam            → EXPOSED (bocor via tangan orang lain - pelajaran: minta izin juga norma)
 └─ D REPORT ke admin grup  → SURVIVED + report ✓ (admin grup private-in akun)
 ```
 
@@ -144,19 +144,19 @@ S1 HOOK: "Foto tim kita keren! Kartu pelajar kelihatan jelas — ayo upload ke I
 
 ---
 
-# HARI 3 — D5 Keamanan HP (pagi) + D6 Lapor & Pulihkan (sore)
+# HARI 3 - D5 Keamanan HP (pagi) + D6 Lapor & Pulihkan (sore)
 
 **App urutan:** notif → ChatLoop (attack A) → Security (audit izin, misi wajib) → MessageBox (attack B) → Settings (perangkat aktif)
 **Misi eksplorasi:** 📱 audit izin aplikasi di Security
 
-## Attack A — "APK Premium Gratis" (D5, ChatLoop → Settings/Security)
+## Attack A - "APK Premium Gratis" (D5, ChatLoop → Settings/Security)
 
 ```
 S1 HOOK (teman grup): "APK editor video PREMIUM gratis! instal dari link drive,
    gak perlu Play Store!"
 ├─ A COMPLY download → S2a instal → minta izin: SMS, kontak, aksesibilitas
 │    ├─ A2 COMPLY izinkan semua → EXPOSED (spyware) → Security scan (misi hari ini)
-│    │    DETECT app jahat: "EditorVideoProPro — 12 izin berlebihan, 0 review"
+│    │    DETECT app jahat: "EditorVideoProPro - 12 izin berlebihan, 0 review"
 │    │    ├─ A3 UNINSTALL + ganti password → RECOVERED (incident_response ✓✓)
 │    │    └─ B3 diam            → EXPOSED FINAL → data kontak keluar (DM aneh ke teman2 di Hari 4)
 │    ├─ B2 SUSPECT tolak izin aneh → app gak jalan → teman: "izinin aja semua"
@@ -169,14 +169,14 @@ S1 HOOK (teman grup): "APK editor video PREMIUM gratis! instal dari link drive,
 └─ C IGNORE → SURVIVED (silent)
 ```
 
-## Attack B — "OTP Account Takeover" (D6, MessageBox) — KLIMAKS
+## Attack B - "OTP Account Takeover" (D6, MessageBox) - KLIMAKS
 
 **Konteks:** kalau `credentials_leaked=true` (Hari 1) → login ASLI dari perangkat lain benar2 terjadi.
 Kalau `false` → tetap sama (attack sim), tapi debrief nunjukin: "kali ini latihan".
 
 ```
 S1 MessageBox: "⚠️ Percobaan masuk dari perangkat tidak dikenal (Windows · Kota Lain).
-   Kami kirim kode untuk mengamankan akun — BALAS dengan kodenya."
+   Kami kirim kode untuk mengamankan akun - BALAS dengan kodenya."
 ├─ A COMPLY kirim kode → EXPOSED TOTAL → 10 menit kemudian: email pemulihan diganti
 │    → RECOVERY SEQUENCE (ini inti domain D6):
 │       "Akunmu dibajak. Ikuti langkah: 1) jangan panik 2) buka Settings → perangkat aktif
@@ -188,7 +188,7 @@ S1 MessageBox: "⚠️ Percobaan masuk dari perangkat tidak dikenal (Windows · 
 │    ├─ B3 tahan + cek Settings → perangkat aktif KELIATAN → logout remote → SURVIVED + verify ✓✓
 │    └─ C3 REPORT → REPORTED + report_threat ✓ (best path)
 ├─ C REPORT langsung → REPORTED
-└─ D IGNORE → netral (login attempt "gagal sendiri" di log — tapi kalau credentials_leaked,
+└─ D IGNORE → netral (login attempt "gagal sendiri" di log - tapi kalau credentials_leaked,
      Hari 4 notif kejadian aneh bermunculan: akun tetap rawan)
 ```
 
@@ -197,12 +197,12 @@ Tombol [Lapor] pertama kali jadi aksi dinilai di sini.
 
 ---
 
-# HARI 4 — D7 Telepon & CS Palsu (pagi) + D8 Pembayaran Digital (siang)
+# HARI 4 - D7 Telepon & CS Palsu (pagi) + D8 Pembayaran Digital (siang)
 
 **App urutan:** notif → Phone (attack A) → ChatLoop + popup QR (attack B)
 **Misi eksplorasi:** 📞 cek riwayat panggilan
 
-## Attack A — "Vishing Petugas Dukungan" (D7, Phone)
+## Attack A - "Vishing Petugas Dukungan" (D7, Phone)
 
 **UI khusus: layar telepon masuk (bukan chat).** Tombol: [Angkat] [Tolak].
 
@@ -213,7 +213,7 @@ S0 incoming call: "+62 812-xxxx (Petugas Dukungan)"
      tolong bacakan biar aku perbaiki." → OTP ASLI masuk ke SMS (realistis!)
      ├─ A COMPLY bacakan kode → EXPOSED → "verifikasi pembayaran" lanjut →
      │    malah minta OTP kedua →
-     │    ├─ A2 kasih lagi  → EXPOSED TOTAL (transaksi terjadi — saldo e-wallet anjlok
+     │    ├─ A2 kasih lagi  → EXPOSED TOTAL (transaksi terjadi - saldo e-wallet anjlok
      │    │                   → masuk D8 dengan saldo berkurang: konsekuensi nyambung!)
      │    └─ B2 sadar & tutup → EXPOSED PARSIAL → blokir kartu via app (recovery mini)
      ├─ B SUSPECT "aku hubungi CS resmi aja" → S2b: "antrean CS 3 hari, akun kamu
@@ -225,7 +225,7 @@ S0 incoming call: "+62 812-xxxx (Petugas Dukungan)"
      └─ D diam/mikir → attacker naikin tekanan (jalan B3)
 ```
 
-## Attack B — "Biaya Admin QRIS Fiktif" (D8, ChatLoop + popup QR)
+## Attack B - "Biaya Admin QRIS Fiktif" (D8, ChatLoop + popup QR)
 
 ```
 S1 HOOK: "FINALIS WAJIB BAYAR biaya administrasi Rp 250.000 via QRIS hari ini.
@@ -249,18 +249,18 @@ S1 HOOK: "FINALIS WAJIB BAYAR biaya administrasi Rp 250.000 via QRIS hari ini.
 ```
 
 **Kalau saldo berkurang dari D7:** teks attack ini nyambung ("saldomu kurang? itu
-bukti pembayaran pertama berhasil, tinggal pelunasan…") — pressure naik.
+bukti pembayaran pertama berhasil, tinggal pelunasan…") - pressure naik.
 
 ---
 
-# HARI 5 — D10 Keluarga & Komunitas (pagi) + D9 Psikologi Penipuan (siang)
+# HARI 5 - D10 Keluarga & Komunitas (pagi) + D9 Psikologi Penipuan (siang)
 
 **App urutan:** notif → MessageBox (attack A) → ChatLoop (attack B) → Phone (callback) → Journal (closing)
 **Misi eksplorasi:** 👨‍👩‍👧 baca pesan keluarga
 
-## Attack A — "Keluarga Hampir Kena" (D10, MessageBox)
+## Attack A - "Keluarga Hampir Kena" (D10, MessageBox)
 
-**Pemain BUKAN korban — pemain = penolong.** Dua sub-kasus berurutan.
+**Pemain BUKAN korban - pemain = penolong.** Dua sub-kasus berurutan.
 
 ```
 S1 Ibu (chat): "Nak, tadi ada telepon dari 'bank', minta nomor kartu & kode.
@@ -270,7 +270,7 @@ S1 Ibu (chat): "Nak, tadi ada telepon dari 'bank', minta nomor kartu & kode.
 │    → lanjut S3 (kasus adik)
 ├─ B BIASA AJA: "kayaknya iya Bu, beneran" → ibu kasih KODE → EXPOSED (keluarga)
 │    → kartu kosong → recovery: lapor bank + buat laporan polisi (D6 skill dipakai ulang)
-└─ C ABAI "ntar aja" → ibu kasih kode → EXPOSED (versi pasif — debrief: diam = ikut
+└─ C ABAI "ntar aja" → ibu kasih kode → EXPOSED (versi pasif - debrief: diam = ikut
      menjerumuskan; transfer of learning gagal)
 
 S3 Adik (chat): "Kak! dapat hadiah skin game gratis, cuma disuruh password akun.
@@ -280,20 +280,20 @@ S3 Adik (chat): "Kak! dapat hadiah skin game gratis, cuma disuruh password akun.
 │    ├─ jawab benar ("hadiah asli gak minta password") → FAMILY SAVE COMPLETE 🏆
 │    └─ jawab ragu → coach compliment + koreksi (masih SURVIVED, edukasi menguatkan)
 ├─ B BIARKAN → EXPOSED (akun game adik dibajak → dipakai kirimin link scam ke
-│    teman2 adik — efek domino komunitas)
+│    teman2 adik - efek domino komunitas)
 └─ C REPORT ke ortu (tombol "Kabari Ibu") → SURVIVED + report ✓ (ibuu ikut aware)
 ```
 
 **Skor D10 = assessment sejati**: pemain harus PAKAI skill D1-D9 buat nyelametin orang lain.
 
-## Attack B — "Blackmail Data Bocor" (D9, ChatLoop) — KLIMAKS PSIKOLOGIS
+## Attack B - "Blackmail Data Bocor" (D9, ChatLoop) - KLIMAKS PSIKOLOGIS
 
 **Konteks:**
-- Kalau `personal_data_public=true` (D4 Hari 2): attacker pakai data ASLI (nama, sekolah, alamat) — creepy & meyakinkan
+- Kalau `personal_data_public=true` (D4 Hari 2): attacker pakai data ASLI (nama, sekolah, alamat) - creepy & meyakinkan
 - Kalau `false`: data FABRIKASI (nama salah, sekolah salah) → player bisa bongkar klaimnya
 
 ```
-S1 HOOK: "Kami punya infomu: [nama], [sekolah], [alamat] — SEMUA BENAR kan?
+S1 HOOK: "Kami punya infomu: [nama], [sekolah], [alamat] - SEMUA BENAR kan?
    Transfer 500rb dalam 15 MENIT atau kami sebar ke semua kontak sekolahmu."
 ├─ A COMPLY bayar → S2a: "terima kasih. tapi ada biaya penghapusan data…"
 │    (extortion TIDAK berhenti) →
@@ -305,7 +305,7 @@ S1 HOOK: "Kami punya infomu: [nama], [sekolah], [alamat] — SEMUA BENAR kan?
 ├─ B SUSPECT cek klaim: "sekolahku bukan itu" (kalau data fabrikasi) → attacker
 │    kasih kambing: "aku punya filemu" (bluff) →
 │    ├─ B2 panggil bluff / cek screenshot → GIVE_UP attacker → SURVIVED + verify ✓✓
-│    │    (lesson: klaim data sering BLUFF — uji dulu)
+│    │    (lesson: klaim data sering BLUFF - uji dulu)
 │    └─ A2 takut & bayar → (jalan S2a)
 ├─ C REFUSE + REPORT: "gak akan bayar. aku screenshot & lapor" →
 │    S2c attacker ancam lebih keras ("orangtuamu akan tahu besok pagi!") →
@@ -314,7 +314,7 @@ S1 HOOK: "Kami punya infomu: [nama], [sekolah], [alamat] — SEMUA BENAR kan?
 │    │    (penipu pindah target) → debrief: ancaman = umpan panik, bukan fakta
 │    └─ A3 balas emosi/marah → attacker naikin personal (pakai data D4 kalau ada)
 │         → tetap harus block & report (jalan B3) untuk REPORTED
-└─ D IGNORE + block diam2 → SURVIVED (oke, tapi report_threat gak ✓ — debrief
+└─ D IGNORE + block diam2 → SURVIVED (oke, tapi report_threat gak ✓ - debrief
      ingetin: laporin nyelametin orang lain yang jadi target berikutnya)
 ```
 
@@ -336,13 +336,13 @@ S1 HOOK: "Kami punya infomu: [nama], [sekolah], [alamat] — SEMUA BENAR kan?
 
 # Skoring
 
-- Outcome XP: REPORTED 150 · SURVIVED 100 · IGNORED 70 · RECOVERED 120 · EXPOSED 40 (tetap dapat — gagal = belajar)
+- Outcome XP: REPORTED 150 · SURVIVED 100 · IGNORED 70 · RECOVERED 120 · EXPOSED 40 (tetap dapat - gagal = belajar)
 - Indikator ✓ per cabang (lihat tree) → behavior_score backend
-- `RECOVERED` (EXPOSED → recovery sukses) hampir setara SURVIVED — **failure-friendly by design**
+- `RECOVERED` (EXPOSED → recovery sukses) hampir setara SURVIVED - **failure-friendly by design**
 
 ---
 
-# FALLBACK PLAN — Mode Tanpa LLM / Tanpa GPU AMD
+# FALLBACK PLAN - Mode Tanpa LLM / Tanpa GPU AMD
 
 ## Prinsip
 Semua tree di atas = **scripted decision tree lengkap**. AI (MiniMax via vLLM) cuma
@@ -363,7 +363,7 @@ template reply → game 100% playable, kualitas narasi turun dikit, logika TIDAK
    Kode OTP / data di reply pemain (regex `\d{4,6}`, email) → auto-`COMPLY` (data keluar).
 2. **Scripted replies**: setiap node `S1/S2a/S2b/S3...` di tree atas = string siap pakai
    (bahasa ID + EN via tabel translations). Adversary = state machine sederhana.
-3. **Debrief**: template per outcome (tanpa LLM) — sudah ada fallback text di
+3. **Debrief**: template per outcome (tanpa LLM) - sudah ada fallback text di
    `/api/mission/{mid}/debrief`; tinggal tambah template per-outcome + red_flags statis.
 4. **Cast generator** (nama kafe/SSID/NPC): fallback = wordlist per kita/persona
    (sudah ada `strSeed` deterministic fallback di frontend).
@@ -380,6 +380,6 @@ Dari tree atas, generate JSONL per node:
 dengan logika game. Eval: cabang tree coverage (semua jalur ter-reach).
 
 ## Prioritas GPU kalau dapat
-1. Adversary paraphrase (make scripted natural) — dampak terbesar
+1. Adversary paraphrase (make scripted natural) - dampak terbesar
 2. Debrief coach personal
-3. Cast generator (nama) — udah ada fallback bagus, prioritas rendah
+3. Cast generator (nama) - udah ada fallback bagus, prioritas rendah

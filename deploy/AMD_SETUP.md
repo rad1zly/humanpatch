@@ -30,12 +30,12 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 
 - `/api/health` returns `{"ok": true, "mock_llm": false}` when wired to the GPU endpoint.
 - Every adversary reply in the demo is a live inference; show `pressure/tactic/suspicion`
-  HUD (exposed in the API response) as proof the engine — not a script — is steering.
+  HUD (exposed in the API response) as proof the engine - not a script - is steering.
 
 ## Cost note (for judges)
 
 One mission ≈ 6-10 LLM calls × ~400 tokens ≈ **< $0.01 per user mission** on
-self-hosted MI300X — the marginal cost of patching one human is near zero.
+self-hosted MI300X - the marginal cost of patching one human is near zero.
 
 ## Optional: LoRA fine-tune (stretch)
 
@@ -43,5 +43,5 @@ Fine-tune adversary style on localized scam dialogue data:
 
 ```bash
 pip install peft datasets
-# see scripts/ (roadmap) — Unsloth or peft LoRA on the same instance
+# see scripts/ (roadmap) - Unsloth or peft LoRA on the same instance
 ```
