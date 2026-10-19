@@ -867,9 +867,9 @@ body { scroll-snap-type: y proximity; } /* gentle snap, still free-scrolls insid
 .brand-mark { width: auto !important; height: 46px !important; max-width: none !important; object-fit: contain; display: block; flex-shrink: 0; cursor: pointer; }
 
 /* --- user icon set (128px PNGs in icons/) --- */
-.ai-canvas { width: 54px; height: 54px; border-radius: 15px; position: relative; display: grid; place-items: center; background: #FFFFFF; box-shadow: 0 3px 8px rgba(17,24,39,.14); }
-.ai-canvas.dock { width: 46px; height: 46px; border-radius: 12px; }
-.ai-canvas .ai-img { width: calc(100% - 10px); height: calc(100% - 10px); object-fit: contain; display: block; }
+.ai-canvas { width: 54px; height: 54px; border-radius: 15px; position: relative; display: flex; align-items: center; justify-content: center; background: #FFFFFF; box-shadow: 0 3px 8px rgba(17,24,39,.14); padding: 0; box-sizing: border-box; }
+.ai-canvas.dock { width: 46px; height: 46px; border-radius: 12px; padding: 0; }
+.ai-canvas .ai-img { width: calc(100% - 10px); height: calc(100% - 10px); object-fit: contain; display: block; flex: none; }
 .ai-img.sm { width: 20px; height: 20px; display: inline-block; vertical-align: -4px; border-radius: 5px; }
 /* per-icon dock canvas: .ai-canvas.dock (46px) supersedes the old .ai-img.dock rule */
 .hv-apps .hv-app { width: 100%; height: auto; aspect-ratio: 1/1; object-fit: contain; object-position: center; border-radius: 12px; display: block; padding: 6%; box-sizing: border-box; }
