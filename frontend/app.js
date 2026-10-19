@@ -618,7 +618,7 @@ function vPrep() {
   const stTitle = story ? (story.title[state.lang] || story.title.en) : null;
   return `
   <div class="prep-screen"><div class="wrap prep-inner">
-    <div class="prep-phone-mock"></div>
+    <img class="prep-logo" src="HumanPatch_Logo.png" alt="HumanPatch">
     <h1 style="font-size:22px">${t("prep_h")}</h1>
     <p class="dim small" style="margin-top:6px">${t("prep_sub")}</p>
     ${stTitle ? `<div style="margin-top:10px;padding:10px 16px;border-radius:12px;background:#60B6FF;color:#0D408E;font-weight:700;font-size:13px">📖 ${state.lang === "id" ? "Storyline" : "Storyline"}: ${stTitle}</div>` : ""}
