@@ -10,6 +10,7 @@
   let particles, lines;
   const NODE_COUNT = 90;
   const LINK_DIST = 130;
+  let vels = []; // per-node velocity vectors (module scope: tick() reads them)
 
   function boot() {
     try {
@@ -29,7 +30,7 @@
       // nodes
       const pts = [];
     const positions = new Float32Array(NODE_COUNT * 3);
-    const vels = [];
+    vels = [];
     for (let i = 0; i < NODE_COUNT; i++) {
       positions[i * 3] = (Math.random() - 0.5) * innerWidth * 1.1;
       positions[i * 3 + 1] = (Math.random() - 0.5) * innerHeight * 1.1;
